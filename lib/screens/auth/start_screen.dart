@@ -19,66 +19,64 @@ class _StartScreenState extends State<StartScreen> {
 
     final widthButton = (screenWidth - 32 - 9) / 2;
 
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: screenHeight - 100,
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(32),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(
-                    'assets/images/start_background.jpg',
-                  ),
-                  fit: BoxFit.cover,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: screenHeight - 100,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(32),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/start_background.jpg',
                 ),
+                fit: BoxFit.cover,
               ),
-              child: Image.asset('assets/images/logo.png'),
             ),
-            Row(
-              children: [
-                PhotoButton(
-                  widthButton: widthButton,
-                  buttonMargin: const EdgeInsets.only(top: 20, left: 16, right: 9),
-                  buttonText: 'LOG IN',
-                  textColor: Colors.black,
-                  buttonColor: Colors.white,
-                  function: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return LoginScreen();
-                        },
-                      ),
-                    );
-                  },
-                ),
-                PhotoButton(
-                  widthButton: widthButton,
-                  buttonMargin: const EdgeInsets.only(top: 20),
-                  buttonText: 'REGISTER',
-                  textColor: Colors.white,
-                  buttonColor: Colors.black,
-                  function: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return RegistrationScreen();
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+            child: Image.asset('assets/images/logo.png'),
+          ),
+          Row(
+            children: [
+              PhotoButton(
+                widthButton: widthButton,
+                buttonMargin: const EdgeInsets.only(top: 20, left: 16, right: 9),
+                buttonText: 'LOG IN',
+                textColor: Colors.black,
+                buttonColor: Colors.white,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return LoginScreen();
+                      },
+                    ),
+                  );
+                },
+              ),
+              PhotoButton(
+                widthButton: widthButton,
+                buttonMargin: const EdgeInsets.only(top: 20),
+                buttonText: 'REGISTER',
+                textColor: Colors.white,
+                buttonColor: Colors.black,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return RegistrationScreen();
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -45,7 +45,6 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         shape: Border(
@@ -79,6 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
         ),
+        centerTitle: false,
       ),
       body: Column(
         children: [

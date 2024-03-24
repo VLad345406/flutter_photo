@@ -30,6 +30,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
+        centerTitle: false,
       ),
       body: ListView.builder(
           itemCount: 5,

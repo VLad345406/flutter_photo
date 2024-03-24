@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/screens/auth/wait_accept_email_page.dart';
+import 'package:flutter_qualification_work/screens/main/main_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -103,7 +104,16 @@ class _LoginScreenState extends State<LoginScreen> {
             textColor: Colors.white,
             buttonColor: Colors.black,
             // function: signIn,
-            function: (){},
+            function: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return MainScreen();
+                  },
+                ),
+              );
+            },
           ),
           //continue with text
           Align(

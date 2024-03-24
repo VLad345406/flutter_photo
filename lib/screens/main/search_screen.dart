@@ -30,6 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
+        centerTitle: false,
       ),
       body: Column(
         children: [
