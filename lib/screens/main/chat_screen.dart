@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/main/profile_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:io' show Platform;
 
 class ChatScreen extends StatefulWidget {
   final int index;
@@ -47,12 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        shape: Border(
-            bottom: BorderSide(
-                color: Colors.grey,
-                width: 1
-            )
-        ),
+        shape: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -66,8 +62,12 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 0,
         title: TextButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                ProfileScreen( mode: 'other',)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfileScreen(
+                          mode: 'other',
+                        )));
           },
           child: Text(
             users[widget.index],
@@ -88,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: ListView.builder(
                 itemCount: user1Messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if (index == 0 || index % 2 != 0){
+                  if (index == 0 || index % 2 != 0) {
                     return Padding(
                       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
                       child: Row(
@@ -97,23 +97,21 @@ class _ChatScreenState extends State<ChatScreen> {
                             padding: const EdgeInsets.only(top: 16, right: 16),
                             child: CircleAvatar(
                               radius: 14,
-                              backgroundImage: AssetImage("assets/images/avatar1.jpg"),
+                              backgroundImage:
+                                  AssetImage("assets/images/avatar1.jpg"),
                             ),
                           ),
                           Expanded(
                             child: Container(
                               padding: EdgeInsets.all(16),
                               color: Colors.grey[300],
-                              child: Text(
-                                  user1Messages[index]
-                              ),
+                              child: Text(user1Messages[index]),
                             ),
                           ),
                         ],
                       ),
                     );
-                  }
-                  else{
+                  } else {
                     return Padding(
                       padding: EdgeInsets.only(left: 16, right: 16, top: 16),
                       child: Row(
@@ -122,16 +120,15 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: Container(
                               padding: EdgeInsets.all(16),
                               color: Colors.grey[300],
-                              child: Text(
-                                  user1Messages[index]
-                              ),
+                              child: Text(user1Messages[index]),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 16, left: 16),
                             child: CircleAvatar(
                               radius: 14,
-                              backgroundImage: AssetImage("assets/images/avatar1.jpg"),
+                              backgroundImage:
+                                  AssetImage("assets/images/avatar1.jpg"),
                             ),
                           ),
                         ],
@@ -145,25 +142,36 @@ class _ChatScreenState extends State<ChatScreen> {
           Row(
             children: [
               Container(
-                padding: EdgeInsets.only(top: 16, left: 16, bottom: 16, right: 16),
-                height: 82,
+                padding: EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  bottom: Platform.isIOS ? 32 : 16,
+                  right: 16,
+                ),
+                height: Platform.isIOS ? 98 : 82,
                 child: ConstrainedBox(
                   constraints: BoxConstraints.tight(Size(screenWidth - 90, 52)),
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: 'Write message',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2)
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(width: 2)
-                      ),
+                      focusedBorder:
+                          OutlineInputBorder(borderSide: BorderSide(width: 2)),
+                      enabledBorder:
+                          OutlineInputBorder(borderSide: BorderSide(width: 2)),
                     ),
                   ),
                 ),
               ),
-
-              IconButton(onPressed: (){}, icon: Icon(Icons.send, size: 30,)),
+              Padding(
+                padding: EdgeInsets.only(bottom: Platform.isIOS ? 20 : 5),
+                child: IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.send,
+                    size: 30,
+                  ),
+                ),
+              ),
             ],
           ),
         ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
-import 'package:flutter_qualification_work/screens/auth/login.dart';
-import 'package:flutter_qualification_work/screens/auth/registration.dart';
+import 'package:flutter_qualification_work/screens/auth/login_screen.dart';
+import 'package:flutter_qualification_work/screens/auth/registration_screen.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});

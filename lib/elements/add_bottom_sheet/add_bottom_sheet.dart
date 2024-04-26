@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'dart:io' show Platform;
 
 void showAddBottomSheet(context, double widthButton) {
   showMaterialModalBottomSheet<dynamic>(
     context: context,
     backgroundColor: Colors.white,
     builder: (context) => SizedBox(
-      height: 150,
+      height: Platform.isIOS ? 200 : 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
