@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
+import 'package:flutter_qualification_work/services/authentication/start_auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,7 @@ class App extends StatelessWidget {
           accentColor: const Color(0xFF13B9FF),
         ),
       ),
-      home: StartScreen(),
+      home: StartAuthService().handleAuthState(),
     );
   }
 }
