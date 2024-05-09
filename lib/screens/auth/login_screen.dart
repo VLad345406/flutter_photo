@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/screens/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -92,46 +95,95 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          //Google auth button
-          /*Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: IconButton(
-                icon: Image.asset('assets/login_screen/Google.png'),
-                onPressed: () {},
-                */
-          /*onPressed: ()async {
-                  final FirebaseAuth auth;
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //Google auth button
+              SizedBox(
+                height: 65,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: IconButton(
+                    icon: Image.asset('assets/login_screen/Google.png'),
+                    onPressed: () async {
+                      try {
+                        final googleAccount = await GoogleSignIn().signIn();
 
-                  GoogleSignIn _googleSignIn = GoogleSignIn();
+                        final googleAuth = await googleAccount?.authentication;
 
-                  //@override
-                  //Future<User?> signUpWithGoogle() async {
+                        final credential = GoogleAuthProvider.credential(
+                          accessToken: googleAuth?.accessToken,
+                          idToken: googleAuth?.idToken,
+                        );
 
-                  GoogleSignInAccount? _googleSignInAccount = await _googleSignIn.signIn();
+                        await FirebaseAuth.instance
+                            .signInWithCredential(credential);
 
-                  GoogleSignInAccount googleSignInAccount = _googleSignInAccount!;
+                        if (mounted) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => MainScreen(),
+                            ),
+                          );
+                        }
+                      } on FirebaseAuthException catch (e) {
+                        print(e.message);
+                      }
+                    },
+                    /*onPressed: ()async {
+                      final FirebaseAuth auth;
 
-                  GoogleSignInAuthentication googleSignInAuthentication =
-                      await googleSignInAccount.authentication;
+                      GoogleSignIn _googleSignIn = GoogleSignIn();
 
-                  AuthCredential authCredential = GoogleAuthProvider.credential(
-                      idToken: googleSignInAuthentication.idToken,
-                      accessToken: googleSignInAuthentication.accessToken);
+                      //@override
+                      //Future<User?> signUpWithGoogle() async {
 
-                  UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(authCredential);
-                  User user = authResult.user!;
+                      GoogleSignInAccount? _googleSignInAccount = await _googleSignIn.signIn();
 
-                  //return user;
-                  //}
+                      GoogleSignInAccount googleSignInAccount = _googleSignInAccount!;
 
-                  //Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
-                },*/
-          /*
+                      GoogleSignInAuthentication googleSignInAuthentication =
+                          await googleSignInAccount.authentication;
+
+                      AuthCredential authCredential = GoogleAuthProvider.credential(
+                          idToken: googleSignInAuthentication.idToken,
+                          accessToken: googleSignInAuthentication.accessToken);
+
+                      UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(authCredential);
+                      User user = authResult.user!;
+
+                      //return user;
+                      //}
+
+                      //Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
+                    },*/
+                  ),
+                ),
               ),
-            ),
-          ),*/
+              //Facebook auth button
+              SizedBox(
+                height: 70,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: IconButton(
+                    icon: Image.asset('assets/login_screen/Facebook.png'),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+              //Apple auth button
+              SizedBox(
+                height: 65,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: IconButton(
+                    icon: Image.asset('assets/login_screen/Apple.png'),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
