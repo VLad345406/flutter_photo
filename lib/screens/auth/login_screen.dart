@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/screens/auth/restore_screen.dart';
 import 'package:flutter_qualification_work/screens/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,8 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: const EdgeInsets.only(left: 16, top: 32.65, bottom: 32),
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 32.65, bottom: 32),
             child: Text(
               'Log in',
               style: GoogleFonts.comfortaa(
@@ -79,6 +82,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 passwordController.text,
               );
             },
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: RichText(
+                text: TextSpan(
+                  text: 'Forgot password? ',
+                  style: GoogleFonts.roboto(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  children: [
+                    TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RestoreScreen(),
+                              ),
+                            ),
+                      //..onTap = () => navigatorPush(context, const RestorePage()),
+                      text: 'Restore',
+                      style: GoogleFonts.roboto(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           //continue with text
           Align(
@@ -130,33 +167,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         print(e.message);
                       }
                     },
-                    /*onPressed: ()async {
-                      final FirebaseAuth auth;
-
-                      GoogleSignIn _googleSignIn = GoogleSignIn();
-
-                      //@override
-                      //Future<User?> signUpWithGoogle() async {
-
-                      GoogleSignInAccount? _googleSignInAccount = await _googleSignIn.signIn();
-
-                      GoogleSignInAccount googleSignInAccount = _googleSignInAccount!;
-
-                      GoogleSignInAuthentication googleSignInAuthentication =
-                          await googleSignInAccount.authentication;
-
-                      AuthCredential authCredential = GoogleAuthProvider.credential(
-                          idToken: googleSignInAuthentication.idToken,
-                          accessToken: googleSignInAuthentication.accessToken);
-
-                      UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(authCredential);
-                      User user = authResult.user!;
-
-                      //return user;
-                      //}
-
-                      //Navigator.pushNamedAndRemoveUntil(context, '/home', (Route<dynamic> route) => false);
-                    },*/
                   ),
                 ),
               ),

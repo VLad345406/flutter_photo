@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
+import 'package:flutter_qualification_work/services/remove_account_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeaderBuilder extends StatefulWidget {
@@ -103,14 +104,8 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
             buttonText: 'REMOVE ACCOUNT',
             textColor: Colors.red,
             buttonColor: Colors.white,
-            function: () async {
-              FirebaseAuth.instance.authStateChanges().listen((User? user) {
-                user?.delete();
-              });
-              Navigator.pushAndRemoveUntil(context,
-                  MaterialPageRoute(builder: (context) {
-                return StartScreen();
-              }), (route) => false);
+            function: () {
+              removeAccount(context);
             },
           ),
         ],

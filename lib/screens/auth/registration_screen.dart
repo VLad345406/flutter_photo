@@ -14,7 +14,9 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final emailController = TextEditingController();
+  final nickNameController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +63,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             showVisibleButton: false,
             label: 'Email',
           ),
+          //email text-field
+          PhotoTextField(
+            controller: nickNameController,
+            showVisibleButton: false,
+            label: 'Nick name',
+          ),
           //password text-field
           PhotoTextField(
             controller: passwordController,
             showVisibleButton: true,
             label: 'Password',
+          ),
+          //password text-field
+          PhotoTextField(
+            controller: confirmPasswordController,
+            showVisibleButton: true,
+            label: 'Confirm password',
           ),
           //registration button
           PhotoButton(
@@ -78,7 +92,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               registration(
                 context,
                 emailController.text,
+                nickNameController.text,
                 passwordController.text,
+                confirmPasswordController.text,
               );
             },
           ),
