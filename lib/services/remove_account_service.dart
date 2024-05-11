@@ -17,19 +17,26 @@ void removeAccount(BuildContext context) async {
   }
   //remove user info from database
   final userId = FirebaseAuth.instance.currentUser!.uid;
-  final data =
-      await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
   try {
+    final data =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     await FirebaseStorage.instance
         .ref()
         .child('avatars/${data['user_name']}')
         .delete();
   } catch (e) {
     if (kDebugMode) {
-      print("User don't have avatar!");
+      print("User don't have info in database and avatar!");
     }
   }
-  await FirebaseFirestore.instance.collection('users').doc(userId).delete();
+  try {
+    await FirebaseFirestore.instance.collection('users').doc(userId).delete();
+  } catch (e) {
+    if (kDebugMode) {
+      print("User don`t have info in database!");
+    }
+  }
   await FirebaseAuth.instance.authStateChanges().listen((User? user) {
     user?.delete();
   });

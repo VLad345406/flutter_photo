@@ -1,9 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/screens/auth/google_sigh_in_registration_data.dart';
 import 'package:flutter_qualification_work/screens/auth/restore_screen.dart';
 import 'package:flutter_qualification_work/screens/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
@@ -103,7 +104,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 builder: (context) => RestoreScreen(),
                               ),
                             ),
-                      //..onTap = () => navigatorPush(context, const RestorePage()),
                       text: 'Restore',
                       style: GoogleFonts.roboto(
                         color: Colors.black,
@@ -157,11 +157,35 @@ class _LoginScreenState extends State<LoginScreen> {
                             .signInWithCredential(credential);
 
                         if (mounted) {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => MainScreen(),
-                            ),
-                          );
+                          final userId = FirebaseAuth.instance.currentUser!.uid;
+                          final data = await FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(userId)
+                              .get();
+                          try {
+                            if (data['uid'] == userId) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => MainScreen(),
+                                ),
+                              );
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      GoogleSighInRegistrationData(),
+                                ),
+                              );
+                            }
+                          }
+                          catch (e) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    GoogleSighInRegistrationData(),
+                              ),
+                            );
+                          }
                         }
                       } on FirebaseAuthException catch (e) {
                         print(e.message);
