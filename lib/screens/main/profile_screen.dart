@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
+import 'package:flutter_qualification_work/screens/main/edit_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/main/profile_header_builder.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String mode;
@@ -29,6 +31,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          'Tom',
+          style: GoogleFonts.comfortaa(
+            color: Colors.black,
+            fontSize: 36,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditScreen(),
+                ),
+              );
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
+      ),
       body: ListView.builder(
         //itemCount: photoArray.length + 2,
         itemCount: photoArray.length > 5

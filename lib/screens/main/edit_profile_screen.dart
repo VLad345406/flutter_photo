@@ -1,4 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification_work/elements/button.dart';
+import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
+import 'package:flutter_qualification_work/services/remove_account_service.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class EditScreen extends StatefulWidget {
@@ -9,6 +15,11 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController nicknameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -19,6 +30,16 @@ class _EditScreenState extends State<EditScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/back_arrow.svg',
+            width: 12.21,
+            height: 11.35,
+          ),
+        ),
         title: Text(
           'Edit profile',
           style: GoogleFonts.comfortaa(
@@ -61,128 +82,20 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 16, left: 16),
-                child: Text(
-                  'Name',
-                  style: GoogleFonts.comfortaa(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+              PhotoTextField(
+                controller: nameController,
+                showVisibleButton: false,
+                label: 'Name',
               ),
-              Container(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: TextFormField(
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  onChanged: (value) {
-                    //_passwd = _readTextFormField(value);
-                  },
-                  style: GoogleFonts.roboto(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                  ),
-                  decoration: const InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
+              PhotoTextField(
+                controller: nicknameController,
+                showVisibleButton: false,
+                label: 'Nick name',
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 16, left: 16),
-                child: Text(
-                  'Nick name',
-                  style: GoogleFonts.comfortaa(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: TextFormField(
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  onChanged: (value) {
-                    //_passwd = _readTextFormField(value);
-                  },
-                  style: GoogleFonts.roboto(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                  ),
-                  decoration: const InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16, left: 16),
-                child: Text(
-                  'Email',
-                  style: GoogleFonts.comfortaa(
-                    color: Colors.black,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: TextFormField(
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  onChanged: (value) {
-                    //_passwd = _readTextFormField(value);
-                  },
-                  style: GoogleFonts.roboto(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                  ),
-                  decoration: const InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
+              PhotoTextField(
+                controller: emailController,
+                showVisibleButton: false,
+                label: 'Email',
               ),
               Padding(
                 padding: EdgeInsets.only(top: 16, left: 16),
@@ -195,111 +108,50 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: TextFormField(
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  onChanged: (value) {
-                    //_passwd = _readTextFormField(value);
-                  },
-                  style: GoogleFonts.roboto(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'New password',
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
+              PhotoTextField(
+                controller: passwordController,
+                showVisibleButton: true,
+                label: 'Password',
               ),
-              Container(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: TextFormField(
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  onChanged: (value) {
-                    //_passwd = _readTextFormField(value);
-                  },
-                  style: GoogleFonts.roboto(
-                    fontSize: 15,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'Confirm password',
-                    labelStyle: TextStyle(
-                      color: Colors.black,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.zero),
-                      borderSide: BorderSide(
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
+              //password text-field
+              PhotoTextField(
+                controller: confirmPasswordController,
+                showVisibleButton: true,
+                label: 'Confirm password',
               ),
-              Container(
-                width: screenWidth - 32,
-                height: 52,
-                margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 2),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'SAVE',
-                    style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'SAVE',
+                textColor: Colors.white,
+                buttonColor: Colors.black,
+                function: () {
+                  Navigator.pop(context);
+                },
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                child: GestureDetector(
-                  onTap: () {
-                    print("Delete account");
-                  },
-                  child: Text(
-                    'Delete account',
-                    style: GoogleFonts.comfortaa(
-                      color: Colors.red,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'EXIT PROFILE',
+                textColor: Colors.red,
+                buttonColor: Colors.white,
+                function: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
+                        return StartScreen();
+                      }), (route) => false);
+                },
+              ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'REMOVE ACCOUNT',
+                textColor: Colors.red,
+                buttonColor: Colors.white,
+                function: () {
+                  removeAccount(context);
+                },
               ),
             ],
           );

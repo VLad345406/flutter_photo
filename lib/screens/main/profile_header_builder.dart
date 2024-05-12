@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
-import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
-import 'package:flutter_qualification_work/services/remove_account_service.dart';
+import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeaderBuilder extends StatefulWidget {
@@ -30,7 +29,7 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
               backgroundImage: AssetImage("assets/images/avatar1.jpg"),
             ),
           ),
-          Center(
+          /*Center(
             child: Container(
               padding: EdgeInsets.only(top: 32),
               child: Text(
@@ -42,12 +41,15 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
                 ),
               ),
             ),
-          ),
+          ),*/
           Center(
             child: GestureDetector(
               onTap: () {
                 Clipboard.setData(ClipboardData(text: "@TomProfile1"));
-                print("success copied");
+                snackBar(context, 'Success copied!');
+                if (kDebugMode) {
+                  print("success copied");
+                }
               },
               child: Container(
                 padding: EdgeInsets.only(top: 16),
@@ -62,7 +64,7 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
               ),
             ),
           ),
-          Center(
+          /*Center(
             child: Container(
               padding: EdgeInsets.only(top: 16),
               child: Text(
@@ -73,8 +75,8 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
                     fontWeight: FontWeight.w900),
               ),
             ),
-          ),
-          PhotoButton(
+          ),*/
+          /*PhotoButton(
             widthButton: screenWidth - 32,
             buttonMargin: const EdgeInsets.only(top: 32, left: 16, right: 16),
             buttonText: 'EDIT PROFILE',
@@ -83,8 +85,8 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
             function: () {
               Navigator.pushNamed(context, '/edit_profile');
             },
-          ),
-          PhotoButton(
+          ),*/
+          /*PhotoButton(
             widthButton: screenWidth - 32,
             buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
             buttonText: 'EXIT PROFILE',
@@ -107,7 +109,7 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
             function: () {
               removeAccount(context);
             },
-          ),
+          ),*/
         ],
       );
     } else {

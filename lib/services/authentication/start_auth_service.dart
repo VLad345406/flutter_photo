@@ -15,13 +15,6 @@ class StartAuthService {
             return const Center(child: Text('Something went wrong!'));
           } else if (snapshot.hasData) {
             return SnapshotHasDataPage();
-            /*bool checkData = _checkDataInDatabase() as bool;
-            if (checkData) {
-              return const MainScreen();
-            }
-            else {
-              return GoogleSighInRegistrationData();
-            }*/
           } else {
             return const StartScreen();
           }
