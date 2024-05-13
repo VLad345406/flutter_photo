@@ -17,8 +17,9 @@ Future googleSighInAddInfoFirestore(
         'uid': userID,
         'email': userEmail,
         'user_name': nickName,
-        'image_link': '',
+        'avatar_link': '',
         'count_image' : 0,
+        'name' : '',
       }, SetOptions(merge: true));
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {

@@ -43,18 +43,36 @@ class _EditScreenState extends State<EditScreen> {
 
     setState(() {
       userName = data['user_name'];
-      userAvatarLink = data['image_link'];
+      userAvatarLink = data['avatar_link'];
       nicknameController.text = userName;
       emailController.text = data['email'];
+      nameController.text = data['name'];
     });
   }
 
-  void selectImage() async {
+  void selectAvatar() async {
     Uint8List image = await pickImage(ImageSource.gallery);
-    uploadImageToStorage(userName, image);
-    await saveData(FirebaseAuth.instance.currentUser!.email.toString(),
+    uploadImageToStorage(userName, 'avatar', image);
+    await saveImage(FirebaseAuth.instance.currentUser!.email.toString(),
         FirebaseAuth.instance.currentUser!.uid.toString(), userName, image);
     getUserData();
+    snackBar(context, 'Success avatar change!');
+  }
+
+  void saveData() async {
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+    try {
+      DocumentReference userRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(_firebaseAuth.currentUser?.uid);
+      await userRef.set({'name': nameController.text}, SetOptions(merge: true));
+      await userRef
+          .set({'user_name': nicknameController.text}, SetOptions(merge: true));
+      snackBar(context, 'Success add name!');
+    } catch (e) {
+      snackBar(context, 'Error add name!');
+    }
   }
 
   @override
@@ -115,7 +133,7 @@ class _EditScreenState extends State<EditScreen> {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 16),
                   child: GestureDetector(
-                    onTap: selectImage,
+                    onTap: selectAvatar,
                     child: PhotoUserAvatar(
                       userAvatarLink: userAvatarLink,
                       radius: 64,
@@ -141,7 +159,8 @@ class _EditScreenState extends State<EditScreen> {
                 textColor: Colors.white,
                 buttonColor: Colors.black,
                 function: () {
-                  snackBar(context, 'Success save!');
+                  saveData();
+                  //snackBar(context, 'Success save!');
                   //Navigator.pop(context);
                 },
               ),

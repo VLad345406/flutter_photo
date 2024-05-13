@@ -12,16 +12,16 @@ pickImage(ImageSource source) async {
   }
 }
 
-Future<String> uploadImageToStorage(String childName, Uint8List file) async {
+Future<String> uploadImageToStorage(String userName, String fileName, Uint8List file) async {
   final FirebaseStorage storage = FirebaseStorage.instance;
-  Reference ref = storage.ref().child('avatars/$childName');
+  Reference ref = storage.ref().child('avatars/$userName/$fileName');
   UploadTask uploadTask = ref.putData(file);
   TaskSnapshot snapshot = await uploadTask;
   String downloadUrl = await snapshot.ref.getDownloadURL();
   return downloadUrl;
 }
 
-Future<String> saveData(
+Future<String> saveImage(
     String email,
     String uid,
     String userName,
@@ -31,11 +31,11 @@ Future<String> saveData(
 
   String result = 'Some errors occurred!';
   try {
-    String imageUrl = await uploadImageToStorage(userName, file);
+    String imageUrl = await uploadImageToStorage(userName, 'avatar', file);
     await firestore
         .collection('users')
         .doc(uid)
-        .update({'image_link': imageUrl});
+        .update({'avatar_link': imageUrl});
     result = 'Success avatar change!';
   } catch (e) {
     result = e.toString();

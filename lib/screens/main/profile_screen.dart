@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_qualification_work/elements/button.dart';
+
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/main/edit_profile_screen.dart';
-//import 'package:flutter_qualification_work/screens/main/photo_open.dart';
+
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,20 +23,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String name = '';
   String userName = '';
   String userAvatarLink = '';
+  int imageCount = 0;
 
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     setState(() {
       userName = data['user_name'];
-      userAvatarLink = data['image_link'];
-      try {
+      userAvatarLink = data['avatar_link'];
+      if (data['name'] != '') {
         name = data['name'];
-      } catch (e) {
+      } else {
         name = data['user_name'];
       }
+      imageCount = data['count_image'];
     });
   }
 
@@ -70,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MaterialPageRoute(
                   builder: (context) => EditScreen(),
                 ),
-              );
+              ).then((value) => getUserData());
             },
             icon: Icon(Icons.settings),
           ),
@@ -109,6 +111,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
+          imageCount == 0
+              ? Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(16),
+                  child: Text(
+                    "You haven't uploaded any images yet!",
+                    style: GoogleFonts.roboto(
+                      color: Colors.black,
+                      fontSize: 20,
+                    ),
+                  ),
+                )
+              : Column(),
         ],
       ),
       /*body: ListView.builder(
@@ -130,11 +145,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             path:
                                 'assets/images/Profile1/${photoArray[index - 1]}')));
               },
-              *//*onTap: (){
+              */ /*onTap: (){
                 //Navigator.pushNamed(context, '/photo_open');
                 // PhotoOpen(path: 'assets/images/Profile1/${photoArray[index - 1]}');
                 Navigator.push(context, MaterialPageRoute(builder: (context) => PhotoOpen(path: 'assets/images/Profile1/${photoArray[index - 1]}')));
-              },*//*
+              },*/ /*
               child: Container(
                 margin: const EdgeInsets.only(top: 32, left: 16, right: 16),
                 height: screenWidth - 32,

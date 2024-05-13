@@ -37,7 +37,9 @@ Future registration(
         'uid': userCredential.user!.uid,
         'email': email,
         'user_name': nickName,
-        'image_link': '',
+        'avatar_link': '',
+        'name' : '',
+        'count_image' : 0,
       }, SetOptions(merge: true));
       Navigator.pushAndRemoveUntil(context,
           MaterialPageRoute(builder: (context) {
