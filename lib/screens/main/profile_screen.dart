@@ -50,16 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     //final screenWidth = MediaQuery.of(context).size.width;
 
-    /*final List<String> photoArray = [
-      "picture1.jpg",
-      "picture2.jpg",
-      "picture3.jpg",
-      "picture4.jpg",
-      "picture5.jpg",
-      "picture5.jpg"
-    ];
-    int _countPictures = 5;*/
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -97,20 +87,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          /*Center(
-            child: Container(
-              padding: EdgeInsets.only(top: 16),
-              child: GestureDetector(
-                onTap: () {
-                  print("Change avatar");
-                },
-                child: CircleAvatar(
-                  radius: 64,
-                  backgroundImage: AssetImage("assets/images/avatar1.jpg"),
-                ),
-              ),
-            ),
-          ),*/
           Center(
             child: GestureDetector(
               onTap: () {
