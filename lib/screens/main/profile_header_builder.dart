@@ -29,19 +29,6 @@ class _ProfileHeaderBuilder extends State<ProfileHeaderBuilder> {
               backgroundImage: AssetImage("assets/images/avatar1.jpg"),
             ),
           ),
-          /*Center(
-            child: Container(
-              padding: EdgeInsets.only(top: 32),
-              child: Text(
-                'Tom',
-                style: GoogleFonts.comfortaa(
-                  color: Colors.black,
-                  fontSize: 36,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),*/
           Center(
             child: GestureDetector(
               onTap: () {
