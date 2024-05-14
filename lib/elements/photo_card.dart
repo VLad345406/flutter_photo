@@ -26,6 +26,7 @@ class PhotoCard extends StatelessWidget {
                 MaterialPageRoute(
                   builder: (context) => PhotoOpen(
                     path: pathImage,
+                    uid: '',
                   ),
                 ),
               );

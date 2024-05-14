@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/main/edit_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/main/photo_open.dart';
 
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String name = '';
   String userName = '';
   String userAvatarLink = '';
+  String uid = '';
   int imageCount = 0;
 
   Future<void> getUserData() async {
@@ -39,6 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         name = data['user_name'];
       }
       imageCount = data['count_image'];
+      uid = data['uid'];
     });
   }
 
@@ -83,9 +86,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Center(
             child: Padding(
               padding: const EdgeInsets.only(top: 16),
-              child: PhotoUserAvatar(
-                userAvatarLink: userAvatarLink,
-                radius: 64,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PhotoOpen(
+                        path: userAvatarLink,
+                        uid: uid,
+                      ),
+                    ),
+                  );
+                },
+                child: PhotoUserAvatar(
+                  userAvatarLink: userAvatarLink,
+                  radius: 64,
+                ),
               ),
             ),
           ),
