@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/services/validate_password_service.dart';
+import 'package:flutter_qualification_work/services/validate_username_service.dart';
 
 Future registration(
   BuildContext context,
@@ -26,29 +27,34 @@ Future registration(
         'Minimum 1 lowercase symbol, Minimum 1 Numeric Number symbol, '
         'Minimum 1 Special Character!');
   } else {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
-      );
-      final FirebaseFirestore fireStore = FirebaseFirestore.instance;
-      fireStore.collection('users').doc(userCredential.user!.uid).set({
-        'uid': userCredential.user!.uid,
-        'email': email,
-        'user_name': nickName,
-        'avatar_link': '',
-        'name' : '',
-        'count_image' : 0,
-      }, SetOptions(merge: true));
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) {
-        return MainScreen();
-      }), (route) => false);
-    } on FirebaseAuthException catch (e) {
-      snackBar(context, e.message.toString());
-    } catch (e) {
-      snackBar(context, e.toString());
+    if (await validateUsername(nickName)) {
+      snackBar(context, 'This user name is already exist!');
+    }
+    else {
+      try {
+        UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.trim(),
+          password: password.trim(),
+        );
+        final FirebaseFirestore fireStore = FirebaseFirestore.instance;
+        fireStore.collection('users').doc(userCredential.user!.uid).set({
+          'uid': userCredential.user!.uid,
+          'email': email,
+          'user_name': nickName,
+          'avatar_link': '',
+          'name': '',
+          'count_image': 0,
+        }, SetOptions(merge: true));
+        Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) {
+              return MainScreen();
+            }), (route) => false);
+      } on FirebaseAuthException catch (e) {
+        snackBar(context, e.message.toString());
+      } catch (e) {
+        snackBar(context, e.toString());
+      }
     }
   }
 }

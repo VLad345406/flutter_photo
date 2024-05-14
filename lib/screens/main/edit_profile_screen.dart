@@ -11,6 +11,7 @@ import 'package:flutter_qualification_work/services/change_password_service.dart
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
 import 'package:flutter_qualification_work/services/remove_account_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
+import 'package:flutter_qualification_work/services/validate_username_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -66,10 +67,23 @@ class _EditScreenState extends State<EditScreen> {
       DocumentReference userRef = FirebaseFirestore.instance
           .collection('users')
           .doc(_firebaseAuth.currentUser?.uid);
-      await userRef.set({'name': nameController.text}, SetOptions(merge: true));
-      await userRef
-          .set({'user_name': nicknameController.text}, SetOptions(merge: true));
-      snackBar(context, 'Success add name!');
+      final data = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      if (nicknameController.text == data['user_name']) {
+        await userRef
+            .set({'name': nameController.text}, SetOptions(merge: true));
+        snackBar(context, 'Success add name!');
+      } else {
+        if (!await validateUsername(nicknameController.text)) {
+          await userRef.set(
+              {'user_name': nicknameController.text}, SetOptions(merge: true));
+          snackBar(context, 'Success add nick name!');
+        } else {
+          snackBar(context, 'That nick name is already exist!');
+        }
+      }
     } catch (e) {
       snackBar(context, 'Error add name!');
     }
