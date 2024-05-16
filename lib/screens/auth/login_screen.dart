@@ -61,13 +61,13 @@ class _LoginScreenState extends State<LoginScreen> {
           PhotoTextField(
             controller: emailController,
             showVisibleButton: false,
-            label: 'Email',
+            label: 'Email', disableSpace: true, disableUppercase: false,
           ),
           //password text-field
           PhotoTextField(
             controller: passwordController,
             showVisibleButton: true,
-            label: 'Password',
+            label: 'Password', disableSpace: true, disableUppercase: false,
           ),
           //login button
           PhotoButton(

@@ -159,11 +159,15 @@ class _EditScreenState extends State<EditScreen> {
                 controller: nameController,
                 showVisibleButton: false,
                 label: 'Name',
+                disableSpace: false,
+                disableUppercase: false,
               ),
               PhotoTextField(
                 controller: nicknameController,
                 showVisibleButton: false,
                 label: 'Nick name',
+                disableSpace: true,
+                disableUppercase: true,
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,
@@ -182,6 +186,8 @@ class _EditScreenState extends State<EditScreen> {
                 controller: emailController,
                 showVisibleButton: false,
                 label: 'Email',
+                disableSpace: true,
+                disableUppercase: false,
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,
@@ -210,17 +216,23 @@ class _EditScreenState extends State<EditScreen> {
                 controller: oldPasswordController,
                 showVisibleButton: true,
                 label: 'Old password',
+                disableSpace: true,
+                disableUppercase: false,
               ),
               PhotoTextField(
                 controller: passwordController,
                 showVisibleButton: true,
                 label: 'Password',
+                disableSpace: true,
+                disableUppercase: false,
               ),
               //password text-field
               PhotoTextField(
                 controller: confirmPasswordController,
                 showVisibleButton: true,
                 label: 'Confirm password',
+                disableSpace: true,
+                disableUppercase: false,
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,

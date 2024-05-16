@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/services/authentication/restore_password_service.dart';
-import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,7 +46,7 @@ class RestoreScreen extends StatelessWidget {
           PhotoTextField(
             controller: emailController,
             showVisibleButton: false,
-            label: 'Email',
+            label: 'Email', disableSpace: true, disableUppercase: false,
           ),
           PhotoButton(
             widthButton: MediaQuery.of(context).size.width - 32,

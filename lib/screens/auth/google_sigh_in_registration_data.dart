@@ -60,6 +60,8 @@ class _GoogleSighInRegistrationDataState
             controller: nickNameController,
             showVisibleButton: false,
             label: 'Nick name',
+            disableSpace: true,
+            disableUppercase: true,
           ),
           //registration button
           PhotoButton(

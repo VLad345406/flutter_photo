@@ -62,24 +62,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             controller: emailController,
             showVisibleButton: false,
             label: 'Email',
+            disableSpace: true,
+            disableUppercase: false,
           ),
           //email text-field
           PhotoTextField(
             controller: nickNameController,
             showVisibleButton: false,
             label: 'Nick name',
+            disableSpace: true,
+            disableUppercase: true,
           ),
           //password text-field
           PhotoTextField(
             controller: passwordController,
             showVisibleButton: true,
             label: 'Password',
+            disableSpace: true,
+            disableUppercase: false,
           ),
           //password text-field
           PhotoTextField(
             controller: confirmPasswordController,
             showVisibleButton: true,
             label: 'Confirm password',
+            disableSpace: true,
+            disableUppercase: false,
           ),
           //registration button
           PhotoButton(
