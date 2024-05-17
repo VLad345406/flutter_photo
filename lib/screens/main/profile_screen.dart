@@ -155,8 +155,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 )
               : SizedBox(
-                  height: 2500,
+                  height: MediaQuery.of(context).size.width * imageCount,
                   child: ListView.builder(
+                    primary: false,
+                    shrinkWrap: true,
                     itemCount: userPictures.length,
                     itemBuilder: (BuildContext context, int index) {
                       final userPicture = userPictures[index];

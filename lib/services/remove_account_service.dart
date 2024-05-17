@@ -30,13 +30,22 @@ void removeAccount(BuildContext context) async {
     for (final Reference fileRef in result.items) {
       await fileRef.delete();
     }
-
-    } catch (e) {
+  } catch (e) {
     if (kDebugMode) {
       print("User don't have info in database and avatar!");
     }
   }
   try {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('pictures')
+        .get();
+
+    for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+
     await FirebaseFirestore.instance.collection('users').doc(userId).delete();
   } catch (e) {
     if (kDebugMode) {
