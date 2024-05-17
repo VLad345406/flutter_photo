@@ -65,9 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProfileScreen(
-                          mode: 'other',
-                        )));
+                    builder: (context) => ProfileScreen()));
           },
           child: Text(
             users[widget.index],

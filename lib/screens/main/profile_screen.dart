@@ -12,9 +12,9 @@ import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String mode;
+  //final String mode;
 
-  const ProfileScreen({Key? key, required this.mode}) : super(key: key);
+  const ProfileScreen({Key? key,}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -88,15 +88,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               padding: const EdgeInsets.only(top: 16),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PhotoOpen(
-                        path: userAvatarLink,
-                        uid: uid,
+                  if (!userAvatarLink.isEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PhotoOpen(
+                          path: userAvatarLink,
+                          uid: uid,
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                  }
                 },
                 child: PhotoUserAvatar(
                   userAvatarLink: userAvatarLink,

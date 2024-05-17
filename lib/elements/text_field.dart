@@ -46,11 +46,9 @@ class _PhotoTextFieldState extends State<PhotoTextField> {
         autocorrect: false,
         inputFormatters: [
           if (widget.disableSpace)
-            FilteringTextInputFormatter.deny(RegExp(r'\s')), // Запрещаем ввод пробелов
-
+            FilteringTextInputFormatter.deny(RegExp(r'\s')),
           if (widget.disableUppercase)
-            FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9_\W]')), // Разрешаем только строчные латинские символы, цифры, символ подчеркивания и спец символы
-
+            FilteringTextInputFormatter.allow(RegExp(r'[a-z0-9_\W]')),
         ],
         style: GoogleFonts.roboto(
           fontSize: 15,

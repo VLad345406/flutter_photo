@@ -21,11 +21,17 @@ void removeAccount(BuildContext context) async {
   try {
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    await FirebaseStorage.instance
+    final Reference directoryRef = await FirebaseStorage.instance
         .ref()
-        .child('avatars/${data['user_name']}')
-        .delete();
-  } catch (e) {
+        .child('pictures/${data['user_name']}');
+
+    final ListResult result = await directoryRef.listAll();
+
+    for (final Reference fileRef in result.items) {
+      await fileRef.delete();
+    }
+
+    } catch (e) {
     if (kDebugMode) {
       print("User don't have info in database and avatar!");
     }

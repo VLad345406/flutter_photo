@@ -54,7 +54,7 @@ class _EditScreenState extends State<EditScreen> {
   void selectAvatar() async {
     Uint8List image = await pickImage(ImageSource.gallery);
     uploadImageToStorage(userName, 'avatar', image);
-    await saveImage(FirebaseAuth.instance.currentUser!.email.toString(),
+    await saveAvatar(FirebaseAuth.instance.currentUser!.email.toString(),
         FirebaseAuth.instance.currentUser!.uid.toString(), userName, image);
     getUserData();
     snackBar(context, 'Success avatar change!');

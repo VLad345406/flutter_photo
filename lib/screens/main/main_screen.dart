@@ -32,9 +32,9 @@ class _MainScreenState extends State<MainScreen> {
     final screens = [
       DiscoverScreen(),
       SearchScreen(),
-      DiscoverScreen(),
+      Container(),
       MessageScreen(),
-      ProfileScreen(mode: 'individual')
+      ProfileScreen(),
     ];
 
     return Scaffold(
@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
         type: BottomNavigationBarType.fixed,
         onTap: (index){
           if (index == 2){
-            showAddBottomSheet(context, widthButton);
+            ShowAddBottomSheet().showAddBottomSheet(context, widthButton);
           }
           else{
             _onItemTapped(index);

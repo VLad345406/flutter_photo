@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/main/profile_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //import 'package:google_fonts/google_fonts.dart';
@@ -29,7 +30,7 @@ class _PhotoOpenState extends State<PhotoOpen> {
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     setState(() {
       userName = data['user_name'];
@@ -63,38 +64,48 @@ class _PhotoOpenState extends State<PhotoOpen> {
           ),
           Align(
             alignment: Alignment.topLeft,
-            child: Container(
-              margin: const EdgeInsets.only(top: 50, left: 16),
-              width: 200,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              //child: Image.asset('assets/images/user.png'),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  PhotoUserAvatar(
-                    userAvatarLink: userAvatarLink,
-                    radius: 15,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(),
                   ),
-                  SizedBox(
-                    width: 16,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        name,
-                        style: GoogleFonts.roboto(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.only(top: 50, left: 16),
+                width: 200,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                //child: Image.asset('assets/images/user.png'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PhotoUserAvatar(
+                      userAvatarLink: userAvatarLink,
+                      radius: 15,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          name,
+                          style: GoogleFonts.roboto(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      Text('@$userName'),
-                    ],
-                  ),
-                ],
+                        Text('@$userName'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

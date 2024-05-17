@@ -1,55 +1,87 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet_button.dart';
+import 'package:flutter_qualification_work/services/image_picker_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:io' show Platform;
 
-void showAddBottomSheet(context, double widthButton) {
-  showMaterialModalBottomSheet<dynamic>(
-    context: context,
-    backgroundColor: Colors.white,
-    builder: (context) => SizedBox(
-      height: Platform.isIOS ? 200 : 150,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(left: 16, top: 16),
-            child: Text(
-              'Add photo',
-              style: GoogleFonts.comfortaa(
-                color: Colors.black,
-                fontSize: 36,
-                fontWeight: FontWeight.w400,
+class ShowAddBottomSheet {
+  String _userName = '';
+  int _countImage = 0;
+
+  void selectGalleryImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    await getUserData();
+    uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
+    await savePicture(FirebaseAuth.instance.currentUser!.uid.toString(),
+        _userName, image, _countImage + 1);
+    /*await saveAvatar(FirebaseAuth.instance.currentUser!.email.toString(),
+      FirebaseAuth.instance.currentUser!.uid.toString(), userName, image);*/
+    //snackBar(context, 'Success avatar change!');
+  }
+
+  Future<void> getUserData() async {
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final data =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    _userName = data['user_name'];
+    _countImage = data['count_image'];
+  }
+
+  void showAddBottomSheet(context, double widthButton) {
+    showMaterialModalBottomSheet<dynamic>(
+      context: context,
+      backgroundColor: Colors.white,
+      builder: (context) => SizedBox(
+        height: Platform.isIOS ? 200 : 150,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 16, top: 16),
+              child: Text(
+                'Add photo',
+                style: GoogleFonts.comfortaa(
+                  color: Colors.black,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  left: 16,
-                  right: 9,
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 20,
+                    left: 16,
+                    right: 9,
+                  ),
+                  child: AddBottomSheetButton(
+                    function: () {},
+                    swgLink: 'assets/icons/camera.svg',
+                    buttonText: 'Camera',
+                  ),
                 ),
-                child: AddBottomSheetButton(
-                  function: () {},
-                  swgLink: 'assets/icons/camera.svg',
-                  buttonText: 'Camera',
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: AddBottomSheetButton(
+                    function: () {
+                      selectGalleryImage();
+                      Navigator.pop(context);
+                    },
+                    swgLink: 'assets/icons/gallery.svg',
+                    buttonText: 'Gallery',
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: AddBottomSheetButton(
-                  function: () {},
-                  swgLink: 'assets/icons/gallery.svg',
-                  buttonText: 'Gallery',
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
