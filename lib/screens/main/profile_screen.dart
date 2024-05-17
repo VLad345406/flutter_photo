@@ -12,9 +12,9 @@ import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileScreen extends StatefulWidget {
-  //final String mode;
-
-  const ProfileScreen({Key? key,}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -26,11 +26,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userAvatarLink = '';
   String uid = '';
   int imageCount = 0;
+  List<Map<String, dynamic>> userPictures = [];
 
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    if (data['count_image'] > 0) {
+      CollectionReference collectionRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('pictures');
+
+      QuerySnapshot querySnapshot = await collectionRef.get();
+      userPictures = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    }
 
     setState(() {
       userName = data['user_name'];
@@ -141,7 +154,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 )
-              : Column(),
+              : SizedBox(
+                  height: 2500,
+                  child: ListView.builder(
+                    itemCount: userPictures.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final userPicture = userPictures[index];
+                      final imageLink = userPicture['image_link'];
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PhotoOpen(
+                                path: imageLink,
+                                uid: uid,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin:
+                              const EdgeInsets.only(top: 32, left: 16, right: 16),
+                          height: MediaQuery.of(context).size.width - 32,
+                          width: MediaQuery.of(context).size.width - 32,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(imageLink),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
         ],
       ),
       /*body: ListView.builder(

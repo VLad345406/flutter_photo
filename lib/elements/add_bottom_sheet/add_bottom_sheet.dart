@@ -13,15 +13,17 @@ class ShowAddBottomSheet {
   String _userName = '';
   int _countImage = 0;
 
-  void selectGalleryImage() async {
-    Uint8List image = await pickImage(ImageSource.gallery);
-    await getUserData();
-    uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
-    await savePicture(FirebaseAuth.instance.currentUser!.uid.toString(),
-        _userName, image, _countImage + 1);
-    /*await saveAvatar(FirebaseAuth.instance.currentUser!.email.toString(),
-      FirebaseAuth.instance.currentUser!.uid.toString(), userName, image);*/
-    //snackBar(context, 'Success avatar change!');
+  void selectGalleryImage(BuildContext context) async {
+    try {
+      Uint8List image = await pickImage(ImageSource.gallery);
+      await getUserData();
+      uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
+      await savePictureInFirestore(FirebaseAuth.instance.currentUser!.uid.toString(),
+          _userName, image, _countImage + 1);
+      //snackBar(context, 'Success add picture!');
+    } catch (e) {
+      //snackBar(context, 'Something wen`t wrong!');
+    }
   }
 
   Future<void> getUserData() async {
@@ -32,7 +34,7 @@ class ShowAddBottomSheet {
     _countImage = data['count_image'];
   }
 
-  void showAddBottomSheet(context, double widthButton) {
+  void showAddBottomSheet(BuildContext context, double widthButton) {
     showMaterialModalBottomSheet<dynamic>(
       context: context,
       backgroundColor: Colors.white,
@@ -70,7 +72,7 @@ class ShowAddBottomSheet {
                   padding: const EdgeInsets.only(top: 20),
                   child: AddBottomSheetButton(
                     function: () {
-                      selectGalleryImage();
+                      selectGalleryImage(context);
                       Navigator.pop(context);
                     },
                     swgLink: 'assets/icons/gallery.svg',

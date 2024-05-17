@@ -44,15 +44,13 @@ Future<String> saveAvatar(
   return result;
 }
 
-Future<String> savePicture(
+Future savePictureInFirestore(
   String uid,
   String userName,
   Uint8List file,
   int pictureNumber,
 ) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  String result = 'Some errors occurred!';
   try {
     String imageUrl =
         await uploadImageToStorage(userName, pictureNumber.toString(), file);
@@ -63,16 +61,12 @@ Future<String> savePicture(
         .doc(pictureNumber.toString())
         .set({
       'image_link': imageUrl,
-      'tags' : '',
-      'file_name' : pictureNumber.toString(),
+      'tags': '',
+      'file_name': pictureNumber.toString(),
     });
     await firestore
         .collection('users')
         .doc(uid)
         .update({'count_image': pictureNumber});
-    result = 'Success avatar change!';
-  } catch (e) {
-    result = e.toString();
-  }
-  return result;
+  } catch (e) {}
 }
