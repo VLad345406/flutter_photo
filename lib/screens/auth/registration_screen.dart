@@ -38,8 +38,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        primary: false,
+        shrinkWrap: true,
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //header text
           Container(

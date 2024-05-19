@@ -43,8 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
+        primary: false,
+        shrinkWrap: true,
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 32.65, bottom: 32),
@@ -70,19 +72,21 @@ class _LoginScreenState extends State<LoginScreen> {
             label: 'Password', disableSpace: true, disableUppercase: false,
           ),
           //login button
-          PhotoButton(
-            widthButton: screenWidth - 32,
-            buttonMargin: const EdgeInsets.only(left: 16, top: 16),
-            buttonText: 'LOG IN',
-            textColor: Colors.white,
-            buttonColor: Colors.black,
-            function: () {
-              signIn(
-                context,
-                emailController.text,
-                passwordController.text,
-              );
-            },
+          Center(
+            child: PhotoButton(
+              widthButton: screenWidth - 32,
+              buttonMargin: const EdgeInsets.only(left: 16, top: 16),
+              buttonText: 'LOG IN',
+              textColor: Colors.white,
+              buttonColor: Colors.black,
+              function: () {
+                signIn(
+                  context,
+                  emailController.text,
+                  passwordController.text,
+                );
+              },
+            ),
           ),
           Center(
             child: Padding(
