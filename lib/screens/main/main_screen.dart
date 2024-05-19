@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet.dart';
 import 'package:flutter_qualification_work/screens/main/discover_screen.dart';
-import 'package:flutter_qualification_work/screens/main/message_screen.dart';
+import 'package:flutter_qualification_work/screens/main/chats_list_screen.dart';
 import 'package:flutter_qualification_work/screens/main/profile_screen.dart';
 import 'package:flutter_qualification_work/screens/main/search_screen.dart';
 import 'package:flutter_svg/svg.dart';
@@ -33,7 +33,7 @@ class _MainScreenState extends State<MainScreen> {
       DiscoverScreen(),
       SearchScreen(),
       Container(),
-      MessageScreen(),
+      ChatsListScreen(),
       ProfileScreen(),
     ];
 
