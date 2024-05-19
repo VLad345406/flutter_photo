@@ -34,26 +34,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final screenWidth = MediaQuery.of(context).size.width;
-    //final screenHeight = MediaQuery.of(context).size.height;
-
-    /*final List<String> users = [
-      "Tom",
-      "Alice",
-      "Sam",
-      "Bob",
-      "Kate",
-      "Tom",
-      "Alice",
-      "Sam",
-      "Bob",
-      "Kate",
-      "Tom",
-      "Alice",
-      "Sam",
-      "Bob",
-      "Kate"
-    ];*/
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -185,22 +165,10 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => ChatScreen(
-                receiverUserEmail: data['email'],
                 receiverUserID: data['uid'],
-                senderUserName: userName,
-                receiverUserName: receiverUserName,
               ),
             ),
           );
-          /*navigatorPush(
-            context,
-            ChatScreen(index: 0,
-              */ /*receiverUserEmail: data['email'],
-              receiverUserID: data['uid'],
-              senderUserName: userName,
-              receiverUserName: receiverUserName,*/ /*
-            ),
-          );*/
         },
       );
     } else {

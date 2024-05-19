@@ -1,26 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/main/edit_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/main/photo_open.dart';
 
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
+class OpenProfileScreen extends StatefulWidget {
+  final String userId;
+
+  const OpenProfileScreen({
     Key? key,
+    required this.userId,
   }) : super(key: key);
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<OpenProfileScreen> createState() => _OpenProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _OpenProfileScreenState extends State<OpenProfileScreen> {
   String name = '';
   String userName = '';
   String userAvatarLink = '';
@@ -28,8 +30,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int imageCount = 0;
   List<Map<String, dynamic>> userPictures = [];
 
-  Future<void> getUserData() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+  Future<void> getReceiverUserData() async {
+    final userId = widget.userId;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
@@ -46,22 +48,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     setState(() {
-      userName = data['user_name'];
       userAvatarLink = data['avatar_link'];
+      userName = data['user_name'];
+      uid = widget.userId;
+      imageCount = data['count_image'];
       if (data['name'] != '') {
         name = data['name'];
       } else {
         name = data['user_name'];
       }
-      imageCount = data['count_image'];
-      uid = data['uid'];
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getUserData();
+    getReceiverUserData();
   }
 
   @override
@@ -72,6 +74,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/back_arrow.svg',
+            width: 12.21,
+            height: 11.35,
+          ),
+        ),
         title: Text(
           name,
           style: GoogleFonts.comfortaa(
@@ -80,19 +92,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditScreen(),
-                ),
-              ).then((value) => getUserData());
-            },
-            icon: Icon(Icons.settings),
-          ),
-        ],
       ),
       body: ListView(
         children: [
@@ -164,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final userPicture = userPictures[index];
                       final imageLink = userPicture['image_link'];
                       return GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -176,8 +175,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                         },
                         child: Container(
-                          margin:
-                              const EdgeInsets.only(top: 32, left: 16, right: 16),
+                          margin: const EdgeInsets.only(
+                              top: 32, left: 16, right: 16),
                           height: MediaQuery.of(context).size.width - 32,
                           width: MediaQuery.of(context).size.width - 32,
                           decoration: BoxDecoration(

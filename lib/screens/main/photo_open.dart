@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/main/profile_screen.dart';
+import 'package:flutter_qualification_work/screens/main/open_profile_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-//import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 
 class PhotoOpen extends StatefulWidget {
@@ -47,11 +46,6 @@ class _PhotoOpenState extends State<PhotoOpen> {
 
   @override
   Widget build(BuildContext context) {
-    //get screen ppi
-
-    //final screenHeight = MediaQuery.of(context).size.height;
-    //final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       body: Stack(
         alignment: AlignmentDirectional.topCenter,
@@ -69,7 +63,9 @@ class _PhotoOpenState extends State<PhotoOpen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
+                    builder: (context) => OpenProfileScreen(
+                      userId: widget.uid,
+                    ),
                   ),
                 );
               },
