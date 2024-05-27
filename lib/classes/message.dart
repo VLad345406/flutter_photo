@@ -20,4 +20,13 @@ class Message {
       'timestamp': timestamp,
     };
   }
+
+  static Message fromMap(Map<String, dynamic> map) {
+    return Message(
+      senderId: map['sender_id'],
+      receiverId: map['receiver_id'],
+      message: map['message'],
+      timestamp: map['timestamp'],
+    );
+  }
 }

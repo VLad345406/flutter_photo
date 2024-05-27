@@ -95,6 +95,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: ListView(
+        primary: false,
+        shrinkWrap: true,
         children: [
           Center(
             child: Padding(
@@ -144,10 +146,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           imageCount == 0
               ? Container(
-                  alignment: Alignment.center,
                   margin: const EdgeInsets.all(16),
                   child: Text(
                     "You haven't uploaded any images yet!",
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 20,

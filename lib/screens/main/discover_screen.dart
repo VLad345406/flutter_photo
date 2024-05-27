@@ -12,7 +12,7 @@ class DiscoverScreen extends StatefulWidget {
 class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    //final screenWidth = MediaQuery.of(context).size.width;
 
     //final widthButton = screenWidth - 32;
 
@@ -32,10 +32,20 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         ),
         centerTitle: false,
       ),
-      body: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
+      body: ListView(
+        children: [
+          PhotoCard(
+            pathImage: 'assets/images/start_background.jpg',
+          ),
+          PhotoCard(
+            pathImage: 'assets/images/Profile1/picture1.jpg',
+          ),
+        ],
+      ),
+      /*body: ListView.builder(
+        itemCount: 1,
+        itemBuilder: (BuildContext context, int index) {
+           if (index == 0) {
               return Column(
                 children: [
                   Align(
@@ -81,11 +91,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 ],
               );
             } else {
-              return PhotoCard(
-                pathImage: 'assets/images/start_background.jpg',
-              );
-            }
-          }),
+          return PhotoCard(
+            pathImage: 'assets/images/start_background.jpg',
+          );
+          }
+        },
+      ),*/
     );
   }
 }

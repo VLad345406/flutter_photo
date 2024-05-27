@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/main/chat_screen.dart';
+import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChatsListScreen extends StatefulWidget {
@@ -14,13 +15,15 @@ class ChatsListScreen extends StatefulWidget {
 
 class _ChatsListScreenState extends State<ChatsListScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _currentUserID = FirebaseAuth.instance.currentUser?.uid;
+  final ChatService _chatService = ChatService();
 
   String userName = '';
 
   Future<void> getUserName() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     setState(() {
       userName = data['user_name'];
     });
@@ -34,7 +37,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -51,71 +53,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
         ),
         shape: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
       ),
-      /*body: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              scrollDirection: Axis.vertical,
-              itemCount: users.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    print("Tap $index");
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => ChatScreen(index: index),),);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 32,
-                          backgroundImage:
-                              AssetImage("assets/images/avatar1.jpg"),
-                        ),
-                        Container(
-                          height: 64,
-                          padding: const EdgeInsets.only(left: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  users[index],
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 6),
-                                child: Text(
-                                  'Thank you! That was very helpful!',
-                                  style: GoogleFonts.roboto(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) => Divider(
-                color: Colors.grey,
-              ),
-            ),
-          ),
-        ],
-      ),*/
       body: _buildUserList(),
     );
   }
@@ -128,12 +65,13 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
           return const Text("Error!");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: Text("Loading..."));
+          //return const Center(child: Text("Loading..."));
+          return CircularProgressIndicator();
         }
 
-        //return Text('Test loading');
-
         return ListView(
+          primary: false,
+          shrinkWrap: true,
           children: snapshot.data!.docs
               .map<Widget>((doc) => _buildUserListItem(doc))
               .toList(),
@@ -157,7 +95,46 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
           children: [
             PhotoUserAvatar(userAvatarLink: data['avatar_link'], radius: 20),
             const SizedBox(width: 20),
-            Text(receiverUserName)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  receiverUserName,
+                  style: GoogleFonts.roboto(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('chat_rooms')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error load last message');
+                    }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+
+                    DocumentSnapshot? lastMessage;
+
+                    // Listen to the messages stream
+                    Stream<QuerySnapshot> messages = _chatService.getMessages(data['uid'], _currentUserID!);
+                    messages.listen((QuerySnapshot snapshot) {
+                      if (snapshot.docs.isNotEmpty) {
+                        lastMessage = snapshot.docs.last;
+                      }
+                    });
+
+                    print(lastMessage?['message']);
+
+                    return Text(lastMessage != null ? lastMessage!['message'] : 'No messages');
+                  },
+                ),
+                //Text(lastMessageText),
+              ],
+            )
           ],
         ),
         onTap: () {

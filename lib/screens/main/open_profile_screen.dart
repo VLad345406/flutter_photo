@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_qualification_work/elements/button.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/main/photo_open.dart';
@@ -94,6 +96,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
         ),
       ),
       body: ListView(
+        primary: false,
+        shrinkWrap: true,
         children: [
           Center(
             child: Padding(
@@ -141,12 +145,26 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
               ),
             ),
           ),
+          FirebaseAuth.instance.currentUser?.uid != uid
+              ? PhotoButton(
+                  widthButton: MediaQuery.of(context).size.width - 32,
+                  buttonMargin: EdgeInsets.only(
+                    top: 16,
+                    left: 16,
+                    right: 16,
+                  ),
+                  buttonText: 'FOLLOW',
+                  textColor: Colors.white,
+                  buttonColor: Colors.black,
+                )
+              : Container(),
           imageCount == 0
               ? Container(
-                  alignment: Alignment.center,
+                  //alignment: Alignment.center,
                   margin: const EdgeInsets.all(16),
                   child: Text(
-                    "You haven't uploaded any images yet!",
+                    "This user has not uploaded any images yet!",
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
                       color: Colors.black,
                       fontSize: 20,

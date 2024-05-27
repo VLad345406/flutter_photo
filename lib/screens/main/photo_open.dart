@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/main/open_profile_screen.dart';
@@ -27,9 +26,8 @@ class _PhotoOpenState extends State<PhotoOpen> {
   String userAvatarLink = '';
 
   Future<void> getUserData() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        await FirebaseFirestore.instance.collection('users').doc(widget.uid).get();
 
     setState(() {
       userName = data['user_name'];
@@ -76,7 +74,6 @@ class _PhotoOpenState extends State<PhotoOpen> {
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(15))),
-                //child: Image.asset('assets/images/user.png'),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

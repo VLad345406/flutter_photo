@@ -94,7 +94,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           //registration button
           PhotoButton(
             widthButton: screenWidth - 32,
-            buttonMargin: EdgeInsets.only(left: 16, top: 16),
+            buttonMargin: EdgeInsets.only(left: 16, top: 16, right: 16),
             buttonText: 'NEXT',
             textColor: Colors.white,
             buttonColor: Colors.black,

@@ -72,21 +72,19 @@ class _LoginScreenState extends State<LoginScreen> {
             label: 'Password', disableSpace: true, disableUppercase: false,
           ),
           //login button
-          Center(
-            child: PhotoButton(
-              widthButton: screenWidth - 32,
-              buttonMargin: const EdgeInsets.only(left: 16, top: 16),
-              buttonText: 'LOG IN',
-              textColor: Colors.white,
-              buttonColor: Colors.black,
-              function: () {
-                signIn(
-                  context,
-                  emailController.text,
-                  passwordController.text,
-                );
-              },
-            ),
+          PhotoButton(
+            widthButton: screenWidth - 32,
+            buttonMargin: const EdgeInsets.only(left: 16, top: 16, right: 16),
+            buttonText: 'LOG IN',
+            textColor: Colors.white,
+            buttonColor: Colors.black,
+            function: () {
+              signIn(
+                context,
+                emailController.text,
+                passwordController.text,
+              );
+            },
           ),
           Center(
             child: Padding(
