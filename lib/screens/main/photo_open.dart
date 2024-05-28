@@ -26,8 +26,10 @@ class _PhotoOpenState extends State<PhotoOpen> {
   String userAvatarLink = '';
 
   Future<void> getUserData() async {
-    final data =
-        await FirebaseFirestore.instance.collection('users').doc(widget.uid).get();
+    final data = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get();
 
     setState(() {
       userName = data['user_name'];
@@ -90,11 +92,16 @@ class _PhotoOpenState extends State<PhotoOpen> {
                         Text(
                           name,
                           style: GoogleFonts.roboto(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black),
+                        ),
+                        Text(
+                          '@$userName',
+                          style: TextStyle(
+                            color: Colors.black,
                           ),
                         ),
-                        Text('@$userName'),
                       ],
                     ),
                   ],

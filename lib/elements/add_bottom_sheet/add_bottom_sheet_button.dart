@@ -19,11 +19,6 @@ class AddBottomSheetButton extends StatelessWidget {
     return Container(
       width: (MediaQuery.of(context).size.width - 41) / 2,
       height: 52,
-      /*margin: const EdgeInsets.only(
-        top: 20,
-        left: 16,
-        right: 9,
-      ),*/
       decoration: BoxDecoration(
         border: Border.all(width: 2),
         borderRadius: BorderRadius.circular(10),

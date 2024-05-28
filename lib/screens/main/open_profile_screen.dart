@@ -73,9 +73,9 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
     //final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -84,12 +84,13 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
             'assets/icons/back_arrow.svg',
             width: 12.21,
             height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         title: Text(
           name,
           style: GoogleFonts.comfortaa(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
             fontWeight: FontWeight.w400,
           ),
@@ -137,7 +138,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                 child: Text(
                   '@$userName',
                   style: GoogleFonts.roboto(
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 13,
                     fontWeight: FontWeight.w900,
                   ),
@@ -154,8 +155,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     right: 16,
                   ),
                   buttonText: 'FOLLOW',
-                  textColor: Colors.white,
-                  buttonColor: Colors.black,
+                  textColor: Theme.of(context).colorScheme.secondary,
+                  buttonColor: Theme.of(context).colorScheme.primary,
                 )
               : Container(),
           imageCount == 0
@@ -166,7 +167,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     "This user has not uploaded any images yet!",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 20,
                     ),
                   ),

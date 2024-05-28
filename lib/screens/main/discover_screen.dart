@@ -17,15 +17,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     //final widthButton = screenWidth - 32;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         title: Text(
           'Discover',
           style: GoogleFonts.comfortaa(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
             fontWeight: FontWeight.w400,
           ),

@@ -13,9 +13,9 @@ class RestoreScreen extends StatelessWidget {
     final emailController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -25,6 +25,7 @@ class RestoreScreen extends StatelessWidget {
             'assets/icons/back_arrow.svg',
             width: 12.21,
             height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),
@@ -36,7 +37,7 @@ class RestoreScreen extends StatelessWidget {
             child: Text(
               'Restore password',
               style: GoogleFonts.comfortaa(
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.primary,
                 fontSize: 36,
                 fontWeight: FontWeight.w400,
               ),
@@ -52,8 +53,8 @@ class RestoreScreen extends StatelessWidget {
             widthButton: MediaQuery.of(context).size.width - 32,
             buttonMargin: const EdgeInsets.only(left: 16, top: 16),
             buttonText: 'RESTORE',
-            textColor: Colors.white,
-            buttonColor: Colors.black,
+            textColor: Theme.of(context).colorScheme.secondary,
+            buttonColor: Theme.of(context).colorScheme.primary,
             function: () => restorePassword(context, emailController.text),
           ),
         ],

@@ -28,9 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -40,20 +40,20 @@ class _LoginScreenState extends State<LoginScreen> {
             'assets/icons/back_arrow.svg',
             width: 12.21,
             height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),
       body: ListView(
         primary: false,
         shrinkWrap: true,
-        //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 32.65, bottom: 32),
             child: Text(
               'Log in',
               style: GoogleFonts.comfortaa(
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.primary,
                 fontSize: 36,
                 fontWeight: FontWeight.w400,
               ),
@@ -63,21 +63,25 @@ class _LoginScreenState extends State<LoginScreen> {
           PhotoTextField(
             controller: emailController,
             showVisibleButton: false,
-            label: 'Email', disableSpace: true, disableUppercase: false,
+            label: 'Email',
+            disableSpace: true,
+            disableUppercase: false,
           ),
           //password text-field
           PhotoTextField(
             controller: passwordController,
             showVisibleButton: true,
-            label: 'Password', disableSpace: true, disableUppercase: false,
+            label: 'Password',
+            disableSpace: true,
+            disableUppercase: false,
           ),
           //login button
           PhotoButton(
             widthButton: screenWidth - 32,
             buttonMargin: const EdgeInsets.only(left: 16, top: 16, right: 16),
             buttonText: 'LOG IN',
-            textColor: Colors.white,
-            buttonColor: Colors.black,
+            textColor: Theme.of(context).colorScheme.secondary,
+            buttonColor: Theme.of(context).colorScheme.primary,
             function: () {
               signIn(
                 context,
@@ -93,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: TextSpan(
                   text: 'Forgot password? ',
                   style: GoogleFonts.roboto(
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
@@ -108,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                       text: 'Restore',
                       style: GoogleFonts.roboto(
-                        color: Colors.black,
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.underline,
@@ -127,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 'Continue with:',
                 style: GoogleFonts.roboto(
-                  color: Colors.black,
+                  color: Theme.of(context).colorScheme.primary,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                 ),
@@ -179,8 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               );
                             }
-                          }
-                          catch (e) {
+                          } catch (e) {
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) =>
@@ -213,7 +216,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Container(
                   margin: const EdgeInsets.only(top: 16),
                   child: IconButton(
-                    icon: Image.asset('assets/login_screen/Apple.png'),
+                    icon: Image.asset(
+                      'assets/login_screen/Apple.png',
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                     onPressed: () {},
                   ),
                 ),

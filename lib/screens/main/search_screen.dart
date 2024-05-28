@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -10,22 +10,21 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
   @override
   Widget build(BuildContext context) {
-
     final screenWidth = MediaQuery.of(context).size.width;
+    final TextEditingController searchController = TextEditingController();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         title: Text(
           'Search',
           style: GoogleFonts.comfortaa(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
             fontWeight: FontWeight.w400,
           ),
@@ -34,7 +33,14 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          Container(
+          PhotoTextField(
+            controller: searchController,
+            showVisibleButton: false,
+            label: 'Search all photos',
+            disableSpace: false,
+            disableUppercase: false,
+          ),
+          /*Container(
             width: screenWidth - 32,
             height: 52,
             margin: const EdgeInsets.only(left: 16, top: 32),
@@ -61,7 +67,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
-          ),
+          ),*/
         ],
       ),
     );

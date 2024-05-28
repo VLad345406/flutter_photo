@@ -100,10 +100,10 @@ class _EditScreenState extends State<EditScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -113,21 +113,22 @@ class _EditScreenState extends State<EditScreen> {
             'assets/icons/back_arrow.svg',
             width: 12.21,
             height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
         title: Text(
           'Edit profile',
           style: GoogleFonts.comfortaa(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
             fontWeight: FontWeight.w400,
           ),
         ),
+        //actions: [IconButton(onPressed: () {}, icon: Icon(Icons.light_mode))],
       ),
-      body: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
+      body: ListView(
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
@@ -174,8 +175,8 @@ class _EditScreenState extends State<EditScreen> {
                 buttonMargin:
                     const EdgeInsets.only(top: 16, left: 16, right: 16),
                 buttonText: 'SAVE',
-                textColor: Colors.white,
-                buttonColor: Colors.black,
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   saveData();
                   //snackBar(context, 'Success save!');
@@ -194,8 +195,8 @@ class _EditScreenState extends State<EditScreen> {
                 buttonMargin:
                     const EdgeInsets.only(top: 16, left: 16, right: 16),
                 buttonText: 'SAVE EMAIL',
-                textColor: Colors.white,
-                buttonColor: Colors.black,
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   snackBar(context, 'Success save!');
                   //Navigator.pop(context);
@@ -206,7 +207,7 @@ class _EditScreenState extends State<EditScreen> {
                 child: Text(
                   'Password (if use alternative sigh in method write name this method. For example "Google")',
                   style: GoogleFonts.comfortaa(
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
@@ -239,8 +240,8 @@ class _EditScreenState extends State<EditScreen> {
                 buttonMargin:
                     const EdgeInsets.only(top: 16, left: 16, right: 16),
                 buttonText: 'SAVE PASSWORD',
-                textColor: Colors.white,
-                buttonColor: Colors.black,
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   changePassword(context, oldPasswordController.text,
                       passwordController.text, confirmPasswordController.text);
@@ -254,7 +255,7 @@ class _EditScreenState extends State<EditScreen> {
                     const EdgeInsets.only(top: 16, left: 16, right: 16),
                 buttonText: 'EXIT PROFILE',
                 textColor: Colors.red,
-                buttonColor: Colors.white,
+                buttonColor: Theme.of(context).colorScheme.secondary,
                 function: () {
                   FirebaseAuth.instance.signOut();
                   Navigator.pushAndRemoveUntil(context,
@@ -273,15 +274,15 @@ class _EditScreenState extends State<EditScreen> {
                       const EdgeInsets.only(top: 16, left: 16, right: 16),
                   buttonText: 'REMOVE ACCOUNT',
                   textColor: Colors.red,
-                  buttonColor: Colors.white,
+                  buttonColor: Theme.of(context).colorScheme.secondary,
                   function: () {
                     removeAccount(context);
                   },
                 ),
               ),
             ],
-          );
-        },
+          ),
+        ],
       ),
     );
   }

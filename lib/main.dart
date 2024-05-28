@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/firebase_options.dart';
 import 'package:flutter_qualification_work/services/authentication/start_auth_service.dart';
+import 'package:flutter_qualification_work/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +21,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(
-          accentColor: const Color(0xFF13B9FF),
-        ),
-      ),
+      theme: lightMode,
+      darkTheme: darkMode,
       home: StartAuthService().handleAuthState(),
     );
   }

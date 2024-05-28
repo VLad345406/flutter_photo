@@ -5,6 +5,7 @@ import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'open_profile_screen.dart';
 
@@ -92,7 +93,13 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(receiverName),
+        title: Text(
+          receiverName,
+          style: GoogleFonts.roboto(
+            fontSize: 25,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -101,12 +108,13 @@ class _ChatScreenState extends State<ChatScreen> {
             'assets/icons/back_arrow.svg',
             width: 12.21,
             height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         centerTitle: true,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: Column(
         children: [
           Expanded(child: _buildMessageItemList()),
@@ -215,7 +223,8 @@ class _ChatScreenState extends State<ChatScreen> {
               maxWidth: MediaQuery.of(context).size.width - 100,
             ),
             decoration: BoxDecoration(
-              color: Colors.black12,
+              color: Theme.of(context).colorScheme.primary,
+              //color: Colors.black12,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(20),
                 topRight: const Radius.circular(20),
@@ -238,7 +247,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: const TextStyle(
                       color: Colors.blue, fontWeight: FontWeight.w700),
                 ),
-                Text(data['message']),
+                Text(
+                  data['message'],
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
               ],
             ),
           ),

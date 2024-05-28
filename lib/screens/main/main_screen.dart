@@ -24,9 +24,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final screenWidth = MediaQuery.of(context).size.width;
-
     final widthButton = (screenWidth - 32 - 9) / 2;
 
     final screens = [
@@ -42,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         type: BottomNavigationBarType.fixed,
         onTap: (index){
           if (index == 2){
@@ -56,12 +54,14 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/tab_bar/toolbar_home.svg',
+              color: Theme.of(context).colorScheme.primary,
             ),
             label: 'Discover',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/tab_bar/toolbar_search.svg',
+              color: Theme.of(context).colorScheme.primary,
             ),
             label: 'Search',
           ),
@@ -72,12 +72,14 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/tab_bar/toolbar_massage.svg',
+              color: Theme.of(context).colorScheme.primary,
             ),
             label: 'Massage',
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               'assets/tab_bar/toolbar_profile.svg',
+              color: Theme.of(context).colorScheme.primary,
             ),
             label: 'Profile',
           ),

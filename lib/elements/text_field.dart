@@ -52,7 +52,7 @@ class _PhotoTextFieldState extends State<PhotoTextField> {
         ],
         style: GoogleFonts.roboto(
           fontSize: 15,
-          color: Colors.black,
+          color: Theme.of(context).colorScheme.primary,
           fontWeight: FontWeight.w400,
           fontStyle: FontStyle.normal,
         ),
@@ -68,17 +68,17 @@ class _PhotoTextFieldState extends State<PhotoTextField> {
               : null,
           labelText: widget.label,
           labelStyle: TextStyle(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
           ),
           focusedBorder: OutlineInputBorder(
-            //borderRadius: BorderRadius.all(Radius.zero),
             borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
               width: 2,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            //borderRadius: BorderRadius.all(Radius.zero),
             borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.primary,
               width: 2,
             ),
           ),

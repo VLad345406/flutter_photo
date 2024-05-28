@@ -69,13 +69,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     //final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
           name,
           style: GoogleFonts.comfortaa(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
             fontWeight: FontWeight.w400,
           ),
@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(
                   '@$userName',
                   style: GoogleFonts.roboto(
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 13,
                     fontWeight: FontWeight.w900,
                   ),

@@ -21,9 +21,9 @@ class _GoogleSighInRegistrationDataState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -33,6 +33,7 @@ class _GoogleSighInRegistrationDataState
             'assets/icons/back_arrow.svg',
             width: 12.21,
             height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
       ),
@@ -49,7 +50,7 @@ class _GoogleSighInRegistrationDataState
             child: Text(
               'Register',
               style: GoogleFonts.comfortaa(
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.primary,
                 fontSize: 36,
                 fontWeight: FontWeight.w400,
               ),
@@ -68,8 +69,8 @@ class _GoogleSighInRegistrationDataState
             widthButton: MediaQuery.of(context).size.width - 32,
             buttonMargin: EdgeInsets.only(left: 16, top: 16),
             buttonText: 'NEXT',
-            textColor: Colors.white,
-            buttonColor: Colors.black,
+            textColor: Theme.of(context).colorScheme.secondary,
+            buttonColor: Theme.of(context).colorScheme.primary,
             function: () {
               googleSighInAddInfoFirestore(context, nickNameController.text);
             },
