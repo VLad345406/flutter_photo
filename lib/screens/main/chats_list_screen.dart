@@ -15,7 +15,6 @@ class ChatsListScreen extends StatefulWidget {
 
 class _ChatsListScreenState extends State<ChatsListScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final _currentUserID = FirebaseAuth.instance.currentUser?.uid;
   final ChatService _chatService = ChatService();
 
   String userName = '';
@@ -106,33 +105,25 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                   ),
                 ),
                 StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('chat_rooms')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error load last message');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
+                    stream: _chatService.getMessages(
+                        data['uid'], FirebaseAuth.instance.currentUser!.uid),
+                    builder: (context, snapshot) {
+                      try {
+                        if (snapshot.hasError) {
+                          return Center(
+                              child: Text('Error ${snapshot.error
+                                  .toString()}'));
+                        }
 
-                    DocumentSnapshot? lastMessage;
-
-                    // Listen to the messages stream
-                    Stream<QuerySnapshot> messages = _chatService.getMessages(data['uid'], _currentUserID!);
-                    messages.listen((QuerySnapshot snapshot) {
-                      if (snapshot.docs.isNotEmpty) {
-                        lastMessage = snapshot.docs.last;
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(child: Text('Loading...'));
+                        }
+                        return Text(snapshot.data!.docs.last['message']);
+                      } catch (e) {
+                        return Text('No message!');
                       }
-                    });
-
-                    //print(lastMessage?['message']);
-
-                    return Text(lastMessage != null ? lastMessage!['message'] : 'No messages');
-                  },
-                ),
-                //Text(lastMessageText),
+                    }),
               ],
             )
           ],

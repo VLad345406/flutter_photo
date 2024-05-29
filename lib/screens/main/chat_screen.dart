@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
+import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -111,10 +113,10 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
       ),
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
           Expanded(child: _buildMessageItemList()),
@@ -247,10 +249,16 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: const TextStyle(
                       color: Colors.blue, fontWeight: FontWeight.w700),
                 ),
-                Text(
-                  data['message'],
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
+                GestureDetector(
+                  onLongPress: (){
+                    Clipboard.setData(ClipboardData(text: data['message']));
+                    snackBar(context, 'Success copied text!');
+                  },
+                  child: Text(
+                    data['message'],
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ),
               ],
