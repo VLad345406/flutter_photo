@@ -26,6 +26,19 @@ class ShowAddBottomSheet {
     }
   }
 
+  void addCameraImage(BuildContext context) async {
+    try {
+      Uint8List image = await pickImage(ImageSource.camera);
+      await getUserData();
+      uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
+      await savePictureInFirestore(FirebaseAuth.instance.currentUser!.uid.toString(),
+          _userName, image, _countImage + 1);
+      //snackBar(context, 'Success add picture!');
+    } catch (e) {
+      //snackBar(context, 'Something wen`t wrong!');
+    }
+  }
+
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
@@ -39,14 +52,14 @@ class ShowAddBottomSheet {
       context: context,
       backgroundColor: Colors.white,
       builder: (context) => SizedBox(
-        height: Platform.isIOS ? 200 : 150,
+        height: Platform.isIOS ? 250 : 230,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               margin: const EdgeInsets.only(left: 16, top: 16),
               child: Text(
-                'Add photo',
+                'Add content',
                 style: GoogleFonts.comfortaa(
                   color: Colors.black,
                   fontSize: 36,
@@ -54,30 +67,67 @@ class ShowAddBottomSheet {
                 ),
               ),
             ),
-            Row(
+            Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 20,
-                    left: 16,
-                    right: 9,
-                  ),
-                  child: AddBottomSheetButton(
-                    function: () {},
-                    swgLink: 'assets/icons/camera.svg',
-                    buttonText: 'Camera',
-                  ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        left: 16,
+                        right: 9,
+                      ),
+                      child: AddBottomSheetButton(
+                        function: () {
+                          addCameraImage(context);
+                          Navigator.pop(context);
+                        },
+                        swgLink: 'assets/icons/camera.svg',
+                        buttonText: 'Picture (Camera)',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: AddBottomSheetButton(
+                        function: () {
+                          selectGalleryImage(context);
+                          Navigator.pop(context);
+                        },
+                        swgLink: 'assets/icons/gallery.svg',
+                        buttonText: 'Picture (Gallery)',
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: AddBottomSheetButton(
-                    function: () {
-                      selectGalleryImage(context);
-                      Navigator.pop(context);
-                    },
-                    swgLink: 'assets/icons/gallery.svg',
-                    buttonText: 'Gallery',
-                  ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        left: 16,
+                        right: 9,
+                      ),
+                      child: AddBottomSheetButton(
+                        function: () {
+                          //addCameraImage(context);
+                          Navigator.pop(context);
+                        },
+                        swgLink: 'assets/icons/music.svg',
+                        buttonText: 'Music',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: AddBottomSheetButton(
+                        function: () {
+                          //selectGalleryImage(context);
+                          Navigator.pop(context);
+                        },
+                        swgLink: 'assets/icons/video.svg',
+                        buttonText: 'Video',
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

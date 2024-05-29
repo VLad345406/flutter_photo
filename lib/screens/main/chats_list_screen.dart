@@ -38,10 +38,10 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
           'Chats',
@@ -127,7 +127,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                       }
                     });
 
-                    print(lastMessage?['message']);
+                    //print(lastMessage?['message']);
 
                     return Text(lastMessage != null ? lastMessage!['message'] : 'No messages');
                   },
