@@ -105,25 +105,24 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                   ),
                 ),
                 StreamBuilder(
-                    stream: _chatService.getMessages(
-                        data['uid'], FirebaseAuth.instance.currentUser!.uid),
-                    builder: (context, snapshot) {
-                      try {
-                        if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error ${snapshot.error
-                                  .toString()}'));
-                        }
-
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(child: Text('Loading...'));
-                        }
-                        return Text(snapshot.data!.docs.last['message']);
-                      } catch (e) {
-                        return Text('No message!');
+                  stream: _chatService.getMessages(
+                      data['uid'], FirebaseAuth.instance.currentUser!.uid),
+                  builder: (context, snapshot) {
+                    try {
+                      if (snapshot.hasError) {
+                        return Center(
+                            child: Text('Error ${snapshot.error.toString()}'));
                       }
-                    }),
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: Text('Loading...'));
+                      }
+                      return Text(snapshot.data!.docs.last['message']);
+                    } catch (e) {
+                      return Text('No message!');
+                    }
+                  },
+                ),
               ],
             )
           ],

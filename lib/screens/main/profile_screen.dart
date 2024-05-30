@@ -25,15 +25,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName = '';
   String userAvatarLink = '';
   String uid = '';
-  int imageCount = 0;
-  List<Map<String, dynamic>> userPictures = [];
+  //int imageCount = 0;
+  //List<Map<String, dynamic>> userPictures = [];
 
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-    if (data['count_image'] > 0) {
+    /*if (data['count_image'] > 0) {
       CollectionReference collectionRef = FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
@@ -43,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       userPictures = querySnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
-    }
+    }*/
 
     setState(() {
       userName = data['user_name'];
@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       } else {
         name = data['user_name'];
       }
-      imageCount = data['count_image'];
+      //imageCount = data['count_image'];
       uid = data['uid'];
     });
   }
@@ -69,9 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     //final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(
           name,
           style: GoogleFonts.comfortaa(
@@ -144,26 +144,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          imageCount == 0
-              ? Container(
-                  margin: const EdgeInsets.all(16),
-                  child: Text(
-                    "You haven't uploaded any images yet!",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                )
-              : SizedBox(
-                  height: MediaQuery.of(context).size.width * imageCount,
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(FirebaseAuth.instance.currentUser?.uid)
+                .collection('pictures')
+                .snapshots(),
+            builder: (context, snapshot) {
+              try {
+                if (snapshot.hasError) {
+                  return Center(
+                      child: Text('Error ${snapshot.error.toString()}'));
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: Text('Loading...'));
+                }
+
+                return SizedBox(
+                  height: MediaQuery.of(context).size.width * snapshot.data!.docs.length,
                   child: ListView.builder(
                     primary: false,
                     shrinkWrap: true,
-                    itemCount: userPictures.length,
+                    itemCount: snapshot.data!.docs.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final userPicture = userPictures[index];
+                      final userPicture = snapshot.data!.docs[index];
                       final imageLink = userPicture['image_link'];
                       return GestureDetector(
                         onTap: (){
@@ -179,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: Container(
                           margin:
-                              const EdgeInsets.only(top: 32, left: 16, right: 16),
+                          const EdgeInsets.only(top: 32, left: 16, right: 16),
                           height: MediaQuery.of(context).size.width - 32,
                           width: MediaQuery.of(context).size.width - 32,
                           decoration: BoxDecoration(
@@ -192,7 +197,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-                ),
+                );
+              } catch (e) {
+                return Text(
+                  "You haven't uploaded any images yet!",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );

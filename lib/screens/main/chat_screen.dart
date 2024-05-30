@@ -247,10 +247,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(
                   alignment == Alignment.centerLeft ? receiverName : name,
                   style: const TextStyle(
-                      color: Colors.blue, fontWeight: FontWeight.w700),
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
                 ),
                 GestureDetector(
-                  onLongPress: (){
+                  onLongPress: () {
                     Clipboard.setData(ClipboardData(text: data['message']));
                     snackBar(context, 'Success copied text!');
                   },
@@ -258,6 +261,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     data['message'],
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
+                      fontSize: 17,
                     ),
                   ),
                 ),

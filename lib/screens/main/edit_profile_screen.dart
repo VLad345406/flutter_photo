@@ -100,10 +100,10 @@ class _EditScreenState extends State<EditScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -137,7 +137,7 @@ class _EditScreenState extends State<EditScreen> {
                   child: Text(
                     'CHANGE AVATAR',
                     style: GoogleFonts.roboto(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.primary,
                       fontSize: 13,
                       fontWeight: FontWeight.w900,
                     ),
