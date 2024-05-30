@@ -10,6 +10,7 @@ import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
 import 'package:flutter_qualification_work/services/change_password_service.dart';
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
 import 'package:flutter_qualification_work/services/remove_account_service.dart';
+import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/services/validate_username_service.dart';
 import 'package:flutter_svg/svg.dart';
@@ -144,17 +145,46 @@ class _EditScreenState extends State<EditScreen> {
                   ),
                 ),
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: GestureDetector(
-                    onTap: selectAvatar,
-                    child: PhotoUserAvatar(
-                      userAvatarLink: userAvatarLink,
-                      radius: 64,
+              Stack(
+                alignment: AlignmentDirectional.topCenter,
+                fit: StackFit.loose,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: GestureDetector(
+                        onTap: selectAvatar,
+                        child: PhotoUserAvatar(
+                          userAvatarLink: userAvatarLink,
+                          radius: 64,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  userAvatarLink.isNotEmpty ? Padding(
+                    padding:
+                    const EdgeInsets.only(left: 100),
+                    child: IconButton(
+                      onPressed: () async {
+                        String result = await removePictureService(
+                          'pictures/$userName/avatar',
+                          'avatar',
+                        );
+                        if (result == 'Success') {
+                          getUserData();
+                          snackBar(context, 'Success remove file!');
+                        }
+                        else {
+                          snackBar(context, 'Fail remove file!');
+                        }
+                      },
+                      icon: Icon(
+                        Icons.remove_circle,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ) : Container(),
+                ],
               ),
               PhotoTextField(
                 controller: nameController,

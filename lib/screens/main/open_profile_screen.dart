@@ -47,13 +47,15 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
       userPictures = querySnapshot.docs
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
+      imageCount = querySnapshot.docs.length;
+      print(imageCount);
     }
 
     setState(() {
       userAvatarLink = data['avatar_link'];
       userName = data['user_name'];
       uid = widget.userId;
-      imageCount = data['count_image'];
+      //imageCount = data['count_image'];
       if (data['name'] != '') {
         name = data['name'];
       } else {
@@ -159,6 +161,17 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                   buttonColor: Theme.of(context).colorScheme.primary,
                 )
               : Container(),
+          PhotoButton(
+            widthButton: MediaQuery.of(context).size.width - 32,
+            buttonMargin: EdgeInsets.only(
+              top: 16,
+              left: 16,
+              right: 16,
+            ),
+            buttonText: 'MESSAGE',
+            textColor: Theme.of(context).colorScheme.secondary,
+            buttonColor: Theme.of(context).colorScheme.primary,
+          ),
           imageCount == 0
               ? Container(
                   //alignment: Alignment.center,
