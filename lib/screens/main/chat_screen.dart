@@ -244,84 +244,98 @@ class _ChatScreenState extends State<ChatScreen> {
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      alignment == Alignment.centerLeft ? receiverName : name,
-                      style: const TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 20,
+                alignment == Alignment.centerLeft
+                    ? Text(
+                        receiverName,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20,
+                        ),
+                      )
+                    : SizedBox(
+                        width: 86,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'You',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                            alignment == Alignment.centerRight
+                                ? PopupMenuButton(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    icon: Icon(Icons.more_vert),
+                                    iconColor:
+                                        Theme.of(context).colorScheme.secondary,
+                                    itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            Clipboard.setData(ClipboardData(
+                                                text: data['message']));
+                                            snackBar(context,
+                                                'Success copied text!');
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Copy',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            snackBar(context, 'Edit');
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Edit',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        child: TextButton(
+                                          onPressed: () {
+                                            snackBar(context, 'Delete');
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Container(),
+                          ],
+                        ),
                       ),
-                    ),
-                    alignment == Alignment.centerRight
-                        ? PopupMenuButton(
-                            color: Theme.of(context).colorScheme.primary,
-                            icon: Icon(Icons.more_vert),
-                            iconColor: Theme.of(context).colorScheme.secondary,
-                            itemBuilder: (context) => [
-                              PopupMenuItem(
-                                child: TextButton(
-                                  onPressed: () {
-                                    Clipboard.setData(ClipboardData(text: data['message']));
-                                    snackBar(context, 'Success copied text!');
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Copy',
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.secondary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                child: TextButton(
-                                  onPressed: (){
-                                    snackBar(context, 'Edit');
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Edit',
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.secondary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              PopupMenuItem(
-                                child: TextButton(
-                                  onPressed: (){
-                                    snackBar(context, 'Delete');
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    'Delete',
-                                    style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.secondary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container(),
-                  ],
-                ),
-                GestureDetector(
-                  onLongPress: () {
-                    Clipboard.setData(ClipboardData(text: data['message']));
-                    snackBar(context, 'Success copied text!');
-                  },
-                  child: Text(
-                    data['message'],
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 17,
-                    ),
+                Text(
+                  data['message'],
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 17,
                   ),
                 ),
               ],

@@ -117,7 +117,13 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: Text('Loading...'));
                       }
-                      return Text(snapshot.data!.docs.last['message']);
+                      String textMessage = snapshot.data!.docs.last['message'];
+                      if (textMessage.length > 30) {
+                        String truncatedTextMessage =
+                            textMessage.substring(0, 30) + "...";
+                        textMessage = truncatedTextMessage;
+                      }
+                      return Text(textMessage);
                     } catch (e) {
                       return Text('No message!');
                     }
