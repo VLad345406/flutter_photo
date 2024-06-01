@@ -29,6 +29,8 @@ class _ChatScreenState extends State<ChatScreen> {
   String receiverName = '';
   String receiverAvatarLink = '';
 
+  bool editingStatus = false;
+
   final TextEditingController _messageEditingController =
       TextEditingController();
   final ChatService _chatService = ChatService();
@@ -146,7 +148,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: sendMessage,
+                  onPressed: (){
+                    if (editingStatus) {
+                      editingStatus = false;
+                      _messageEditingController.text = '';
+                    }
+                    else {
+                      sendMessage();
+                    }
+                  },
                   icon: const Icon(
                     Icons.send,
                     size: 32,
@@ -296,7 +306,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                       PopupMenuItem(
                                         child: TextButton(
                                           onPressed: () {
-                                            snackBar(context, 'Edit');
+                                            _messageEditingController.text =
+                                                data['message'];
+                                            editingStatus = true;
                                             Navigator.pop(context);
                                           },
                                           child: Text(

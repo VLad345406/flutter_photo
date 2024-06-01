@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/auth/google_sigh_in_registration_data.dart';
 import 'package:flutter_qualification_work/screens/main/main_screen.dart';
+import 'package:flutter_qualification_work/services/check_internet_service.dart';
 
 class SnapshotHasDataPage extends StatelessWidget {
   const SnapshotHasDataPage({super.key});
@@ -15,6 +16,7 @@ class SnapshotHasDataPage extends StatelessWidget {
       if (data['uid'] == userId) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
+            //builder: (context) => CheckInternet(widget: MainScreen()),
             builder: (context) => MainScreen(),
           ),
         );

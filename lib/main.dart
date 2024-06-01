@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/firebase_options.dart';
 import 'package:flutter_qualification_work/services/authentication/start_auth_service.dart';
+import 'package:flutter_qualification_work/services/check_internet_service.dart';
 import 'package:flutter_qualification_work/theme/theme.dart';
 
 void main() async {
@@ -24,6 +25,7 @@ class App extends StatelessWidget {
       theme: lightMode,
       darkTheme: darkMode,
       home: StartAuthService().handleAuthState(),
+      //home: CheckInternet(widget: StartAuthService().handleAuthState(),),
     );
   }
 }

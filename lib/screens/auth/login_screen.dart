@@ -8,6 +8,7 @@ import 'package:flutter_qualification_work/screens/auth/google_sigh_in_registrat
 import 'package:flutter_qualification_work/screens/auth/restore_screen.dart';
 import 'package:flutter_qualification_work/screens/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
+import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -193,6 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
                         }
                       } on FirebaseAuthException catch (e) {
+                        snackBar(context, e.message.toString());
                         print(e.message);
                       }
                     },
