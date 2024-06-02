@@ -4,23 +4,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
-import 'package:flutter_qualification_work/screens/auth/google_sigh_in_registration_data.dart';
-import 'package:flutter_qualification_work/screens/auth/restore_screen.dart';
-import 'package:flutter_qualification_work/screens/main/main_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/auth/mobile_restore_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+import 'mobile_google_sigh_in_registration_data.dart';
+
+class MobileLoginScreen extends StatefulWidget {
+  const MobileLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<MobileLoginScreen> createState() => _MobileLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _MobileLoginScreenState extends State<MobileLoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -29,9 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: IconButton(
           onPressed: () {
@@ -108,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ..onTap = () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RestoreScreen(),
+                                builder: (context) => MobileRestoreScreen(),
                               ),
                             ),
                       text: 'Restore',

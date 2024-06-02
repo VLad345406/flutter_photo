@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/main/open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:photo_view/photo_view.dart';
@@ -71,7 +71,10 @@ class _PhotoOpenState extends State<PhotoOpen> {
               },
               child: Container(
                 margin: const EdgeInsets.only(top: 50, left: 16),
-                width: 200,
+                //width: 200,
+                width: userName.length < name.length
+                    ? name.length * 14
+                    : userName.length * 18  ,
                 height: 50,
                 decoration: BoxDecoration(
                     color: Colors.white,

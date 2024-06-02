@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/auth/mobile_start_screen.dart';
 import 'package:flutter_qualification_work/services/change_password_service.dart';
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
 import 'package:flutter_qualification_work/services/remove_account_service.dart';
@@ -161,29 +161,29 @@ class _EditScreenState extends State<EditScreen> {
                       ),
                     ),
                   ),
-                  userAvatarLink.isNotEmpty ? Padding(
-                    padding:
-                    const EdgeInsets.only(left: 100),
-                    child: IconButton(
-                      onPressed: () async {
-                        String result = await removePictureService(
-                          'pictures/$userName/avatar',
-                          'avatar',
-                        );
-                        if (result == 'Success') {
-                          getUserData();
-                          snackBar(context, 'Success remove file!');
-                        }
-                        else {
-                          snackBar(context, 'Fail remove file!');
-                        }
-                      },
-                      icon: Icon(
-                        Icons.remove_circle,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ) : Container(),
+                  userAvatarLink.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 100),
+                          child: IconButton(
+                            onPressed: () async {
+                              String result = await removePictureService(
+                                'pictures/$userName/avatar',
+                                'avatar',
+                              );
+                              if (result == 'Success') {
+                                getUserData();
+                                snackBar(context, 'Success remove file!');
+                              } else {
+                                snackBar(context, 'Fail remove file!');
+                              }
+                            },
+                            icon: Icon(
+                              Icons.remove_circle,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : Container(),
                 ],
               ),
               PhotoTextField(
@@ -290,7 +290,7 @@ class _EditScreenState extends State<EditScreen> {
                   FirebaseAuth.instance.signOut();
                   Navigator.pushAndRemoveUntil(context,
                       MaterialPageRoute(builder: (context) {
-                    return StartScreen();
+                    return MobileStartScreen();
                   }), (route) => false);
                 },
               ),

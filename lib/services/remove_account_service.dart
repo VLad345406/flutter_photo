@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/auth/mobile_start_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 void removeAccount(BuildContext context) async {
@@ -61,7 +61,7 @@ void removeAccount(BuildContext context) async {
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(
-      builder: (context) => StartScreen(),
+      builder: (context) => MobileStartScreen(),
     ),
   );
 }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/main/chat_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/chat_screen.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 

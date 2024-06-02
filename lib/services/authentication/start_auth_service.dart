@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/auth/mobile_start_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/snapshot_has_data_page.dart';
 
 class StartAuthService {
@@ -16,7 +16,7 @@ class StartAuthService {
           } else if (snapshot.hasData) {
             return SnapshotHasDataPage();
           } else {
-            return const StartScreen();
+            return const MobileStartScreen();
           }
         },
       ),

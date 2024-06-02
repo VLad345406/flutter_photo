@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/main/edit_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/main/photo_open.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';

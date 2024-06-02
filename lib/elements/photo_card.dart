@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/screens/main/photo_open.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 
 class PhotoCard extends StatelessWidget {
   final String pathImage;

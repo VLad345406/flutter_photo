@@ -5,8 +5,8 @@ import 'package:flutter_qualification_work/services/authentication/restore_passw
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RestoreScreen extends StatelessWidget {
-  const RestoreScreen({super.key});
+class MobileRestoreScreen extends StatelessWidget {
+  const MobileRestoreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

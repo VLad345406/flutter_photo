@@ -61,7 +61,6 @@ class _PhotoTextFieldState extends State<PhotoTextField> {
               ? IconButton(
                   icon: Icon(
                     _isObscure ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.black,
                   ),
                   onPressed: showPassword,
                 )

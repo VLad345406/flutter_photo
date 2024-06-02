@@ -35,7 +35,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       body: ListView(
         children: [
           PhotoCard(
-            pathImage: 'assets/images/start_background.jpg',
+            pathImage: 'assets/images/start_background_mobile.jpg',
           ),
           PhotoCard(
             pathImage: 'assets/images/Profile1/picture1.jpg',
@@ -69,7 +69,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       itemCount: 3,
                       itemBuilder: (BuildContext context, int index) {
                         return PhotoCard(
-                          pathImage: 'assets/images/start_background.jpg',
+                          pathImage: 'assets/images/start_background_mobile.jpg',
                         );
                       },
                     ),
@@ -92,7 +92,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               );
             } else {
           return PhotoCard(
-            pathImage: 'assets/images/start_background.jpg',
+            pathImage: 'assets/images/start_background_mobile.jpg',
           );
           }
         },

@@ -5,14 +5,14 @@ import 'package:flutter_qualification_work/services/authentication/registration_
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+class MobileRegistrationScreen extends StatefulWidget {
+  const MobileRegistrationScreen({super.key});
 
   @override
-  State<RegistrationScreen> createState() => _RegistrationScreenState();
+  State<MobileRegistrationScreen> createState() => _MobileRegistrationScreenState();
 }
 
-class _RegistrationScreenState extends State<RegistrationScreen> {
+class _MobileRegistrationScreenState extends State<MobileRegistrationScreen> {
   final emailController = TextEditingController();
   final nickNameController = TextEditingController();
   final passwordController = TextEditingController();

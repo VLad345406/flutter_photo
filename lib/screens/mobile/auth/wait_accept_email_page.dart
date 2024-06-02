@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/screens/auth/start_screen.dart';
-import 'package:flutter_qualification_work/screens/main/main_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/auth/mobile_start_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WaitAcceptEmailPage extends StatefulWidget {
@@ -121,7 +121,7 @@ class _WaitAcceptEmailPageState extends State<WaitAcceptEmailPage> {
                     } catch (e) {
                       Navigator.pushAndRemoveUntil(context,
                           MaterialPageRoute(builder: (context) {
-                        return StartScreen();
+                        return MobileStartScreen();
                       }), (route) => false);
                     }
                   },

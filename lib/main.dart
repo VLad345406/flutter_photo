@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/firebase_options.dart';
+import 'package:flutter_qualification_work/screens/web/auth/web_start_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/start_auth_service.dart';
 import 'package:flutter_qualification_work/services/check_internet_service.dart';
 import 'package:flutter_qualification_work/theme/theme.dart';
@@ -22,9 +23,11 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: lightMode,
       darkTheme: darkMode,
-      home: StartAuthService().handleAuthState(),
+      home: WebStartScreen(),
+      //home: StartAuthService().handleAuthState(),
       //home: CheckInternet(widget: StartAuthService().handleAuthState(),),
     );
   }
