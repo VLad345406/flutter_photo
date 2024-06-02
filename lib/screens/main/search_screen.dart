@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/services/search_service.dart';
+import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -10,10 +12,15 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController searchController = TextEditingController();
+
+  void displaySearch(){
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    //final screenWidth = MediaQuery.of(context).size.width;
-    final TextEditingController searchController = TextEditingController();
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -33,19 +40,15 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-          PhotoTextField(
-            controller: searchController,
-            showVisibleButton: false,
-            label: 'Search all photos',
-            disableSpace: false,
-            disableUppercase: false,
-          ),
-          /*Container(
+          Container(
             width: screenWidth - 32,
             height: 52,
-            margin: const EdgeInsets.only(left: 16, top: 32),
+            margin: const EdgeInsets.only(left: 16, top: 32, right: 16),
             decoration: BoxDecoration(
-              border: Border.all(width: 2),
+              border: Border.all(
+                width: 2,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
             child: Padding(
               padding: const EdgeInsets.only(
@@ -54,20 +57,21 @@ class _SearchScreenState extends State<SearchScreen> {
                 top: 14,
               ),
               child: TextField(
-                //obscureText: true,
+                controller: searchController,
                 enableSuggestions: false,
                 autocorrect: false,
+                onChanged: (value) => searchService(context, value),
                 style: GoogleFonts.roboto(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
                   fontStyle: FontStyle.normal,
                 ),
                 decoration: const InputDecoration.collapsed(
-                  hintText: 'Search all photos',
+                  hintText: 'Search all photos, profiles',
                 ),
               ),
             ),
-          ),*/
+          ),
         ],
       ),
     );
