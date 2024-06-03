@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet_button.dart';
@@ -52,7 +53,7 @@ class ShowAddBottomSheet {
       context: context,
       backgroundColor: Colors.white,
       builder: (context) => SizedBox(
-        height: Platform.isIOS ? 250 : 230,
+        height: kIsWeb ? 250 : Platform.isIOS ? 250 : 230,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

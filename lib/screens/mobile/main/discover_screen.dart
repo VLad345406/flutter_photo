@@ -12,7 +12,7 @@ class DiscoverScreen extends StatefulWidget {
 class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
-    //final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
     //final widthButton = screenWidth - 32;
 
@@ -36,9 +36,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         children: [
           PhotoCard(
             pathImage: 'assets/images/start_background_mobile.jpg',
+            cardWidth: screenWidth - 32,
           ),
           PhotoCard(
             pathImage: 'assets/images/Profile1/picture1.jpg',
+            cardWidth: screenWidth - 32,
           ),
         ],
       ),

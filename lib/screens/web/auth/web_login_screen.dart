@@ -7,6 +7,7 @@ import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_google_sigh_in_registration_data.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_restore_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,6 +78,14 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                 buttonText: 'LOGIN',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebMainScreen(),
+                    ),
+                  );
+                },
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 16),
@@ -92,11 +101,11 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WebRestoreScreen(),
-                            ),
-                          ),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WebRestoreScreen(),
+                                ),
+                              ),
                         text: 'Restore',
                         style: GoogleFonts.roboto(
                           color: Theme.of(context).colorScheme.primary,
@@ -133,7 +142,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                           try {
                             final googleAccount = await GoogleSignIn().signIn();
 
-                            final googleAuth = await googleAccount?.authentication;
+                            final googleAuth =
+                                await googleAccount?.authentication;
 
                             final credential = GoogleAuthProvider.credential(
                               accessToken: googleAuth?.accessToken,
@@ -144,7 +154,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                                 .signInWithCredential(credential);
 
                             if (mounted) {
-                              final userId = FirebaseAuth.instance.currentUser!.uid;
+                              final userId =
+                                  FirebaseAuth.instance.currentUser!.uid;
                               final data = await FirebaseFirestore.instance
                                   .collection('users')
                                   .doc(userId)
