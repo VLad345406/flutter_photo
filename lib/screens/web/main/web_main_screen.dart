@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/chats_list_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_chats_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_discover_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_search_screen.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,7 +30,7 @@ class _WebMainScreenState extends State<WebMainScreen> {
       WebDiscoverScreen(),
       WebSearchScreen(),
       Container(),
-      ChatsListScreen(),
+      WebChatsScreen(),
       ProfileScreen(),
     ];
 
@@ -124,6 +124,7 @@ class _WebMainScreenState extends State<WebMainScreen> {
               ],
             ),
           ),
+          SizedBox(width: 16),
           Expanded(
             child: screens[_selectedIndex],
           ),

@@ -8,6 +8,7 @@ import 'package:flutter_qualification_work/screens/mobile/auth/mobile_google_sig
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_restore_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
+import 'package:flutter_qualification_work/services/authentication/login_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -79,11 +80,10 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
-                  Navigator.push(
+                  signIn(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => WebMainScreen(),
-                    ),
+                    emailController.text,
+                    passwordController.text,
                   );
                 },
               ),

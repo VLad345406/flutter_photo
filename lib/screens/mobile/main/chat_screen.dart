@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
@@ -104,17 +105,19 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: SvgPicture.asset(
-            'assets/icons/back_arrow.svg',
-            width: 12.21,
-            height: 11.35,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
+        leading: kIsWeb
+            ? Container()
+            : IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: SvgPicture.asset(
+                  'assets/icons/back_arrow.svg',
+                  width: 12.21,
+                  height: 11.35,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
       ),
@@ -148,12 +151,11 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: (){
+                  onPressed: () {
                     if (editingStatus) {
                       editingStatus = false;
                       _messageEditingController.text = '';
-                    }
-                    else {
+                    } else {
                       sendMessage();
                     }
                   },

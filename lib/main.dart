@@ -27,8 +27,8 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: lightMode,
       darkTheme: darkMode,
-      home: WebMainScreen(),
-      //home: StartAuthService().handleAuthState(),
+      //home: WebMainScreen(),
+      home: StartAuthService().handleAuthState(),
       //home: CheckInternet(widget: StartAuthService().handleAuthState(),),
     );
   }
