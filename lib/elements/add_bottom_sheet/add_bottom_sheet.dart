@@ -19,8 +19,11 @@ class ShowAddBottomSheet {
       Uint8List image = await pickImage(ImageSource.gallery);
       await getUserData();
       uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
-      await savePictureInFirestore(FirebaseAuth.instance.currentUser!.uid.toString(),
-          _userName, image, _countImage + 1);
+      await savePictureInFirestore(
+          FirebaseAuth.instance.currentUser!.uid.toString(),
+          _userName,
+          image,
+          _countImage + 1);
       //snackBar(context, 'Success add picture!');
     } catch (e) {
       //snackBar(context, 'Something wen`t wrong!');
@@ -32,8 +35,11 @@ class ShowAddBottomSheet {
       Uint8List image = await pickImage(ImageSource.camera);
       await getUserData();
       uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
-      await savePictureInFirestore(FirebaseAuth.instance.currentUser!.uid.toString(),
-          _userName, image, _countImage + 1);
+      await savePictureInFirestore(
+          FirebaseAuth.instance.currentUser!.uid.toString(),
+          _userName,
+          image,
+          _countImage + 1);
       //snackBar(context, 'Success add picture!');
     } catch (e) {
       //snackBar(context, 'Something wen`t wrong!');
@@ -53,7 +59,11 @@ class ShowAddBottomSheet {
       context: context,
       backgroundColor: Colors.white,
       builder: (context) => SizedBox(
-        height: kIsWeb ? 250 : Platform.isIOS ? 250 : 230,
+        height: kIsWeb
+            ? 250
+            : Platform.isIOS
+                ? 250
+                : 230,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -71,22 +81,27 @@ class ShowAddBottomSheet {
             Column(
               children: [
                 Row(
+                  mainAxisAlignment: kIsWeb
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20,
-                        left: 16,
-                        right: 9,
-                      ),
-                      child: AddBottomSheetButton(
-                        function: () {
-                          addCameraImage(context);
-                          Navigator.pop(context);
-                        },
-                        swgLink: 'assets/icons/camera.svg',
-                        buttonText: 'Picture (Camera)',
-                      ),
-                    ),
+                    kIsWeb
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                              top: 20,
+                              left: 16,
+                              right: 9,
+                            ),
+                            child: AddBottomSheetButton(
+                              function: () {
+                                addCameraImage(context);
+                                Navigator.pop(context);
+                              },
+                              swgLink: 'assets/icons/camera.svg',
+                              buttonText: 'Picture (Camera)',
+                            ),
+                          ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: AddBottomSheetButton(
