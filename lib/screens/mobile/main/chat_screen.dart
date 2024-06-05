@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
@@ -214,9 +216,18 @@ class _ChatScreenState extends State<ChatScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OpenProfileScreen(
-                          userId: widget.receiverUserID,
-                        ),
+                        builder: (context) => kIsWeb
+                            ? ResponsiveLayout(
+                                mobileScaffold: OpenProfileScreen(
+                                  userId: widget.receiverUserID,
+                                ),
+                                webScaffold: WebOpenProfileScreen(
+                                  userId: widget.receiverUserID,
+                                ),
+                              )
+                            : OpenProfileScreen(
+                                userId: widget.receiverUserID,
+                              ),
                       ),
                     );
                   },

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_google_sigh_in_registration_data.dart';
+import 'package:flutter_qualification_work/screens/mobile/auth/mobile_restore_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_restore_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
@@ -103,7 +105,10 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                           ..onTap = () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => WebRestoreScreen(),
+                                  builder: (context) => ResponsiveLayout(
+                                    mobileScaffold: MobileRestoreScreen(),
+                                    webScaffold: WebRestoreScreen(),
+                                  ),
                                 ),
                               ),
                         text: 'Restore',

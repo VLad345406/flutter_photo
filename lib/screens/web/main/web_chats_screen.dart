@@ -34,6 +34,7 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,

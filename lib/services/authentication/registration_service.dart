@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/check_internet_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/services/validate_password_service.dart';
@@ -32,11 +33,10 @@ Future registration(
   } else {
     if (await validateUsername(nickName)) {
       snackBar(context, 'This user name is already exist!');
-    }
-    else {
+    } else {
       try {
         UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email.trim(),
           password: password.trim(),
         );
@@ -51,9 +51,14 @@ Future registration(
         }, SetOptions(merge: true));
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-              return kIsWeb ? WebMainScreen() : MainScreen();
-              //return CheckInternet(widget: MainScreen());
-            }), (route) => false);
+          return kIsWeb
+              ? ResponsiveLayout(
+                  mobileScaffold: MainScreen(),
+                  webScaffold: WebMainScreen(),
+                )
+              : MainScreen();
+          //return CheckInternet(widget: MainScreen());
+        }), (route) => false);
       } on FirebaseAuthException catch (e) {
         snackBar(context, e.message.toString());
       } catch (e) {

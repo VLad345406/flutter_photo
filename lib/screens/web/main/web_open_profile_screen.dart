@@ -3,55 +3,87 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
-import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class WebProfileScreen extends StatefulWidget {
-  const WebProfileScreen({super.key});
+class WebOpenProfileScreen extends StatefulWidget {
+  final String userId;
+
+  const WebOpenProfileScreen({
+    super.key,
+    required this.userId,
+  });
 
   @override
-  State<WebProfileScreen> createState() => _WebProfileScreenState();
+  State<WebOpenProfileScreen> createState() => _WebOpenProfileScreenState();
 }
 
-class _WebProfileScreenState extends State<WebProfileScreen> {
+class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
   String name = '';
   String userName = '';
   String userAvatarLink = '';
   String uid = '';
+  int imageCount = 0;
+  List<Map<String, dynamic>> userPictures = [];
 
-  Future<void> getUserData() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+  Future<void> getReceiverUserData() async {
+    final userId = widget.userId;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
+    if (data['count_image'] > 0) {
+      CollectionReference collectionRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('pictures');
+
+      QuerySnapshot querySnapshot = await collectionRef.get();
+      userPictures = querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+      imageCount = querySnapshot.docs.length;
+    }
+
     setState(() {
-      userName = data['user_name'];
       userAvatarLink = data['avatar_link'];
+      userName = data['user_name'];
+      uid = widget.userId;
+      //imageCount = data['count_image'];
       if (data['name'] != '') {
         name = data['name'];
       } else {
         name = data['user_name'];
       }
-      uid = data['uid'];
     });
   }
 
   @override
   void initState() {
     super.initState();
-    getUserData();
+    getReceiverUserData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/back_arrow.svg',
+            width: 12.21,
+            height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         title: Text(
           name,
           style: GoogleFonts.comfortaa(
@@ -60,22 +92,6 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ResponsiveLayout(
-                    mobileScaffold: EditScreen(),
-                    webScaffold: WebEditScreen(),
-                  ),
-                ),
-              ).then((value) => getUserData());
-            },
-            icon: Icon(Icons.settings),
-          ),
-        ],
       ),
       body: ListView(
         primary: false,
@@ -127,10 +143,38 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
               ),
             ),
           ),
+          FirebaseAuth.instance.currentUser?.uid != uid
+              ? Center(
+                  child: PhotoButton(
+                    widthButton: MediaQuery.of(context).size.width / 2,
+                    buttonMargin: EdgeInsets.only(
+                      top: 16,
+                      left: 16,
+                      right: 16,
+                    ),
+                    buttonText: 'FOLLOW',
+                    textColor: Theme.of(context).colorScheme.secondary,
+                    buttonColor: Theme.of(context).colorScheme.primary,
+                  ),
+                )
+              : Container(),
+          Center(
+            child: PhotoButton(
+              widthButton: MediaQuery.of(context).size.width / 2,
+              buttonMargin: EdgeInsets.only(
+                top: 16,
+                left: 16,
+                right: 16,
+              ),
+              buttonText: 'MESSAGE',
+              textColor: Theme.of(context).colorScheme.secondary,
+              buttonColor: Theme.of(context).colorScheme.primary,
+            ),
+          ),
           StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('users')
-                .doc(FirebaseAuth.instance.currentUser?.uid)
+                .doc(widget.userId)
                 .collection('pictures')
                 .snapshots(),
             builder: (context, snapshot) {
@@ -205,7 +249,7 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                                       userPicture['file_name'],
                                     );
                                     if (result == 'Success') {
-                                      getUserData();
+                                      getReceiverUserData();
                                       snackBar(context, 'Success remove file!');
                                     } else {
                                       snackBar(context, 'Fail remove file!');

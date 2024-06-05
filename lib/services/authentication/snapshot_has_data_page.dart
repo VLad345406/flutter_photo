@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_google_sigh_in_registration_data.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
-import 'package:flutter_qualification_work/services/check_internet_service.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 
 class SnapshotHasDataPage extends StatelessWidget {
   const SnapshotHasDataPage({super.key});
@@ -19,7 +19,12 @@ class SnapshotHasDataPage extends StatelessWidget {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             //builder: (context) => CheckInternet(widget: MainScreen()),
-            builder: (context) => kIsWeb ? WebMainScreen() : MainScreen(),
+            builder: (context) => kIsWeb
+                ? ResponsiveLayout(
+                    mobileScaffold: MainScreen(),
+                    webScaffold: WebMainScreen(),
+                  )
+                : MainScreen(),
           ),
         );
       } else {
