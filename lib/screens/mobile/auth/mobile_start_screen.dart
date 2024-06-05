@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_login_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_registration_screen.dart';
+import 'package:flutter_qualification_work/screens/web/auth/web_login_screen.dart';
+import 'package:flutter_qualification_work/screens/web/auth/web_registration_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 
 class MobileStartScreen extends StatefulWidget {
   const MobileStartScreen({super.key});
@@ -52,7 +56,12 @@ class _MobileStartScreenState extends State<MobileStartScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return MobileLoginScreen();
+                        return kIsWeb
+                            ? ResponsiveLayout(
+                                mobileScaffold: MobileLoginScreen(),
+                                webScaffold: WebLoginScreen(),
+                              )
+                            : MobileLoginScreen();
                       },
                     ),
                   );
@@ -69,7 +78,11 @@ class _MobileStartScreenState extends State<MobileStartScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) {
-                        return MobileRegistrationScreen();
+                        return kIsWeb
+                            ? ResponsiveLayout(
+                                mobileScaffold: MobileRegistrationScreen(),
+                                webScaffold: WebRegistrationScreen())
+                            : MobileRegistrationScreen();
                       },
                     ),
                   );

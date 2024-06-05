@@ -122,182 +122,187 @@ class _WebEditScreenState extends State<WebEditScreen> {
           ),
         ),
       ),
-      body: ListView(
-        children: [
-          Center(
-            child: Container(
-              padding: EdgeInsets.only(top: 16),
-              child: Text(
-                'CHANGE AVATAR',
-                style: GoogleFonts.roboto(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-            ),
-          ),
-          Stack(
-            alignment: AlignmentDirectional.topCenter,
-            fit: StackFit.loose,
+      body: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width / 3,
+          child: ListView(
             children: [
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16),
-                  child: GestureDetector(
-                    onTap: selectAvatar,
-                    child: PhotoUserAvatar(
-                      userAvatarLink: userAvatarLink,
-                      radius: 64,
+                child: Container(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text(
+                    'CHANGE AVATAR',
+                    style: GoogleFonts.roboto(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                 ),
               ),
-              userAvatarLink.isNotEmpty
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 100),
-                      child: IconButton(
-                        onPressed: () async {
-                          String result = await removePictureService(
-                            'pictures/$userName/avatar',
-                            'avatar',
-                          );
-                          if (result == 'Success') {
-                            getUserData();
-                            snackBar(context, 'Success remove file!');
-                          } else {
-                            snackBar(context, 'Fail remove file!');
-                          }
-                        },
-                        icon: Icon(
-                          Icons.remove_circle,
-                          color: Colors.red,
+              Stack(
+                alignment: AlignmentDirectional.topCenter,
+                fit: StackFit.loose,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: GestureDetector(
+                        onTap: selectAvatar,
+                        child: PhotoUserAvatar(
+                          userAvatarLink: userAvatarLink,
+                          radius: 64,
                         ),
                       ),
-                    )
-                  : Container(),
+                    ),
+                  ),
+                  userAvatarLink.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 100),
+                          child: IconButton(
+                            onPressed: () async {
+                              String result = await removePictureService(
+                                'pictures/$userName/avatar',
+                                'avatar',
+                              );
+                              if (result == 'Success') {
+                                getUserData();
+                                snackBar(context, 'Success remove file!');
+                              } else {
+                                snackBar(context, 'Fail remove file!');
+                              }
+                            },
+                            icon: Icon(
+                              Icons.remove_circle,
+                              color: Colors.red,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+              PhotoTextField(
+                controller: nameController,
+                showVisibleButton: false,
+                label: 'Name',
+                disableSpace: false,
+                disableUppercase: false,
+              ),
+              PhotoTextField(
+                controller: nicknameController,
+                showVisibleButton: false,
+                label: 'Nick name',
+                disableSpace: true,
+                disableUppercase: true,
+              ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'SAVE',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  saveData();
+                  //snackBar(context, 'Success save!');
+                  //Navigator.pop(context);
+                },
+              ),
+              PhotoTextField(
+                controller: emailController,
+                showVisibleButton: false,
+                label: 'Email',
+                disableSpace: true,
+                disableUppercase: false,
+              ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'SAVE EMAIL',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  snackBar(context, 'Success save!');
+                  //Navigator.pop(context);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                child: Text(
+                  'Password (if use alternative sigh in method write name this method. For example "Google")',
+                  style: GoogleFonts.comfortaa(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              PhotoTextField(
+                controller: oldPasswordController,
+                showVisibleButton: true,
+                label: 'Old password',
+                disableSpace: true,
+                disableUppercase: false,
+              ),
+              PhotoTextField(
+                controller: passwordController,
+                showVisibleButton: true,
+                label: 'Password',
+                disableSpace: true,
+                disableUppercase: false,
+              ),
+              //password text-field
+              PhotoTextField(
+                controller: confirmPasswordController,
+                showVisibleButton: true,
+                label: 'Confirm password',
+                disableSpace: true,
+                disableUppercase: false,
+              ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'SAVE PASSWORD',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  changePassword(context, oldPasswordController.text,
+                      passwordController.text, confirmPasswordController.text);
+                  //snackBar(context, 'Success save!');
+                  //Navigator.pop(context);
+                },
+              ),
+              PhotoButton(
+                widthButton: screenWidth - 32,
+                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: 'EXIT PROFILE',
+                textColor: Colors.red,
+                buttonColor: Theme.of(context).colorScheme.secondary,
+                function: () {
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(context,
+                      MaterialPageRoute(builder: (context) {
+                    return WebStartScreen();
+                  }), (route) => false);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: 16,
+                ),
+                child: PhotoButton(
+                  widthButton: screenWidth - 32,
+                  buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
+                  buttonText: 'REMOVE ACCOUNT',
+                  textColor: Colors.red,
+                  buttonColor: Theme.of(context).colorScheme.secondary,
+                  function: () {
+                    removeAccount(context);
+                  },
+                ),
+              ),
             ],
           ),
-          PhotoTextField(
-            controller: nameController,
-            showVisibleButton: false,
-            label: 'Name',
-            disableSpace: false,
-            disableUppercase: false,
-          ),
-          PhotoTextField(
-            controller: nicknameController,
-            showVisibleButton: false,
-            label: 'Nick name',
-            disableSpace: true,
-            disableUppercase: true,
-          ),
-          PhotoButton(
-            widthButton: screenWidth - 32,
-            buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            buttonText: 'SAVE',
-            textColor: Theme.of(context).colorScheme.secondary,
-            buttonColor: Theme.of(context).colorScheme.primary,
-            function: () {
-              saveData();
-              //snackBar(context, 'Success save!');
-              //Navigator.pop(context);
-            },
-          ),
-          PhotoTextField(
-            controller: emailController,
-            showVisibleButton: false,
-            label: 'Email',
-            disableSpace: true,
-            disableUppercase: false,
-          ),
-          PhotoButton(
-            widthButton: screenWidth - 32,
-            buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            buttonText: 'SAVE EMAIL',
-            textColor: Theme.of(context).colorScheme.secondary,
-            buttonColor: Theme.of(context).colorScheme.primary,
-            function: () {
-              snackBar(context, 'Success save!');
-              //Navigator.pop(context);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-            child: Text(
-              'Password (if use alternative sigh in method write name this method. For example "Google")',
-              style: GoogleFonts.comfortaa(
-                color: Theme.of(context).colorScheme.primary,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          PhotoTextField(
-            controller: oldPasswordController,
-            showVisibleButton: true,
-            label: 'Old password',
-            disableSpace: true,
-            disableUppercase: false,
-          ),
-          PhotoTextField(
-            controller: passwordController,
-            showVisibleButton: true,
-            label: 'Password',
-            disableSpace: true,
-            disableUppercase: false,
-          ),
-          //password text-field
-          PhotoTextField(
-            controller: confirmPasswordController,
-            showVisibleButton: true,
-            label: 'Confirm password',
-            disableSpace: true,
-            disableUppercase: false,
-          ),
-          PhotoButton(
-            widthButton: screenWidth - 32,
-            buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            buttonText: 'SAVE PASSWORD',
-            textColor: Theme.of(context).colorScheme.secondary,
-            buttonColor: Theme.of(context).colorScheme.primary,
-            function: () {
-              changePassword(context, oldPasswordController.text,
-                  passwordController.text, confirmPasswordController.text);
-              //snackBar(context, 'Success save!');
-              //Navigator.pop(context);
-            },
-          ),
-          PhotoButton(
-            widthButton: screenWidth - 32,
-            buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-            buttonText: 'EXIT PROFILE',
-            textColor: Colors.red,
-            buttonColor: Theme.of(context).colorScheme.secondary,
-            function: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.pushAndRemoveUntil(context,
-                  MaterialPageRoute(builder: (context) {
-                return WebStartScreen();
-              }), (route) => false);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: 16,
-            ),
-            child: PhotoButton(
-              widthButton: screenWidth - 32,
-              buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-              buttonText: 'REMOVE ACCOUNT',
-              textColor: Colors.red,
-              buttonColor: Theme.of(context).colorScheme.secondary,
-              function: () {
-                removeAccount(context);
-              },
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

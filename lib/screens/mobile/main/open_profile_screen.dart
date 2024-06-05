@@ -48,7 +48,6 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
       imageCount = querySnapshot.docs.length;
-      print(imageCount);
     }
 
     setState(() {
@@ -188,8 +187,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
               : SizedBox(
                   height: MediaQuery.of(context).size.width * imageCount,
                   child: ListView.builder(
-                    primary: false,
-                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemCount: userPictures.length,
                     itemBuilder: (BuildContext context, int index) {
                       final userPicture = userPictures[index];

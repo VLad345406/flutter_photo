@@ -1,7 +1,6 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
@@ -296,7 +295,7 @@ class _EditScreenState extends State<EditScreen> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  bottom: Platform.isIOS ? 0 : 16,
+                  bottom: kIsWeb ? 16 : Platform.isIOS ? 0 : 16,
                 ),
                 child: PhotoButton(
                   widthButton: screenWidth - 32,

@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
@@ -85,7 +87,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditScreen(),
+                  builder: (context) => kIsWeb
+                      ? ResponsiveLayout(
+                          mobileScaffold: EditScreen(),
+                          webScaffold: WebEditScreen(),
+                        )
+                      : EditScreen(),
                 ),
               ).then((value) => getUserData());
             },
@@ -171,14 +178,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   );
-                }
-                else {
+                } else {
                   return SizedBox(
                     height: MediaQuery.of(context).size.width *
                         snapshot.data!.docs.length,
                     child: ListView.builder(
-                      primary: false,
-                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (BuildContext context, int index) {
                         final userPicture = snapshot.data!.docs[index];
@@ -224,8 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   if (result == 'Success') {
                                     getUserData();
                                     snackBar(context, 'Success remove file!');
-                                  }
-                                  else {
+                                  } else {
                                     snackBar(context, 'Fail remove file!');
                                   }
                                 },
