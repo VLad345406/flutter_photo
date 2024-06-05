@@ -7,12 +7,7 @@ import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 
 Future signIn(BuildContext context, String email, String password) async {
   if (email == '' || password == '') {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Input email and password!"),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+    snackBar(context, 'Input email and password!');
   } else {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(

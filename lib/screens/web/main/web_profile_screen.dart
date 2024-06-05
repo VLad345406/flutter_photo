@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,19 +59,19 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        /*actions: [
+        actions: [
           IconButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditScreen(),
+                  builder: (context) => WebEditScreen(),
                 ),
               ).then((value) => getUserData());
             },
             icon: Icon(Icons.settings),
           ),
-        ],*/
+        ],
       ),
       body: ListView(
         primary: false,
