@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/chat_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
@@ -160,17 +161,29 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                   buttonColor: Theme.of(context).colorScheme.primary,
                 )
               : Container(),
-          PhotoButton(
-            widthButton: MediaQuery.of(context).size.width - 32,
-            buttonMargin: EdgeInsets.only(
-              top: 16,
-              left: 16,
-              right: 16,
-            ),
-            buttonText: 'MESSAGE',
-            textColor: Theme.of(context).colorScheme.secondary,
-            buttonColor: Theme.of(context).colorScheme.primary,
-          ),
+          FirebaseAuth.instance.currentUser?.uid != uid
+              ? PhotoButton(
+                  widthButton: MediaQuery.of(context).size.width - 32,
+                  buttonMargin: EdgeInsets.only(
+                    top: 16,
+                    left: 16,
+                    right: 16,
+                  ),
+                  buttonText: 'MESSAGE',
+                  textColor: Theme.of(context).colorScheme.secondary,
+                  buttonColor: Theme.of(context).colorScheme.primary,
+                  function: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatScreen(
+                          receiverUserID: widget.userId,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              : Container(),
           imageCount == 0
               ? Container(
                   //alignment: Alignment.center,

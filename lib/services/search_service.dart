@@ -5,23 +5,40 @@ import 'package:flutter_qualification_work/classes/picture.dart';
 import 'package:flutter_qualification_work/classes/user.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 
-Future<List<dynamic>> searchService(BuildContext context, String value) async {
+dynamic searchService(BuildContext context, String value) async {
   try {
     if (value[0] == '@') {
       snackBar(context, 'User search');
-      //var mapUsers = await FirebaseFirestore.instance.collection('user').get();
-      print('before get users');
-      List<MyUser> listUsers = await fetchUsers();
-      print('after get users');
-      for (int i = 0; i < listUsers.length; i++) {
-        print(listUsers[i].userName);
+
+      QuerySnapshot<Map<String, dynamic>> usersCollection =
+          await FirebaseFirestore.instance.collection('users').get();
+      //print(usersCollection.size);
+
+      List<Map<String, dynamic>> resultSearchUsers =
+          searchUsers(value, usersCollection);
+
+      print(resultSearchUsers.length);
+
+      for (var user in resultSearchUsers) {
+        print('UserName: ${user['user_name']}, Email: ${user['email']}');
       }
 
+      /*for (int i = 0; i < resultSearchUsers.length; i++) {
+        String tempStr = resultSearchUsers[i]['user_name'];
+        if (tempStr.contains(other))
+        print(resultSearchUsers[i]['user_name']);
+      }*/
+
+      /*for (int i = 0; i < usersCollection.size; i++) {
+        print(usersCollection.docs[i]['user_name']);
+      }*/
+      return usersCollection;
     }
     if (value[0] == '#') {
       snackBar(context, 'Tag search');
     }
-  }catch (e) {
+  } catch (e) {
+    print(e);
     if (kDebugMode) {
       print('Out of range');
     }
@@ -29,37 +46,51 @@ Future<List<dynamic>> searchService(BuildContext context, String value) async {
   return [];
 }
 
-Future<List<MyUser>> fetchUsers() async {
-  List<MyUser> users = [];
+List<Map<String, dynamic>> searchUsers(String query, QuerySnapshot<Map<String, dynamic>>? usersCollection) {
+  print(query);
+  String searchQuery = query.replaceAll('@', '').toLowerCase().trim();
+  if (usersCollection == null) {
+    return [];
+  }
+  if (query == '@' && query.length == 1) {
+    return usersCollection.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  } else {
+    return usersCollection.docs
+        .where((doc) {
+      var userName = doc.data()['name'].toString().toLowerCase().trim();
+      return userName.contains(searchQuery);
+    })
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+  }
+}
 
+/*List<Map<String, dynamic>> searchUsers(String query, QuerySnapshot<Map<String, dynamic>>? usersCollection) {
+  //print(query);
+  String searchQuery = query.replaceAll('@', '').toLowerCase();
+  if (usersCollection == null) {
+    return [];
+  }
+  if (query == '@' && query.length == 1) {
+    return usersCollection.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  } else {
+    return usersCollection.docs
+        .where((doc) =>
+        doc.data()['name'].toString().toLowerCase().contains(searchQuery))
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+  }
+}*/
+
+
+/*Future<QuerySnapshot<Map<String, dynamic>>> fetchUsers() async {
+  QuerySnapshot<Map<String, dynamic>> usersCollection;
   try {
-    // Get the collection reference
-    CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
-
-    // Fetch the collection snapshot
-    QuerySnapshot snapshot = await usersCollection.get();
-    print(snapshot);
-
-    // Iterate over the documents and convert them to User objects
-    for (var doc in snapshot.docs) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-
-      // Convert the pictures field to a List<Picture>
-      List<Picture> pictures = (data['pictures'] as List<dynamic>)
-          .map((item) => Picture.fromMap(item as Map<String, dynamic>))
-          .toList();
-
-      // Add the pictures field to the data map
-      data['pictures'] = pictures;
-
-      // Create a User object from the map and add it to the list
-      MyUser user = MyUser.fromMap(data);
-      users.add(user);
-    }
+    usersCollection =
+        await FirebaseFirestore.instance.collection('users').get();
   } catch (e) {
     print("Error fetching users: $e");
   }
 
-  return users;
-}
-
+  return usersCollection;
+}*/
