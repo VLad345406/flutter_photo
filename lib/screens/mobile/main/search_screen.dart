@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/services/search_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,8 +17,10 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController searchController = TextEditingController();
 
-  void displaySearch(){
+  dynamic searchResult;
 
+  Widget buildSearchResult(dynamic resultSearch){
+    return _buildUserList(resultSearch, 'email');
   }
 
   @override
@@ -60,7 +65,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 controller: searchController,
                 enableSuggestions: false,
                 autocorrect: false,
-                onChanged: (value) => searchService(context, value),
+                onChanged: (value) {
+                  searchService(context, value);
+                },
                 style: GoogleFonts.roboto(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
@@ -72,8 +79,62 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
+          Expanded(
+            child: Container(),
+          ),
         ],
       ),
     );
   }
+
+  Widget _buildUserList(dynamic list, String type) {
+    return ListView(
+      primary: false,
+      shrinkWrap: true,
+      children: list!.docs
+          .map<Widget>((doc) => _buildUserListItem(doc))
+          .toList(),
+    );
+  }
+
+  Widget _buildUserListItem(DocumentSnapshot document) {
+    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+
+    if (FirebaseAuth.instance.currentUser!.email != data['email']) {
+      String receiverUserName = data['user_name'];
+
+      if (data['name'] != '') {
+        receiverUserName = data['name'];
+      }
+
+      return ListTile(
+        title: Row(
+          children: [
+            PhotoUserAvatar(userAvatarLink: data['avatar_link'], radius: 20),
+            const SizedBox(width: 20),
+            Text(
+              receiverUserName,
+              style: GoogleFonts.roboto(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            )
+          ],
+        ),
+        onTap: () {
+          /*Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatScreen(
+                receiverUserID: data['uid'],
+              ),
+            ),
+          );*/
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
 }

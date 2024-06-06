@@ -100,11 +100,32 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          receiverName,
-          style: GoogleFonts.roboto(
-            fontSize: 25,
-            color: Theme.of(context).colorScheme.primary,
+        title: TextButton(
+          onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => kIsWeb
+                    ? ResponsiveLayout(
+                  mobileScaffold: OpenProfileScreen(
+                    userId: widget.receiverUserID,
+                  ),
+                  webScaffold: WebOpenProfileScreen(
+                    userId: widget.receiverUserID,
+                  ),
+                )
+                    : OpenProfileScreen(
+                  userId: widget.receiverUserID,
+                ),
+              ),
+            );
+          },
+          child: Text(
+            receiverName,
+            style: GoogleFonts.roboto(
+              fontSize: 25,
+              color: Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
         leading: kIsWeb
