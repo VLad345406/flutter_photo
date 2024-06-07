@@ -159,6 +159,16 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                   buttonText: 'FOLLOW',
                   textColor: Theme.of(context).colorScheme.secondary,
                   buttonColor: Theme.of(context).colorScheme.primary,
+                  function: () {
+                    FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(FirebaseAuth.instance.currentUser?.uid)
+                        .collection('subscriptions')
+                        .doc(widget.userId)
+                        .set({
+                      'uid': widget.userId,
+                    });
+                  },
                 )
               : Container(),
           FirebaseAuth.instance.currentUser?.uid != uid
@@ -172,7 +182,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                   buttonText: 'MESSAGE',
                   textColor: Theme.of(context).colorScheme.secondary,
                   buttonColor: Theme.of(context).colorScheme.primary,
-                  function: (){
+                  function: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
