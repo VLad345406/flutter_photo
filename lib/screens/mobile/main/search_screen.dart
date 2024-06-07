@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/search_service.dart';
-import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -16,11 +18,10 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController searchController = TextEditingController();
+  List<Map<String, dynamic>> searchResult = [];
 
-  dynamic searchResult;
-
-  Widget buildSearchResult(dynamic resultSearch){
-    return _buildUserList(resultSearch, 'email');
+  void updateSearchResult() {
+    setState(() {});
   }
 
   @override
@@ -65,8 +66,18 @@ class _SearchScreenState extends State<SearchScreen> {
                 controller: searchController,
                 enableSuggestions: false,
                 autocorrect: false,
-                onChanged: (value) {
-                  searchService(context, value);
+                onChanged: (value) async {
+                  if (value.isEmpty) {
+                    searchResult = [];
+                    updateSearchResult();
+                  } else {
+                    QuerySnapshot<Map<String, dynamic>> usersCollection =
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .get();
+                    searchResult = await searchUsers(value, usersCollection);
+                    updateSearchResult();
+                  }
                 },
                 style: GoogleFonts.roboto(
                   fontSize: 15,
@@ -80,61 +91,59 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           Expanded(
-            child: Container(),
+            child: searchController.text.isNotEmpty && searchResult.isEmpty
+                ? Center(child: Text('No users found!'))
+                : ListView.builder(
+                    itemCount: searchResult.length,
+                    itemBuilder: (context, index) {
+                      String userName = searchResult[index]['user_name'];
+
+                      if (searchResult[index]['uid'] ==
+                          FirebaseAuth.instance.currentUser?.uid) {
+                        return Container();
+                      } else {
+                        return ListTile(
+                          title: Row(
+                            children: [
+                              PhotoUserAvatar(
+                                  userAvatarLink: searchResult[index]
+                                      ['avatar_link'],
+                                  radius: 20),
+                              const SizedBox(width: 20),
+                              Text(
+                                userName,
+                                style: GoogleFonts.roboto(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              )
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => kIsWeb
+                                    ? ResponsiveLayout(
+                                        mobileScaffold: OpenProfileScreen(
+                                          userId: searchResult[index]['uid'],
+                                        ),
+                                        webScaffold: WebOpenProfileScreen(
+                                            userId: searchResult[index]['uid']),
+                                      )
+                                    : OpenProfileScreen(
+                                        userId: searchResult[index]['uid'],
+                                      ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildUserList(dynamic list, String type) {
-    return ListView(
-      primary: false,
-      shrinkWrap: true,
-      children: list!.docs
-          .map<Widget>((doc) => _buildUserListItem(doc))
-          .toList(),
-    );
-  }
-
-  Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-
-    if (FirebaseAuth.instance.currentUser!.email != data['email']) {
-      String receiverUserName = data['user_name'];
-
-      if (data['name'] != '') {
-        receiverUserName = data['name'];
-      }
-
-      return ListTile(
-        title: Row(
-          children: [
-            PhotoUserAvatar(userAvatarLink: data['avatar_link'], radius: 20),
-            const SizedBox(width: 20),
-            Text(
-              receiverUserName,
-              style: GoogleFonts.roboto(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-              ),
-            )
-          ],
-        ),
-        onTap: () {
-          /*Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatScreen(
-                receiverUserID: data['uid'],
-              ),
-            ),
-          );*/
-        },
-      );
-    } else {
-      return Container();
-    }
-  }
-
 }
