@@ -9,6 +9,7 @@ class MyUser {
   String userName;
   List<Picture> pictures;
   List<String> subscriptions;
+  List<String> followers;
 
   MyUser({
     required this.avatarLink,
@@ -19,6 +20,7 @@ class MyUser {
     required this.userName,
     required this.pictures,
     required this.subscriptions,
+    required this.followers,
   });
 
   Map<String, dynamic> toMap() {
@@ -30,6 +32,7 @@ class MyUser {
       'uid': uid,
       'user_name': userName,
       'subscriptions': subscriptions,
+      'followers': followers,
     };
   }
 
@@ -43,6 +46,7 @@ class MyUser {
       userName: map['user_name'],
       pictures: map['pictures'],
       subscriptions: map['subscriptions'],
+      followers: map['followers'],
     );
   }
 }

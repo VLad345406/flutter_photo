@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
@@ -24,11 +26,23 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
   String userName = '';
   String userAvatarLink = '';
   String uid = '';
+  int countFollowers = 0;
+  int countSubs = 0;
 
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    final followers = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('followers')
+        .get();
+    final subscriptions = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('subscriptions')
+        .get();
 
     setState(() {
       userName = data['user_name'];
@@ -39,6 +53,8 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
         name = data['user_name'];
       }
       uid = data['uid'];
+      countFollowers = followers.size;
+      countSubs = subscriptions.size;
     });
   }
 
@@ -126,6 +142,55 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                 ),
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PhotoButton(
+                widthButton: MediaQuery.of(context).size.width / 4 - 8,
+                buttonMargin: EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  right: 8,
+                ),
+                buttonText: 'Followers ($countFollowers)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListAccounts(
+                        title: 'Followers',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              PhotoButton(
+                widthButton: MediaQuery.of(context).size.width / 4 - 8,
+                buttonMargin: EdgeInsets.only(
+                  top: 16,
+                  left: 8,
+                  right: 16,
+                ),
+                buttonText: 'Subscriptions ($countSubs)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListAccounts(
+                        title: 'Subscriptions',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           StreamBuilder(
             stream: FirebaseFirestore.instance
@@ -235,6 +300,9 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                 );
               }
             },
+          ),
+          SizedBox(
+            height: 16,
           ),
         ],
       ),

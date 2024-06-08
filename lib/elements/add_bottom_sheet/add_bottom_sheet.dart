@@ -99,7 +99,7 @@ class ShowAddBottomSheet {
                                 Navigator.pop(context);
                               },
                               swgLink: 'assets/icons/camera.svg',
-                              buttonText: 'Picture (Camera)',
+                              buttonText: 'Camera',
                             ),
                           ),
                     Padding(
@@ -110,7 +110,7 @@ class ShowAddBottomSheet {
                           Navigator.pop(context);
                         },
                         swgLink: 'assets/icons/gallery.svg',
-                        buttonText: 'Picture (Gallery)',
+                        buttonText: 'Gallery',
                       ),
                     ),
                   ],

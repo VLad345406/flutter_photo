@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
@@ -30,12 +31,32 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
   String userAvatarLink = '';
   String uid = '';
   int imageCount = 0;
+  int countFollowers = 0;
+  int countSubs = 0;
   List<Map<String, dynamic>> userPictures = [];
+
+  bool checkFollow = false;
+
+  void updateFollow() {
+    setState(() {
+      checkFollow = !checkFollow;
+    });
+  }
 
   Future<void> getReceiverUserData() async {
     final userId = widget.userId;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    final followers = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('followers')
+        .get();
+    final subscriptions = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('subscriptions')
+        .get();
 
     if (data['count_image'] > 0) {
       CollectionReference collectionRef = FirebaseFirestore.instance
@@ -50,6 +71,15 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
       imageCount = querySnapshot.docs.length;
     }
 
+    final getFollowStatus = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .collection('subscriptions')
+        .doc(widget.userId)
+        .get();
+
+    checkFollow = getFollowStatus.exists;
+
     setState(() {
       userAvatarLink = data['avatar_link'];
       userName = data['user_name'];
@@ -60,6 +90,8 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
       } else {
         name = data['user_name'];
       }
+      countFollowers = followers.size;
+      countSubs = subscriptions.size;
     });
   }
 
@@ -144,6 +176,69 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
             ),
           ),
           FirebaseAuth.instance.currentUser?.uid != uid
+              ? !checkFollow
+                  ? Center(
+                      child: PhotoButton(
+                        widthButton: MediaQuery.of(context).size.width / 2,
+                        buttonMargin: EdgeInsets.only(
+                          top: 16,
+                          left: 16,
+                          right: 16,
+                        ),
+                        buttonText: 'FOLLOW',
+                        textColor: Theme.of(context).colorScheme.secondary,
+                        buttonColor: Theme.of(context).colorScheme.primary,
+                        function: () {
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .collection('subscriptions')
+                              .doc(widget.userId)
+                              .set({
+                            'uid': widget.userId,
+                          });
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(widget.userId)
+                              .collection('followers')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .set({
+                            'uid': FirebaseAuth.instance.currentUser?.uid,
+                          });
+                          updateFollow();
+                        },
+                      ),
+                    )
+                  : Center(
+                      child: PhotoButton(
+                        widthButton: MediaQuery.of(context).size.width / 2,
+                        buttonMargin: EdgeInsets.only(
+                          top: 16,
+                          left: 16,
+                          right: 16,
+                        ),
+                        buttonText: 'UNFOLLOW',
+                        textColor: Colors.red,
+                        buttonColor: Theme.of(context).colorScheme.primary,
+                        function: () {
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .collection('subscriptions')
+                              .doc(widget.userId)
+                              .delete();
+                          FirebaseFirestore.instance
+                              .collection('users')
+                              .doc(widget.userId)
+                              .collection('followers')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .delete();
+                          updateFollow();
+                        },
+                      ),
+                    )
+              : Container(),
+          FirebaseAuth.instance.currentUser?.uid != uid
               ? Center(
                   child: PhotoButton(
                     widthButton: MediaQuery.of(context).size.width / 2,
@@ -152,24 +247,58 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                       left: 16,
                       right: 16,
                     ),
-                    buttonText: 'FOLLOW',
+                    buttonText: 'MESSAGE',
                     textColor: Theme.of(context).colorScheme.secondary,
                     buttonColor: Theme.of(context).colorScheme.primary,
                   ),
                 )
               : Container(),
-          Center(
-            child: PhotoButton(
-              widthButton: MediaQuery.of(context).size.width / 2,
-              buttonMargin: EdgeInsets.only(
-                top: 16,
-                left: 16,
-                right: 16,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PhotoButton(
+                widthButton: MediaQuery.of(context).size.width / 4 - 8,
+                buttonMargin: EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  right: 8,
+                ),
+                buttonText: 'Followers ($countFollowers)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListAccounts(
+                          title: 'Followers',
+                          userId: widget.userId,),
+                    ),
+                  );
+                },
               ),
-              buttonText: 'MESSAGE',
-              textColor: Theme.of(context).colorScheme.secondary,
-              buttonColor: Theme.of(context).colorScheme.primary,
-            ),
+              PhotoButton(
+                widthButton: MediaQuery.of(context).size.width / 4 - 8,
+                buttonMargin: EdgeInsets.only(
+                  top: 16,
+                  left: 8,
+                  right: 16,
+                ),
+                buttonText: 'Subscriptions ($countSubs)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListAccounts(
+                          title: 'Subscriptions',
+                          userId: widget.userId,),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           StreamBuilder(
             stream: FirebaseFirestore.instance
@@ -210,58 +339,30 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                         final userPicture = snapshot.data!.docs[index];
                         final imageLink = userPicture['image_link'];
                         return Center(
-                          child: Stack(
-                            alignment: AlignmentDirectional.topEnd,
-                            fit: StackFit.loose,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PhotoOpen(
-                                        path: imageLink,
-                                        uid: uid,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(
-                                      top: 32, left: 16, right: 16),
-                                  height: MediaQuery.of(context).size.width / 2,
-                                  width: MediaQuery.of(context).size.width / 2,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(imageLink),
-                                      fit: BoxFit.cover,
-                                    ),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PhotoOpen(
+                                    path: imageLink,
+                                    uid: uid,
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 26, right: 10),
-                                child: IconButton(
-                                  onPressed: () async {
-                                    String result = await removePictureService(
-                                      'pictures/$userName/${userPicture['file_name']}',
-                                      userPicture['file_name'],
-                                    );
-                                    if (result == 'Success') {
-                                      getReceiverUserData();
-                                      snackBar(context, 'Success remove file!');
-                                    } else {
-                                      snackBar(context, 'Fail remove file!');
-                                    }
-                                  },
-                                  icon: Icon(
-                                    Icons.remove_circle,
-                                    color: Colors.red,
-                                  ),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  top: 32, left: 16, right: 16),
+                              height: MediaQuery.of(context).size.width / 2,
+                              width: MediaQuery.of(context).size.width / 2,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(imageLink),
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },
@@ -279,6 +380,9 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                 );
               }
             },
+          ),
+          SizedBox(
+            height: 16,
           ),
         ],
       ),
