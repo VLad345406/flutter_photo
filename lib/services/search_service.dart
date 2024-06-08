@@ -12,12 +12,6 @@ dynamic searchService(BuildContext context, String value) async {
 
       List<Map<String, dynamic>> resultSearchUsers =
           searchUsers(value, usersCollection);
-
-      print(resultSearchUsers.length);
-
-      for (var user in resultSearchUsers) {
-        print('UserName: ${user['user_name']}, Email: ${user['email']}');
-      }
       return usersCollection;
     }
     if (value[0] == '#') {

@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_qualification_work/elements/button.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
@@ -28,23 +30,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName = '';
   String userAvatarLink = '';
   String uid = '';
+  int countFollowers = 0;
+  int countSubs = 0;
 
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
-
-    /*if (data['count_image'] > 0) {
-      CollectionReference collectionRef = FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('pictures');
-
-      QuerySnapshot querySnapshot = await collectionRef.get();
-      userPictures = querySnapshot.docs
-          .map((doc) => doc.data() as Map<String, dynamic>)
-          .toList();
-    }*/
+    final followers = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('followers')
+        .get();
+    final subscriptions = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('subscriptions')
+        .get();
 
     setState(() {
       userName = data['user_name'];
@@ -56,6 +58,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
       //imageCount = data['count_image'];
       uid = data['uid'];
+      countFollowers = followers.size;
+      countSubs = subscriptions.size;
     });
   }
 
@@ -149,6 +153,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              PhotoButton(
+                widthButton: MediaQuery.of(context).size.width / 2 - 24,
+                buttonMargin: EdgeInsets.only(
+                  top: 16,
+                  left: 16,
+                  right: 8,
+                ),
+                buttonText: 'Followers ($countFollowers)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListAccounts(
+                        title: 'Followers',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              PhotoButton(
+                widthButton: MediaQuery.of(context).size.width / 2 - 24,
+                buttonMargin: EdgeInsets.only(
+                  top: 16,
+                  left: 8,
+                  right: 16,
+                ),
+                buttonText: 'Subscriptions ($countSubs)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
+                function: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListAccounts(
+                        title: 'Subscriptions',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
           StreamBuilder(
             stream: FirebaseFirestore.instance
