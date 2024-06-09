@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'open_profile_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverUserID;
@@ -33,6 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String receiverAvatarLink = '';
 
   bool editingStatus = false;
+  String editingMessageID = '';
 
   final TextEditingController _messageEditingController =
       TextEditingController();
@@ -55,12 +56,36 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void sendMessage() async {
     if (_messageEditingController.text.isNotEmpty) {
-      await _chatService.sendMessage(
-        widget.receiverUserID,
-        _messageEditingController.text,
-      );
+      if (editingStatus) {
+        await _chatService.editMessage(
+          widget.receiverUserID,
+          editingMessageID,
+          _messageEditingController.text,
+        );
+        editingStatus = false;
+        editingMessageID = '';
+      } else {
+        await _chatService.sendMessage(
+          widget.receiverUserID,
+          _messageEditingController.text,
+        );
+      }
       _messageEditingController.clear();
     }
+  }
+
+  void editMessage(String messageID, String message) {
+    setState(() {
+      editingStatus = true;
+      editingMessageID = messageID;
+      _messageEditingController.text = message;
+    });
+    snackBar(context, 'Success edit!');
+  }
+
+  void deleteMessage(String messageID) async {
+    await _chatService.deleteMessage(widget.receiverUserID, messageID);
+    snackBar(context, 'Success!');
   }
 
   Future<void> getReceiverUserData() async {
@@ -101,22 +126,22 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: TextButton(
-          onPressed: (){
+          onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => kIsWeb
                     ? ResponsiveLayout(
-                  mobileScaffold: OpenProfileScreen(
-                    userId: widget.receiverUserID,
-                  ),
-                  webScaffold: WebOpenProfileScreen(
-                    userId: widget.receiverUserID,
-                  ),
-                )
+                        mobileScaffold: OpenProfileScreen(
+                          userId: widget.receiverUserID,
+                        ),
+                        webScaffold: WebOpenProfileScreen(
+                          userId: widget.receiverUserID,
+                        ),
+                      )
                     : OpenProfileScreen(
-                  userId: widget.receiverUserID,
-                ),
+                        userId: widget.receiverUserID,
+                      ),
               ),
             );
           },
@@ -147,7 +172,7 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Column(
         children: [
-          Expanded(child: _buildMessageItemList()),
+          Expanded(child: buildMessageItemList()),
           Padding(
             padding: const EdgeInsets.only(
               left: 16,
@@ -174,14 +199,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    if (editingStatus) {
-                      editingStatus = false;
-                      _messageEditingController.text = '';
-                    } else {
-                      sendMessage();
-                    }
-                  },
+                  onPressed: sendMessage,
                   icon: const Icon(
                     Icons.send,
                     size: 32,
@@ -195,7 +213,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageItemList() {
+  Widget buildMessageItemList() {
     return StreamBuilder(
         stream: _chatService.getMessages(
             widget.receiverUserID, _firebaseAuth.currentUser!.uid),
@@ -222,6 +240,14 @@ class _ChatScreenState extends State<ChatScreen> {
     var alignment = (data['sender_id'] == _firebaseAuth.currentUser!.uid)
         ? Alignment.centerRight
         : Alignment.centerLeft;
+
+    //get message sent time
+    Timestamp messageTimestamp = data['timestamp'];
+    DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(messageTimestamp.seconds * 1000);
+    int hour = dateTime.hour;
+    int minute = dateTime.minute;
+
     _scrollToBottom();
     return Row(
       mainAxisAlignment: alignment == Alignment.centerRight
@@ -270,7 +296,6 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary,
-              //color: Colors.black12,
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(20),
                 topRight: const Radius.circular(20),
@@ -314,7 +339,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ? PopupMenuButton(
                                     color:
                                         Theme.of(context).colorScheme.primary,
-                                    icon: Icon(Icons.more_vert),
+                                    icon: const Icon(Icons.more_vert),
                                     iconColor:
                                         Theme.of(context).colorScheme.secondary,
                                     itemBuilder: (context) => [
@@ -340,9 +365,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                       PopupMenuItem(
                                         child: TextButton(
                                           onPressed: () {
-                                            _messageEditingController.text =
-                                                data['message'];
-                                            editingStatus = true;
+                                            editMessage(
+                                                document.id, data['message']);
                                             Navigator.pop(context);
                                           },
                                           child: Text(
@@ -358,7 +382,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                       PopupMenuItem(
                                         child: TextButton(
                                           onPressed: () {
-                                            snackBar(context, 'Delete');
+                                            deleteMessage(document.id);
                                             Navigator.pop(context);
                                           },
                                           child: Text(
@@ -377,12 +401,17 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                       ),
-                Text(
+                /*SelectableText(
                   data['message'],
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
                     fontSize: 17,
                   ),
+                ),*/
+                LinkifyText(text: data['message']),
+                Text(
+                  '${hour < 10 ? '0$hour' : hour}:${minute == 0 ? '00' : minute}',
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),

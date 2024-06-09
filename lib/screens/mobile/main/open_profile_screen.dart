@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/chat_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/chats/chat_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 

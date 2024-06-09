@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/chats_list_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/chats/chats_list_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/discover_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/search_screen.dart';
