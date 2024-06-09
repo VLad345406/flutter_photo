@@ -377,7 +377,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                       ),
-                Text(
+                SelectableText(
                   data['message'],
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
