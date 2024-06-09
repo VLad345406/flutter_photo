@@ -32,6 +32,53 @@ class ChatService extends ChangeNotifier {
         .add(newMessage.toMap());
   }
 
+  Future<void> editMessage(
+    String receiverUserID,
+    String messageID,
+    String newMessage,
+  ) async {
+    final String currentUserId = _firebaseAuth.currentUser!.uid;
+
+    List<String> ids = [currentUserId, receiverUserID];
+    ids.sort();
+    String chatRoomId = ids.join("_");
+
+    try {
+      await _firestore
+          .collection('chat_rooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .doc(messageID)
+          .update({'message': newMessage});
+    } catch (e) {
+      print('Error editing message: $e');
+      throw e;
+    }
+  }
+
+  Future<void> deleteMessage(
+    String receiverUserID,
+    String messageID,
+  ) async {
+    final String currentUserId = _firebaseAuth.currentUser!.uid;
+
+    List<String> ids = [currentUserId, receiverUserID];
+    ids.sort();
+    String chatRoomId = ids.join("_");
+
+    try {
+      await _firestore
+          .collection('chat_rooms')
+          .doc(chatRoomId)
+          .collection('messages')
+          .doc(messageID)
+          .delete();
+    } catch (e) {
+      print('Error deleting message: $e');
+      throw e;
+    }
+  }
+
   Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
     List<String> ids = [userId, otherUserId];
     ids.sort();

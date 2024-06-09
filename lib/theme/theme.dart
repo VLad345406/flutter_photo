@@ -4,8 +4,8 @@ ThemeData lightMode = ThemeData(
   brightness: Brightness.light,
   textSelectionTheme: TextSelectionThemeData(
     selectionColor: Colors.blue,
-    cursorColor: Colors.white,
-    selectionHandleColor: Colors.white,
+    cursorColor: Colors.black,
+    selectionHandleColor: Colors.black,
   ),
   colorScheme: ColorScheme.light(
     background: Colors.white,
@@ -18,8 +18,8 @@ ThemeData darkMode = ThemeData(
   brightness: Brightness.dark,
   textSelectionTheme: TextSelectionThemeData(
     selectionColor: Colors.blue,
-    cursorColor: Colors.black,
-    selectionHandleColor: Colors.black,
+    cursorColor: Colors.white,
+    selectionHandleColor: Colors.white,
   ),
   colorScheme: ColorScheme.dark(
     background: Colors.black,
