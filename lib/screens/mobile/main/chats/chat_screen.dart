@@ -36,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String editingMessageID = '';
 
   final TextEditingController _messageEditingController =
-      TextEditingController();
+  TextEditingController();
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final ScrollController _scrollController = ScrollController();
@@ -44,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     userName = data['user_name'];
     if (data['name'] != '') {
@@ -91,7 +91,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Future<void> getReceiverUserData() async {
     final userId = widget.receiverUserID;
     final data =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    await FirebaseFirestore.instance.collection('users').doc(userId).get();
     setState(() {
       receiverAvatarLink = data['avatar_link'];
       if (data['name'] != '') {
@@ -132,16 +132,16 @@ class _ChatScreenState extends State<ChatScreen> {
               MaterialPageRoute(
                 builder: (context) => kIsWeb
                     ? ResponsiveLayout(
-                        mobileScaffold: OpenProfileScreen(
-                          userId: widget.receiverUserID,
-                        ),
-                        webScaffold: WebOpenProfileScreen(
-                          userId: widget.receiverUserID,
-                        ),
-                      )
+                  mobileScaffold: OpenProfileScreen(
+                    userId: widget.receiverUserID,
+                  ),
+                  webScaffold: WebOpenProfileScreen(
+                    userId: widget.receiverUserID,
+                  ),
+                )
                     : OpenProfileScreen(
-                        userId: widget.receiverUserID,
-                      ),
+                  userId: widget.receiverUserID,
+                ),
               ),
             );
           },
@@ -156,16 +156,16 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: kIsWeb
             ? Container()
             : IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: SvgPicture.asset(
-                  'assets/icons/back_arrow.svg',
-                  width: 12.21,
-                  height: 11.35,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: SvgPicture.asset(
+            'assets/icons/back_arrow.svg',
+            width: 12.21,
+            height: 11.35,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: true,
       ),
@@ -244,7 +244,7 @@ class _ChatScreenState extends State<ChatScreen> {
     //get message sent time
     Timestamp messageTimestamp = data['timestamp'];
     DateTime dateTime =
-        DateTime.fromMillisecondsSinceEpoch(messageTimestamp.seconds * 1000);
+    DateTime.fromMillisecondsSinceEpoch(messageTimestamp.seconds * 1000);
     int hour = dateTime.hour;
     int minute = dateTime.minute;
 
@@ -257,40 +257,40 @@ class _ChatScreenState extends State<ChatScreen> {
       children: [
         alignment == Alignment.centerLeft
             ? Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => kIsWeb
-                            ? ResponsiveLayout(
-                                mobileScaffold: OpenProfileScreen(
-                                  userId: widget.receiverUserID,
-                                ),
-                                webScaffold: WebOpenProfileScreen(
-                                  userId: widget.receiverUserID,
-                                ),
-                              )
-                            : OpenProfileScreen(
-                                userId: widget.receiverUserID,
-                              ),
-                      ),
-                    );
-                  },
-                  child: PhotoUserAvatar(
-                    userAvatarLink: receiverAvatarLink,
-                    radius: 20,
+          padding: const EdgeInsets.only(left: 16),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => kIsWeb
+                      ? ResponsiveLayout(
+                    mobileScaffold: OpenProfileScreen(
+                      userId: widget.receiverUserID,
+                    ),
+                    webScaffold: WebOpenProfileScreen(
+                      userId: widget.receiverUserID,
+                    ),
+                  )
+                      : OpenProfileScreen(
+                    userId: widget.receiverUserID,
                   ),
                 ),
-              )
+              );
+            },
+            child: PhotoUserAvatar(
+              userAvatarLink: receiverAvatarLink,
+              radius: 20,
+            ),
+          ),
+        )
             : Container(),
         Container(
           alignment: alignment,
           child: Container(
             margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
             padding:
-                const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
+            const EdgeInsets.only(left: 16, top: 16, right: 16, bottom: 16),
             constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width - 100,
             ),
@@ -309,98 +309,98 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             child: Column(
               crossAxisAlignment:
-                  (data['sender_id'] == _firebaseAuth.currentUser!.uid)
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
+              (data['sender_id'] == _firebaseAuth.currentUser!.uid)
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
                 alignment == Alignment.centerLeft
                     ? Text(
-                        receiverName,
+                  receiverName,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                  ),
+                )
+                    : SizedBox(
+                  width: 86,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'You',
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
                         ),
-                      )
-                    : SizedBox(
-                        width: 86,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'You',
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 20,
+                      ),
+                      alignment == Alignment.centerRight
+                          ? PopupMenuButton(
+                        color:
+                        Theme.of(context).colorScheme.primary,
+                        icon: const Icon(Icons.more_vert),
+                        iconColor:
+                        Theme.of(context).colorScheme.secondary,
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: TextButton(
+                              onPressed: () {
+                                Clipboard.setData(ClipboardData(
+                                    text: data['message']));
+                                snackBar(context,
+                                    'Success copied text!');
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Copy',
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary,
+                                ),
                               ),
                             ),
-                            alignment == Alignment.centerRight
-                                ? PopupMenuButton(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    icon: const Icon(Icons.more_vert),
-                                    iconColor:
-                                        Theme.of(context).colorScheme.secondary,
-                                    itemBuilder: (context) => [
-                                      PopupMenuItem(
-                                        child: TextButton(
-                                          onPressed: () {
-                                            Clipboard.setData(ClipboardData(
-                                                text: data['message']));
-                                            snackBar(context,
-                                                'Success copied text!');
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            'Copy',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: TextButton(
-                                          onPressed: () {
-                                            editMessage(
-                                                document.id, data['message']);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            'Edit',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      PopupMenuItem(
-                                        child: TextButton(
-                                          onPressed: () {
-                                            deleteMessage(document.id);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            'Delete',
-                                            style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                      ),
+                          ),
+                          PopupMenuItem(
+                            child: TextButton(
+                              onPressed: () {
+                                editMessage(
+                                    document.id, data['message']);
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Edit',
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary,
+                                ),
+                              ),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            child: TextButton(
+                              onPressed: () {
+                                deleteMessage(document.id);
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .secondary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                          : Container(),
+                    ],
+                  ),
+                ),
                 /*SelectableText(
                   data['message'],
                   style: TextStyle(

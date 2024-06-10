@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_chats_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_discover_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/profile/web_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_search_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
