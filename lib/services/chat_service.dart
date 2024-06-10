@@ -19,6 +19,8 @@ class ChatService extends ChangeNotifier {
       receiverId: receiverId,
       message: message,
       timestamp: timestamp,
+      fileLink: '',
+      fileType: '',
     );
 
     List<String> ids = [currentUserId, receiverId];

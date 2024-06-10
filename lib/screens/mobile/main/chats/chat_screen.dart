@@ -64,6 +64,7 @@ class _ChatScreenState extends State<ChatScreen> {
         );
         editingStatus = false;
         editingMessageID = '';
+        snackBar(context, 'Success edit!');
       } else {
         await _chatService.sendMessage(
           widget.receiverUserID,
@@ -80,7 +81,6 @@ class _ChatScreenState extends State<ChatScreen> {
       editingMessageID = messageID;
       _messageEditingController.text = message;
     });
-    snackBar(context, 'Success edit!');
   }
 
   void deleteMessage(String messageID) async {
@@ -183,19 +183,48 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 IconButton(
                   onPressed: () {},
-                  //onPressed: sendMessage,
                   icon: const Icon(
                     Icons.attach_file,
                     size: 32,
                   ),
                 ),
                 Expanded(
-                  child: PhotoTextField(
-                    controller: _messageEditingController,
-                    showVisibleButton: false,
-                    label: '',
-                    disableSpace: false,
-                    disableUppercase: false,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 16,
+                    ),
+                    child: TextFormField(
+                      controller: _messageEditingController,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      style: GoogleFonts.roboto(
+                        fontSize: 15,
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w400,
+                        fontStyle: FontStyle.normal,
+                      ),
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        if (value.isEmpty) {
+                          editingStatus = false;
+                        }
+                      },
+                    ),
                   ),
                 ),
                 IconButton(
@@ -401,13 +430,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     ],
                   ),
                 ),
-                /*SelectableText(
-                  data['message'],
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 17,
-                  ),
-                ),*/
                 LinkifyText(text: data['message']),
                 Text(
                   '${hour < 10 ? '0$hour' : hour}:${minute == 0 ? '00' : minute}',
