@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
