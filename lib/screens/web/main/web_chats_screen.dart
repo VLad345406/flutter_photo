@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/chat_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,6 +31,13 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
     });
   }
 
+  FocusNode _focusNode = FocusNode();
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +56,32 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
         ),
         shape: Border(bottom: BorderSide(color: Colors.grey, width: 1)),
       ),
-      body: Row(
-        children: [
-          Container(
-            alignment: Alignment.topLeft,
-            width: MediaQuery.of(context).size.width / 4,
-            child: _buildUserList(),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width -
-                (MediaQuery.of(context).size.width / 4) -
-                82,
-            child: currentChat,
-          ),
-        ],
+      body: KeyboardListener(
+        focusNode: _focusNode,
+        onKeyEvent: (KeyEvent event) {
+          if (event is KeyDownEvent) {
+            if (event.logicalKey == LogicalKeyboardKey.escape) {
+              setState(() {
+                currentChat = Container();
+              });
+            }
+          }
+        },
+        child: Row(
+          children: [
+            Container(
+              alignment: Alignment.topLeft,
+              width: MediaQuery.of(context).size.width / 4,
+              child: _buildUserList(),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width -
+                  (MediaQuery.of(context).size.width / 4) -
+                  82,
+              child: currentChat,
+            ),
+          ],
+        ),
       ),
     );
   }

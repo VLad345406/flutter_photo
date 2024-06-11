@@ -39,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final ChatService _chatService = ChatService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final ScrollController _scrollController = ScrollController();
+  FocusNode _focusNode = FocusNode();
 
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -116,6 +117,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    _focusNode.requestFocus();
     getReceiverUserData();
     getUserData();
   }
@@ -169,74 +171,84 @@ class _ChatScreenState extends State<ChatScreen> {
         centerTitle: true,
       ),
       backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Column(
-        children: [
-          Expanded(child: buildMessageItemList()),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 16,
-              right: 16,
-              bottom: 32,
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.attach_file,
-                    size: 32,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      top: 16,
-                    ),
-                    child: TextFormField(
-                      controller: _messageEditingController,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      style: GoogleFonts.roboto(
-                        fontSize: 15,
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w400,
-                        fontStyle: FontStyle.normal,
-                      ),
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2,
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          editingStatus = false;
-                        }
-                      },
+      body: KeyboardListener(
+        focusNode: _focusNode,
+        onKeyEvent: (KeyEvent event) {
+          if (event is KeyDownEvent) {
+            if (event.logicalKey == LogicalKeyboardKey.enter) {
+              sendMessage();
+            }
+          }
+        },
+        child: Column(
+          children: [
+            Expanded(child: buildMessageItemList()),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 32,
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.attach_file,
+                      size: 32,
                     ),
                   ),
-                ),
-                IconButton(
-                  onPressed: sendMessage,
-                  icon: const Icon(
-                    Icons.send,
-                    size: 32,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        top: 16,
+                      ),
+                      child: TextFormField(
+                        controller: _messageEditingController,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        style: GoogleFonts.roboto(
+                          fontSize: 15,
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.normal,
+                        ),
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          if (value.isEmpty) {
+                            editingStatus = false;
+                          }
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                  IconButton(
+                    onPressed: sendMessage,
+                    icon: const Icon(
+                      Icons.send,
+                      size: 32,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
