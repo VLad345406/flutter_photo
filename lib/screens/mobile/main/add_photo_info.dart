@@ -113,7 +113,7 @@ class _AddPhotoInfoState extends State<AddPhotoInfo> {
             buttonMargin: EdgeInsets.only(
               left: 16,
               right: 16,
-              bottom: Platform.isIOS ? 32 : 16,
+              bottom: kIsWeb ? 16 : Platform.isIOS ? 32 : 16,
             ),
             buttonText: 'SAVE',
             textColor: Theme.of(context).colorScheme.secondary,

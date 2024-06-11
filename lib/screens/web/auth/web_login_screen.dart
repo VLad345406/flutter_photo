@@ -8,8 +8,8 @@ import 'package:flutter_qualification_work/screens/mobile/auth/mobile_google_sig
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_restore_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_restore_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
+import 'package:flutter_qualification_work/services/authentication/google_sigh_in_service.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
@@ -142,57 +142,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                       margin: const EdgeInsets.only(top: 16),
                       child: IconButton(
                         icon: Image.asset('assets/login_screen/Google.png'),
-                        /*onPressed: (){},*/
-                        onPressed: () async {
-                          try {
-                            final googleAccount = await GoogleSignIn().signIn();
-
-                            final googleAuth =
-                                await googleAccount?.authentication;
-
-                            final credential = GoogleAuthProvider.credential(
-                              accessToken: googleAuth?.accessToken,
-                              idToken: googleAuth?.idToken,
-                            );
-
-                            await FirebaseAuth.instance
-                                .signInWithCredential(credential);
-
-                            if (mounted) {
-                              final userId =
-                                  FirebaseAuth.instance.currentUser!.uid;
-                              final data = await FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(userId)
-                                  .get();
-                              try {
-                                if (data['uid'] == userId) {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => MainScreen(),
-                                    ),
-                                  );
-                                } else {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          GoogleSighInRegistrationData(),
-                                    ),
-                                  );
-                                }
-                              } catch (e) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        GoogleSighInRegistrationData(),
-                                  ),
-                                );
-                              }
-                            }
-                          } on FirebaseAuthException catch (e) {
-                            snackBar(context, e.message.toString());
-                            print(e.message);
-                          }
+                        onPressed: (){
+                          googleSighInService(context);
                         },
                       ),
                     ),
