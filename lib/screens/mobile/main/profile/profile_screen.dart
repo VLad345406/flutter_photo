@@ -281,11 +281,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               32,
                                       width: MediaQuery.of(context).size.width -
                                           32,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(imageLink),
-                                          fit: BoxFit.cover,
-                                        ),
+                                      child: Image.network(
+                                        imageLink,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress.expectedTotalBytes != null
+                                                    ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                                    : null,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                          return Center(
+                                            child: Icon(Icons.error),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),

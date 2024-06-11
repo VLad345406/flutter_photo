@@ -21,7 +21,33 @@ class _PhotoUserAvatarState extends State<PhotoUserAvatar> {
       widget.userAvatarLink.isNotEmpty
           ? CircleAvatar(
         radius: widget.radius,
-        backgroundImage: NetworkImage(widget.userAvatarLink),
+        child: ClipOval(
+          child: Image.network(
+            widget.userAvatarLink,
+            fit: BoxFit.cover,
+            width: widget.radius * 2,
+            height: widget.radius * 2,
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                        : null,
+                  ),
+                );
+              }
+            },
+            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+              return Center(
+                child: Icon(Icons.error),
+              );
+            },
+          ),
+        ),
       )
           : CircleAvatar(
         radius: widget.radius,
