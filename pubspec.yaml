@@ -46,10 +46,15 @@ flutter_native_splash:
   android: true
   ios: true
 
-flutter_icons:
+flutter_launcher_icons:
   android: "launcher_icon"
-  ios: true
+  ios: 'AppIcon'
   image_path: "assets/icons/logo_square.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  web:
+    generate: true
+    image_path: "assets/icons/logo_square.png"
   flutter_test:
     sdk: flutter
 
