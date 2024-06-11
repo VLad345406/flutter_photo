@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
@@ -48,6 +48,8 @@ class _PhotoCardState extends State<PhotoCard> {
     getUserData();
   }
 
+  bool _isLoading = true;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -77,11 +79,27 @@ class _PhotoCardState extends State<PhotoCard> {
               child: Container(
                 height: widget.cardWidth - 46,
                 width: widget.cardWidth,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(widget.pathImage),
-                    fit: BoxFit.cover,
-                  ),
+                child: Image.network(
+                  widget.pathImage,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                    return Center(
+                      child: Icon(Icons.error),
+                    );
+                  },
                 ),
               ),
             ),
@@ -149,11 +167,6 @@ class _PhotoCardState extends State<PhotoCard> {
                 ),
               ),
             ),
-            /*Container(
-              margin: const EdgeInsets.only(top: 16),
-              alignment: Alignment.bottomLeft,
-              child: Image.asset('assets/images/user.png'),
-            ),*/
           ],
         ),
       ),
