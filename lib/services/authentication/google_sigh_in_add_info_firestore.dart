@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
+import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/check_internet_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/services/validate_username_service.dart';
@@ -26,9 +29,14 @@ Future googleSighInAddInfoFirestore(
         }, SetOptions(merge: true));
         Navigator.pushAndRemoveUntil(context,
             MaterialPageRoute(builder: (context) {
-              //return CheckInternet(widget: MainScreen());
-              return MainScreen();
-            }), (route) => false);
+          //return CheckInternet(widget: MainScreen());
+          return kIsWeb
+              ? ResponsiveLayout(
+                  mobileScaffold: MainScreen(),
+                  webScaffold: WebMainScreen(),
+                )
+              : MainScreen();
+        }), (route) => false);
       } on FirebaseAuthException catch (e) {
         snackBar(context, e.message.toString());
       } catch (e) {
