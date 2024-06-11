@@ -52,10 +52,13 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
         children: [
           Container(
             alignment: Alignment.topLeft,
-            width: MediaQuery.of(context).size.width / 5,
+            width: MediaQuery.of(context).size.width / 4,
             child: _buildUserList(),
           ),
-          Expanded(
+          SizedBox(
+            width: MediaQuery.of(context).size.width -
+                (MediaQuery.of(context).size.width / 4) -
+                82,
             child: currentChat,
           ),
         ],
@@ -95,14 +98,12 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
       if (data['name'] != '') {
         receiverUserName = data['name'];
       }
-      print((MediaQuery.of(context).size.width / 5).toInt());
       if (receiverUserName.length >
-          (MediaQuery.of(context).size.width / 5) * 20 - 250) {
-
-        String truncatedTextMessage = receiverUserName.substring(
-                0, (MediaQuery.of(context).size.width / 5 - 250).toInt()) +
+          (MediaQuery.of(context).size.width / 4) / 22) {
+        String truncatedReceiverUserName = receiverUserName.substring(
+                0, ((MediaQuery.of(context).size.width / 4) / 22).toInt()) +
             "...";
-        receiverUserName = truncatedTextMessage;
+        receiverUserName = truncatedReceiverUserName;
       }
 
       return ListTile(
@@ -135,10 +136,10 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
                       }
                       String textMessage = snapshot.data!.docs.last['message'];
                       if (textMessage.length >
-                          MediaQuery.of(context).size.width / 5 - 250) {
+                          (MediaQuery.of(context).size.width / 4) / 22) {
                         String truncatedTextMessage = textMessage.substring(
                                 0,
-                                (MediaQuery.of(context).size.width / 5 - 250)
+                                ((MediaQuery.of(context).size.width / 5) / 22)
                                     .toInt()) +
                             "...";
                         textMessage = truncatedTextMessage;

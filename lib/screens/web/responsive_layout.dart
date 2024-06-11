@@ -21,7 +21,7 @@ class ResponsiveLayout extends StatelessWidget {
             ),
           );
         }
-        else if (constraints.maxWidth <= 610) {
+        else if (constraints.maxWidth <= 850) {
           return mobileScaffold;
         }
         else {
