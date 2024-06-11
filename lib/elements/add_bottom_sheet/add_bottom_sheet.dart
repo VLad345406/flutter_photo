@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet_button.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/add_photo_info.dart';
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,47 +10,24 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:io' show Platform;
 
 class ShowAddBottomSheet {
-  String _userName = '';
-  int _countImage = 0;
-
-  void selectGalleryImage(BuildContext context) async {
+  Future<Uint8List> selectGalleryImage() async {
+    Uint8List image = Uint8List(0);
     try {
-      Uint8List image = await pickImage(ImageSource.gallery);
-      await getUserData();
-      uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
-      await savePictureInFirestore(
-          FirebaseAuth.instance.currentUser!.uid.toString(),
-          _userName,
-          image,
-          _countImage + 1);
-      //snackBar(context, 'Success add picture!');
+      image = await pickImage(ImageSource.gallery);
+      return image;
     } catch (e) {
-      //snackBar(context, 'Something wen`t wrong!');
+      return image;
     }
   }
 
-  void addCameraImage(BuildContext context) async {
+  Future<Uint8List> addCameraImage() async {
+    Uint8List image = Uint8List(0);
     try {
-      Uint8List image = await pickImage(ImageSource.camera);
-      await getUserData();
-      uploadImageToStorage(_userName, (_countImage + 1).toString(), image);
-      await savePictureInFirestore(
-          FirebaseAuth.instance.currentUser!.uid.toString(),
-          _userName,
-          image,
-          _countImage + 1);
-      //snackBar(context, 'Success add picture!');
+      image = await pickImage(ImageSource.camera);
+      return image;
     } catch (e) {
-      //snackBar(context, 'Something wen`t wrong!');
+      return image;
     }
-  }
-
-  Future<void> getUserData() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    final data =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    _userName = data['user_name'];
-    _countImage = data['count_image'];
   }
 
   void showAddBottomSheet(BuildContext context, double widthButton) {
@@ -94,9 +70,18 @@ class ShowAddBottomSheet {
                               right: 9,
                             ),
                             child: AddBottomSheetButton(
-                              function: () {
-                                addCameraImage(context);
-                                Navigator.pop(context);
+                              function: () async {
+                                Uint8List image = await addCameraImage();
+                                if (image.isNotEmpty) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddPhotoInfo(
+                                        image: image,
+                                      ),
+                                    ),
+                                  ).then((value) => Navigator.pop(context));
+                                }
                               },
                               swgLink: 'assets/icons/camera.svg',
                               buttonText: 'Camera',
@@ -105,9 +90,18 @@ class ShowAddBottomSheet {
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: AddBottomSheetButton(
-                        function: () {
-                          selectGalleryImage(context);
-                          Navigator.pop(context);
+                        function: () async {
+                          Uint8List image = await selectGalleryImage();
+                          if (image.isNotEmpty) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddPhotoInfo(
+                                  image: image,
+                                ),
+                              ),
+                            ).then((value) => Navigator.pop(context));
+                          }
                         },
                         swgLink: 'assets/icons/gallery.svg',
                         buttonText: 'Gallery',

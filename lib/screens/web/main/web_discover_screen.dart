@@ -27,14 +27,17 @@ class _WebDiscoverScreenState extends State<WebDiscoverScreen> {
           PhotoCard(
             pathImage: 'assets/images/start_background_mobile.jpg',
             cardWidth: 400,
+            uid: '',
           ),
           PhotoCard(
             pathImage: 'assets/images/Profile1/picture1.jpg',
             cardWidth: 400,
+            uid: '',
           ),
           PhotoCard(
             pathImage: 'assets/images/Profile1/picture1.jpg',
             cardWidth: 400,
+            uid: '',
           ),
         ],
       ),

@@ -49,9 +49,12 @@ Future savePictureInFirestore(
   String userName,
   Uint8List file,
   int pictureNumber,
+  String tags,
 ) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   try {
+    List<String> listTags = tags.split(' ');
+
     String imageUrl =
         await uploadImageToStorage(userName, pictureNumber.toString(), file);
     await firestore
@@ -61,8 +64,8 @@ Future savePictureInFirestore(
         .doc(pictureNumber.toString())
         .set({
       'image_link': imageUrl,
-      'tags': '',
       'file_name': pictureNumber.toString(),
+      'tags': listTags,
     });
     await firestore
         .collection('users')

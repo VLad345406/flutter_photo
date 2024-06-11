@@ -95,6 +95,15 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
       if (data['name'] != '') {
         receiverUserName = data['name'];
       }
+      print((MediaQuery.of(context).size.width / 5).toInt());
+      if (receiverUserName.length >
+          (MediaQuery.of(context).size.width / 5) * 20 - 250) {
+
+        String truncatedTextMessage = receiverUserName.substring(
+                0, (MediaQuery.of(context).size.width / 5 - 250).toInt()) +
+            "...";
+        receiverUserName = truncatedTextMessage;
+      }
 
       return ListTile(
         title: Row(
@@ -125,9 +134,13 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
                         return const Center(child: Text('Loading...'));
                       }
                       String textMessage = snapshot.data!.docs.last['message'];
-                      if (textMessage.length > 30) {
-                        String truncatedTextMessage =
-                            textMessage.substring(0, 30) + "...";
+                      if (textMessage.length >
+                          MediaQuery.of(context).size.width / 5 - 250) {
+                        String truncatedTextMessage = textMessage.substring(
+                                0,
+                                (MediaQuery.of(context).size.width / 5 - 250)
+                                    .toInt()) +
+                            "...";
                         textMessage = truncatedTextMessage;
                       }
                       return Text(textMessage);
@@ -142,15 +155,6 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
         ),
         onTap: () {
           openChat(data['uid']);
-          //currentChat = ChatScreen(receiverUserID: data['uid']);
-          /*Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatScreen(
-                receiverUserID: data['uid'],
-              ),
-            ),
-          );*/
         },
       );
     } else {

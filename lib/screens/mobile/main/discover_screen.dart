@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/elements/photo_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DiscoverScreen extends StatefulWidget {
@@ -12,7 +11,7 @@ class DiscoverScreen extends StatefulWidget {
 class _DiscoverScreenState extends State<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    //final screenWidth = MediaQuery.of(context).size.width;
 
     //final widthButton = screenWidth - 32;
 
@@ -32,18 +31,20 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         ),
         centerTitle: false,
       ),
-      body: ListView(
+      /*body: ListView(
         children: [
           PhotoCard(
             pathImage: 'assets/images/start_background_mobile.jpg',
             cardWidth: screenWidth - 32,
+            uid: '',
           ),
           PhotoCard(
             pathImage: 'assets/images/Profile1/picture1.jpg',
             cardWidth: screenWidth - 32,
+            uid: '',
           ),
         ],
-      ),
+      ),*/
       /*body: ListView.builder(
         itemCount: 1,
         itemBuilder: (BuildContext context, int index) {
