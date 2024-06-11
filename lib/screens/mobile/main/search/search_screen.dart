@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/search/display_pictures.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/search/display_users.dart';
 import 'package:flutter_qualification_work/services/search_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,6 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> searchResult = [];
+  String searchType = '';
 
   void updateSearchResult() {
     setState(() {});
@@ -69,13 +66,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 onChanged: (value) async {
                   if (value.isEmpty) {
                     searchResult = [];
+                    searchType = '';
                     updateSearchResult();
-                  } else {
+                  } else if (value[0] == '@') {
+                    searchType = 'users';
                     QuerySnapshot<Map<String, dynamic>> usersCollection =
                         await FirebaseFirestore.instance
                             .collection('users')
                             .get();
                     searchResult = await searchUsers(value, usersCollection);
+                    updateSearchResult();
+                  } else {
+                    searchType = 'tags';
+                    searchResult =
+                        await getPicturesByTag(searchController.text);
                     updateSearchResult();
                   }
                 },
@@ -91,56 +95,13 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           Expanded(
-            child: searchController.text.isNotEmpty && searchResult.isEmpty
-                ? Center(child: Text('No users found!'))
-                : ListView.builder(
-                    itemCount: searchResult.length,
-                    itemBuilder: (context, index) {
-                      String userName = searchResult[index]['user_name'];
-
-                      if (searchResult[index]['uid'] ==
-                          FirebaseAuth.instance.currentUser?.uid) {
-                        return Container();
-                      } else {
-                        return ListTile(
-                          title: Row(
-                            children: [
-                              PhotoUserAvatar(
-                                  userAvatarLink: searchResult[index]
-                                      ['avatar_link'],
-                                  radius: 20),
-                              const SizedBox(width: 20),
-                              Text(
-                                userName,
-                                style: GoogleFonts.roboto(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              )
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => kIsWeb
-                                    ? ResponsiveLayout(
-                                        mobileScaffold: OpenProfileScreen(
-                                          userId: searchResult[index]['uid'],
-                                        ),
-                                        webScaffold: WebOpenProfileScreen(
-                                            userId: searchResult[index]['uid']),
-                                      )
-                                    : OpenProfileScreen(
-                                        userId: searchResult[index]['uid'],
-                                      ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    },
-                  ),
+            child: searchType != ''
+                ? searchResult.isEmpty
+                    ? Center(child: Text('No result!'))
+                    : searchType == 'users'
+                        ? DisplayUsers(searchResult: searchResult)
+                        : DisplayPictures(searchResult: searchResult)
+                : Container(),
           ),
         ],
       ),

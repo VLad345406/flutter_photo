@@ -9,6 +9,9 @@ import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/search_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'search/web_display_pictures.dart';
+import 'search/web_display_users.dart';
+
 class WebSearchScreen extends StatefulWidget {
   const WebSearchScreen({super.key});
 
@@ -19,6 +22,7 @@ class WebSearchScreen extends StatefulWidget {
 class _WebSearchScreenState extends State<WebSearchScreen> {
   final TextEditingController searchController = TextEditingController();
   List<Map<String, dynamic>> searchResult = [];
+  String searchType = '';
 
   void updateSearchResult() {
     setState(() {});
@@ -61,14 +65,22 @@ class _WebSearchScreenState extends State<WebSearchScreen> {
                 onChanged: (value) async {
                   if (value.isEmpty) {
                     searchResult = [];
-                  } else {
+                    searchType = '';
+                    updateSearchResult();
+                  } else if (value[0] == '@') {
+                    searchType = 'users';
                     QuerySnapshot<Map<String, dynamic>> usersCollection =
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .get();
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .get();
                     searchResult = await searchUsers(value, usersCollection);
+                    updateSearchResult();
+                  } else {
+                    searchType = 'tags';
+                    searchResult =
+                        await getPicturesByTag(searchController.text);
+                    updateSearchResult();
                   }
-                  updateSearchResult();
                 },
                 style: GoogleFonts.roboto(
                   fontSize: 15,
@@ -82,59 +94,13 @@ class _WebSearchScreenState extends State<WebSearchScreen> {
             ),
           ),
           Expanded(
-            child: searchController.text.isNotEmpty && searchResult.isEmpty
-                ? Center(child: Text('No users found!'))
-                : Padding(
-                  padding: const EdgeInsets.only(left: 50, right: 50, top: 16),
-                  child: ListView.builder(
-                                itemCount: searchResult.length,
-                                itemBuilder: (context, index) {
-                  String userName = searchResult[index]['user_name'];
-
-                  if (searchResult[index]['uid'] ==
-                      FirebaseAuth.instance.currentUser?.uid) {
-                    return Container();
-                  } else {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          PhotoUserAvatar(
-                              userAvatarLink: searchResult[index]
-                              ['avatar_link'],
-                              radius: 20),
-                          const SizedBox(width: 20),
-                          Text(
-                            userName,
-                            style: GoogleFonts.roboto(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => kIsWeb
-                                ? ResponsiveLayout(
-                              mobileScaffold: OpenProfileScreen(
-                                userId: searchResult[index]['uid'],
-                              ),
-                              webScaffold: WebOpenProfileScreen(
-                                  userId: searchResult[index]['uid']),
-                            )
-                                : OpenProfileScreen(
-                              userId: searchResult[index]['uid'],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-                                },
-                              ),
-                ),
+            child: searchType != ''
+                ? searchResult.isEmpty
+                    ? Center(child: Text('No result!'))
+                    : searchType == 'users'
+                        ? WebDisplayUsers(searchResult: searchResult)
+                        : WebDisplayPictures(searchResult: searchResult)
+                : Container(),
           ),
         ],
       ),

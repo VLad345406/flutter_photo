@@ -207,7 +207,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state.isLoading) {
-                  return Center(child: CircularProgressIndicator());
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 32),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
                 }
 
                 if (state.hasError) {
