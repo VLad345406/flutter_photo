@@ -2,12 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/profile/settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
@@ -163,7 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   left: 16,
                   right: 8,
                 ),
-                buttonText: 'Followers ($countFollowers)',
+                buttonText:
+                    '${LocaleData.followers.getString(context)} ($countFollowers)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -171,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: 'Followers',
+                        title: LocaleData.followers.getString(context),
                         userId: FirebaseAuth.instance.currentUser!.uid,
                       ),
                     ),
@@ -185,7 +188,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   left: 8,
                   right: 16,
                 ),
-                buttonText: 'Subscriptions ($countSubs)',
+                buttonText:
+                    '${LocaleData.subscriptions.getString(context)} ($countSubs)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -193,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: 'Subscriptions',
+                        title: LocaleData.subscriptions.getString(context),
                         userId: FirebaseAuth.instance.currentUser!.uid,
                       ),
                     ),
@@ -284,20 +288,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: Image.network(
                                         imageLink,
                                         fit: BoxFit.cover,
-                                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
                                           if (loadingProgress == null) {
                                             return child;
                                           } else {
                                             return Center(
                                               child: CircularProgressIndicator(
-                                                value: loadingProgress.expectedTotalBytes != null
-                                                    ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        (loadingProgress
+                                                                .expectedTotalBytes ??
+                                                            1)
                                                     : null,
                                               ),
                                             );
                                           }
                                         },
-                                        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                                        errorBuilder: (BuildContext context,
+                                            Object error,
+                                            StackTrace? stackTrace) {
                                           return Center(
                                             child: Icon(Icons.error),
                                           );

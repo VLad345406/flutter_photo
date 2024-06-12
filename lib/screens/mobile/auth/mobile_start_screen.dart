@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_login_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_registration_screen.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_login_screen.dart';
@@ -48,7 +50,7 @@ class _MobileStartScreenState extends State<MobileStartScreen> {
                 widthButton: widthButton,
                 buttonMargin:
                     const EdgeInsets.only(top: 20, left: 16, right: 9),
-                buttonText: 'LOG IN',
+                buttonText: LocaleData.login.getString(context),
                 textColor: Colors.black,
                 buttonColor: Colors.white,
                 function: () {
@@ -70,7 +72,7 @@ class _MobileStartScreenState extends State<MobileStartScreen> {
               PhotoButton(
                 widthButton: widthButton,
                 buttonMargin: const EdgeInsets.only(top: 20),
-                buttonText: 'REGISTER',
+                buttonText: LocaleData.register.getString(context),
                 textColor: Colors.white,
                 buttonColor: Colors.black,
                 function: () {

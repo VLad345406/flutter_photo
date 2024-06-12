@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet_button.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/add_photo_info.dart';
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
@@ -8,6 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:io' show Platform;
+
+import '../../localization/locales.dart';
 
 class ShowAddBottomSheet {
   Future<Uint8List> selectGalleryImage() async {
@@ -46,7 +49,7 @@ class ShowAddBottomSheet {
             Container(
               margin: const EdgeInsets.only(left: 16, top: 16),
               child: Text(
-                'Add content',
+                LocaleData.addContent.getString(context),
                 style: GoogleFonts.comfortaa(
                   color: Colors.black,
                   fontSize: 36,
@@ -84,7 +87,7 @@ class ShowAddBottomSheet {
                                 }
                               },
                               swgLink: 'assets/icons/camera.svg',
-                              buttonText: 'Camera',
+                              buttonText: LocaleData.camera.getString(context),
                             ),
                           ),
                     Padding(
@@ -104,7 +107,7 @@ class ShowAddBottomSheet {
                           }
                         },
                         swgLink: 'assets/icons/gallery.svg',
-                        buttonText: 'Gallery',
+                        buttonText: LocaleData.gallery.getString(context),
                       ),
                     ),
                   ],
@@ -123,7 +126,7 @@ class ShowAddBottomSheet {
                           Navigator.pop(context);
                         },
                         swgLink: 'assets/icons/music.svg',
-                        buttonText: 'Music',
+                        buttonText: LocaleData.music.getString(context),
                       ),
                     ),
                     Padding(
@@ -134,7 +137,7 @@ class ShowAddBottomSheet {
                           Navigator.pop(context);
                         },
                         swgLink: 'assets/icons/video.svg',
-                        buttonText: 'Video',
+                        buttonText: LocaleData.video.getString(context),
                       ),
                     ),
                   ],

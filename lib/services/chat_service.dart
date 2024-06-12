@@ -28,6 +28,19 @@ class ChatService extends ChangeNotifier {
     String chatRoomId = ids.join("_");
 
     await _firestore
+        .collection('users')
+        .doc(currentUserId)
+        .collection('chat_id_users')
+        .doc(receiverId)
+        .set({'user_id': receiverId});
+    await _firestore
+        .collection('users')
+        .doc(receiverId)
+        .collection('chat_id_users')
+        .doc(currentUserId)
+        .set({'user_id': currentUserId});
+
+    await _firestore
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
@@ -92,5 +105,32 @@ class ChatService extends ChangeNotifier {
         .collection('messages')
         .orderBy('timestamp', descending: false)
         .snapshots();
+  }
+
+  Future<void> removeChat(String userId, String otherUserId) async {
+    List<String> ids = [userId, otherUserId];
+    ids.sort();
+    String chatRoomId = ids.join("_");
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('chat_id_users')
+        .doc(otherUserId)
+        .delete();
+    await _firestore
+        .collection('users')
+        .doc(otherUserId)
+        .collection('chat_id_users')
+        .doc(userId)
+        .delete();
+
+    DocumentReference chatRoomDoc =
+        _firestore.collection('chat_rooms').doc(chatRoomId);
+    CollectionReference messagesCollection = chatRoomDoc.collection('messages');
+    QuerySnapshot messagesSnapshot = await messagesCollection.get();
+    for (QueryDocumentSnapshot doc in messagesSnapshot.docs) {
+      await doc.reference.delete();
+    }
+    await chatRoomDoc.delete();
   }
 }

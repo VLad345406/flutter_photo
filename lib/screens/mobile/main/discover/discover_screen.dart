@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/photo_card.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/discover/display_list_users.dart';
 import 'package:flutter_qualification_work/services/discover_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -56,7 +58,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
-          'Discover',
+          LocaleData.discover.getString(context),
           style: GoogleFonts.comfortaa(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 36,

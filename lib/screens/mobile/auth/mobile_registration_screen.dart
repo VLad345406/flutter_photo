@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/services/authentication/registration_service.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,7 +54,11 @@ class _MobileRegistrationScreenState extends State<MobileRegistrationScreen> {
               bottom: 16,
             ),
             child: Text(
-              'Register',
+                LocaleData.register.getString(context)[0].toUpperCase() +
+                    LocaleData.register
+                        .getString(context)
+                        .substring(1)
+                        .toLowerCase(),
               style: GoogleFonts.comfortaa(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 36,
@@ -72,7 +78,7 @@ class _MobileRegistrationScreenState extends State<MobileRegistrationScreen> {
           PhotoTextField(
             controller: nickNameController,
             showVisibleButton: false,
-            label: 'Nick name',
+            label: LocaleData.nickName.getString(context),
             disableSpace: true,
             disableUppercase: true,
           ),
@@ -80,7 +86,7 @@ class _MobileRegistrationScreenState extends State<MobileRegistrationScreen> {
           PhotoTextField(
             controller: passwordController,
             showVisibleButton: true,
-            label: 'Password',
+            label: LocaleData.password.getString(context),
             disableSpace: true,
             disableUppercase: false,
           ),
@@ -88,7 +94,7 @@ class _MobileRegistrationScreenState extends State<MobileRegistrationScreen> {
           PhotoTextField(
             controller: confirmPasswordController,
             showVisibleButton: true,
-            label: 'Confirm password',
+            label: LocaleData.confirmPassword.getString(context),
             disableSpace: true,
             disableUppercase: false,
           ),
@@ -96,7 +102,7 @@ class _MobileRegistrationScreenState extends State<MobileRegistrationScreen> {
           PhotoButton(
             widthButton: screenWidth - 32,
             buttonMargin: EdgeInsets.only(left: 16, top: 16, right: 16),
-            buttonText: 'NEXT',
+            buttonText: LocaleData.register.getString(context),
             textColor: Theme.of(context).colorScheme.secondary,
             buttonColor: Theme.of(context).colorScheme.primary,
             function: () {

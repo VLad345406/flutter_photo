@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/edit_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/profile/settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
