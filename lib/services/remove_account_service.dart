@@ -46,7 +46,6 @@ void removeAccount(BuildContext context) async {
     for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
       await doc.reference.delete();
     }
-
   } catch (e) {
     if (kDebugMode) {
       print("User don`t have info in database!");
@@ -70,7 +69,6 @@ void removeAccount(BuildContext context) async {
     for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
       await doc.reference.delete();
     }
-
   } catch (e) {
     if (kDebugMode) {
       print("User don`t have followers in database!");
@@ -100,6 +98,42 @@ void removeAccount(BuildContext context) async {
       print("User don`t have subscriptions in database!");
     }
   }
+
+  try {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('chat_id_users')
+        .get();
+
+    for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
+      List<String> ids = [userId, doc['user_id']];
+      ids.sort();
+      String chatRoomId = ids.join("_");
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('chat_id_users')
+          .doc(doc['user_id'])
+          .delete();
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(doc['user_id'])
+          .collection('chat_id_users')
+          .doc(userId)
+          .delete();
+
+      DocumentReference chatRoomDoc =
+          FirebaseFirestore.instance.collection('chat_rooms').doc(chatRoomId);
+      CollectionReference messagesCollection =
+          chatRoomDoc.collection('messages');
+      QuerySnapshot messagesSnapshot = await messagesCollection.get();
+      for (QueryDocumentSnapshot doc in messagesSnapshot.docs) {
+        await doc.reference.delete();
+      }
+      await chatRoomDoc.delete();
+    }
+  } catch (e) {}
 
   await FirebaseFirestore.instance.collection('users').doc(userId).delete();
 

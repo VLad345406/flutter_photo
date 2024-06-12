@@ -58,14 +58,32 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
   Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('chat_id_users')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text("Error!");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          //return const Center(child: Text("Loading..."));
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                "Find user and start messaging!",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          );
         }
 
         return ListView(
@@ -80,72 +98,111 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
   }
 
   Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    String userId = document['user_id'];
 
-    if (_auth.currentUser!.email != data['email']) {
-      String receiverUserName = data['user_name'];
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Error!");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-      if (data['name'] != '') {
-        receiverUserName = data['name'];
-      }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Text("No user data found!");
+        }
 
-      return ListTile(
-        title: Row(
-          children: [
-            PhotoUserAvatar(userAvatarLink: data['avatar_link'], radius: 20),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        Map<String, dynamic> data =
+            snapshot.data!.data()! as Map<String, dynamic>;
+
+        if (_auth.currentUser!.email != data['email']) {
+          String receiverUserName = data['user_name'];
+
+          if (data['name'] != '') {
+            receiverUserName = data['name'];
+          }
+
+          return ListTile(
+            title: Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  receiverUserName,
-                  style: GoogleFonts.roboto(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                PhotoUserAvatar(
+                    userAvatarLink: data['avatar_link'], radius: 20),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        receiverUserName,
+                        style: GoogleFonts.roboto(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      StreamBuilder(
+                        stream: _chatService.getMessages(data['uid'],
+                            FirebaseAuth.instance.currentUser!.uid),
+                        builder: (context, snapshot) {
+                          try {
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text(
+                                      'Error ${snapshot.error.toString()}'));
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(child: Text('Loading...'));
+                            }
+                            String textMessage =
+                                snapshot.data!.docs.last['message'];
+                            if (textMessage.length > 30) {
+                              String truncatedTextMessage =
+                                  textMessage.substring(0, 30) + "...";
+                              textMessage = truncatedTextMessage;
+                            }
+                            return Text(textMessage);
+                          } catch (e) {
+                            return Text('No message!');
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                StreamBuilder(
-                  stream: _chatService.getMessages(
-                      data['uid'], FirebaseAuth.instance.currentUser!.uid),
-                  builder: (context, snapshot) {
-                    try {
-                      if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error ${snapshot.error.toString()}'));
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: Text('Loading...'));
-                      }
-                      String textMessage = snapshot.data!.docs.last['message'];
-                      if (textMessage.length > 30) {
-                        String truncatedTextMessage =
-                            textMessage.substring(0, 30) + "...";
-                        textMessage = truncatedTextMessage;
-                      }
-                      return Text(textMessage);
-                    } catch (e) {
-                      return Text('No message!');
-                    }
-                  },
+                Tooltip(
+                  message: 'Remove chat',
+                  child: IconButton(
+                    onPressed: () {
+                      _chatService.removeChat(
+                          FirebaseAuth.instance.currentUser!.uid, userId);
+                    },
+                    icon: Icon(
+                      Icons.remove_circle,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
               ],
-            )
-          ],
-        ),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatScreen(
-                receiverUserID: data['uid'],
-              ),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatScreen(
+                    receiverUserID: data['uid'],
+                  ),
+                ),
+              );
+            },
           );
-        },
-      );
-    } else {
-      return Container();
-    }
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 }

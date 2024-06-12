@@ -41,6 +41,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   FocusNode _focusNode = FocusNode();
 
+  late Stream<QuerySnapshot<Object?>> getMessages;
+
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
@@ -53,6 +55,8 @@ class _ChatScreenState extends State<ChatScreen> {
       name = data['user_name'];
     }
   }
+
+  //TODO sendMessage
 
   void sendMessage() async {
     if (_messageEditingController.text.isNotEmpty) {
@@ -112,6 +116,11 @@ class _ChatScreenState extends State<ChatScreen> {
         );
       }
     });
+  }
+
+  void getMessagesFunc() async {
+    getMessages = await _chatService.getMessages(
+        widget.receiverUserID, _firebaseAuth.currentUser!.uid);
   }
 
   @override
@@ -328,7 +337,7 @@ class _ChatScreenState extends State<ChatScreen> {
         Container(
           alignment: alignment,
           constraints: BoxConstraints(
-            maxWidth: kIsWeb ? 550 : MediaQuery.of(context).size.width - 32,
+            maxWidth: kIsWeb ? 550 : MediaQuery.of(context).size.width - 60,
           ),
           child: Container(
             margin: const EdgeInsets.only(left: 16, top: 16, right: 16),
