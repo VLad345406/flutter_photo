@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_restore_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/services/authentication/google_sigh_in_service.dart';
@@ -54,7 +56,11 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 32.65, bottom: 32),
             child: Text(
-              'Log in',
+              LocaleData.login.getString(context)[0].toUpperCase() +
+                  LocaleData.login
+                      .getString(context)
+                      .substring(1)
+                      .toLowerCase(),
               style: GoogleFonts.comfortaa(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 36,
@@ -74,7 +80,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
           PhotoTextField(
             controller: passwordController,
             showVisibleButton: true,
-            label: 'Password',
+            label: LocaleData.password.getString(context),
             disableSpace: true,
             disableUppercase: false,
           ),
@@ -82,7 +88,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
           PhotoButton(
             widthButton: screenWidth - 32,
             buttonMargin: const EdgeInsets.only(left: 16, top: 16, right: 16),
-            buttonText: 'LOG IN',
+            buttonText: LocaleData.login.getString(context),
             textColor: Theme.of(context).colorScheme.secondary,
             buttonColor: Theme.of(context).colorScheme.primary,
             function: () {
@@ -98,7 +104,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
               padding: const EdgeInsets.only(top: 16),
               child: RichText(
                 text: TextSpan(
-                  text: 'Forgot password? ',
+                  text: LocaleData.forgotPassword.getString(context),
                   style: GoogleFonts.roboto(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 14,
@@ -113,7 +119,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                                 builder: (context) => MobileRestoreScreen(),
                               ),
                             ),
-                      text: 'Restore',
+                      text: LocaleData.restore.getString(context),
                       style: GoogleFonts.roboto(
                         color: Theme.of(context).colorScheme.primary,
                         fontSize: 14,
@@ -132,7 +138,7 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
             child: Container(
               margin: const EdgeInsets.only(top: 30),
               child: Text(
-                'Continue with:',
+                LocaleData.continueWith.getString(context),
                 style: GoogleFonts.roboto(
                   color: Theme.of(context).colorScheme.primary,
                   fontSize: 14,

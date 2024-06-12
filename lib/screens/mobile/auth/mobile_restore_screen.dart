@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/services/authentication/restore_password_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -35,7 +37,10 @@ class MobileRestoreScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16, top: 32.65, bottom: 32),
             child: Text(
-              'Restore password',
+              //'Restore password',
+              LocaleData.restore.getString(context) +
+                  ' ' +
+                  LocaleData.password.getString(context).toLowerCase(),
               style: GoogleFonts.comfortaa(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 36,
@@ -47,12 +52,14 @@ class MobileRestoreScreen extends StatelessWidget {
           PhotoTextField(
             controller: emailController,
             showVisibleButton: false,
-            label: 'Email', disableSpace: true, disableUppercase: false,
+            label: 'Email',
+            disableSpace: true,
+            disableUppercase: false,
           ),
           PhotoButton(
             widthButton: MediaQuery.of(context).size.width - 32,
             buttonMargin: const EdgeInsets.only(left: 16, top: 16),
-            buttonText: 'RESTORE',
+            buttonText: LocaleData.restore.getString(context).toUpperCase(),
             textColor: Theme.of(context).colorScheme.secondary,
             buttonColor: Theme.of(context).colorScheme.primary,
             function: () => restorePassword(context, emailController.text),

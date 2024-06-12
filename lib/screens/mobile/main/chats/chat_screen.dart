@@ -3,7 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
@@ -380,7 +382,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'You',
+                              LocaleData.you.getString(context),
                               style: const TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.w700,
@@ -405,7 +407,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             Navigator.pop(context);
                                           },
                                           child: Text(
-                                            'Copy',
+                                            LocaleData.copy.getString(context),
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -422,7 +424,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             Navigator.pop(context);
                                           },
                                           child: Text(
-                                            'Edit',
+                                            LocaleData.edit.getString(context),
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -438,7 +440,8 @@ class _ChatScreenState extends State<ChatScreen> {
                                             Navigator.pop(context);
                                           },
                                           child: Text(
-                                            'Delete',
+                                            LocaleData.delete
+                                                .getString(context),
                                             style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme

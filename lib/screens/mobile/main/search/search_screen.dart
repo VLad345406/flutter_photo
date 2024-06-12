@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/search/display_pictures.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/search/display_users.dart';
 import 'package:flutter_qualification_work/services/search_service.dart';
@@ -32,7 +34,7 @@ class _SearchScreenState extends State<SearchScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
-          'Search',
+          LocaleData.search.getString(context),
           style: GoogleFonts.comfortaa(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
@@ -88,8 +90,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   fontWeight: FontWeight.w400,
                   fontStyle: FontStyle.normal,
                 ),
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Search all photos, profiles',
+                decoration: InputDecoration.collapsed(
+                  hintText: LocaleData.searchPhotos.getString(context),
                 ),
               ),
             ),

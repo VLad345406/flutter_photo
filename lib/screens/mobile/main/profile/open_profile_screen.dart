@@ -3,9 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/chat_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
@@ -188,7 +190,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                         left: 16,
                         right: 16,
                       ),
-                      buttonText: 'FOLLOW',
+                      buttonText:
+                          LocaleData.follow.getString(context).toUpperCase(),
                       textColor: Theme.of(context).colorScheme.secondary,
                       buttonColor: Theme.of(context).colorScheme.primary,
                       function: () {
@@ -218,7 +221,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                         left: 16,
                         right: 16,
                       ),
-                      buttonText: 'UNFOLLOW',
+                      buttonText:
+                          LocaleData.unfollow.getString(context).toUpperCase(),
                       textColor: Colors.red,
                       buttonColor: Theme.of(context).colorScheme.primary,
                       function: () {
@@ -246,7 +250,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     left: 16,
                     right: 16,
                   ),
-                  buttonText: 'MESSAGE',
+                  buttonText:
+                      LocaleData.message.getString(context).toUpperCase(),
                   textColor: Theme.of(context).colorScheme.secondary,
                   buttonColor: Theme.of(context).colorScheme.primary,
                   function: () {
@@ -271,7 +276,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                   left: 16,
                   right: 8,
                 ),
-                buttonText: 'Followers ($countFollowers)',
+                buttonText:
+                    '${LocaleData.followers.getString(context)} ($countFollowers)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -279,7 +285,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: 'Followers',
+                        title: LocaleData.followers.getString(context),
                         userId: widget.userId,
                       ),
                     ),
@@ -293,7 +299,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                   left: 8,
                   right: 16,
                 ),
-                buttonText: 'Subscriptions ($countSubs)',
+                buttonText:
+                    '${LocaleData.subscriptions.getString(context)} ($countSubs)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -301,7 +308,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: 'Subscriptions',
+                        title: LocaleData.subscriptions.getString(context),
                         userId: widget.userId,
                       ),
                     ),
@@ -351,20 +358,27 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                           child: Image.network(
                             imageLink,
                             fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
                               if (loadingProgress == null) {
                                 return child;
                               } else {
                                 return Center(
                                   child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                    value: loadingProgress.expectedTotalBytes !=
+                                            null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            (loadingProgress
+                                                    .expectedTotalBytes ??
+                                                1)
                                         : null,
                                   ),
                                 );
                               }
                             },
-                            errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+                            errorBuilder: (BuildContext context, Object error,
+                                StackTrace? stackTrace) {
                               return Center(
                                 child: Icon(Icons.error),
                               );

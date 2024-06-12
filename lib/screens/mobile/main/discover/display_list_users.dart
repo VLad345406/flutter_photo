@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
@@ -23,12 +25,14 @@ class DisplayListUsers extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Text(
-              "You're not subscribed to anyone!\n"
-              "Maybe you know that users:",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.roboto(
-                fontSize: 20,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                LocaleData.notSubscibed.getString(context),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  fontSize: 20,
+                ),
               ),
             ),
           ),

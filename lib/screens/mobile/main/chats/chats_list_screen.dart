@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/chat_screen.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -43,7 +45,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
         backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         title: Text(
-          'Chats',
+          LocaleData.chats.getString(context),
           style: GoogleFonts.comfortaa(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
@@ -75,7 +77,7 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Center(
               child: Text(
-                "Find user and start messaging!",
+                LocaleData.findUserMessage.getString(context),
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontSize: 25,
@@ -166,7 +168,9 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                             }
                             return Text(textMessage);
                           } catch (e) {
-                            return Text('No message!');
+                            return Text(
+                              LocaleData.noMessages.getString(context),
+                            );
                           }
                         },
                       ),

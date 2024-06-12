@@ -4,11 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../localization/locales.dart';
 
 class AddPhotoInfo extends StatefulWidget {
   final Uint8List image;
@@ -40,7 +43,7 @@ class _AddPhotoInfoState extends State<AddPhotoInfo> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Add photo tags',
+          LocaleData.addPhotoTags.getString(context),
           style: GoogleFonts.roboto(
             fontSize: 25,
             color: Theme.of(context).colorScheme.primary,
@@ -89,7 +92,7 @@ class _AddPhotoInfoState extends State<AddPhotoInfo> {
                 fontStyle: FontStyle.normal,
               ),
               decoration: InputDecoration(
-                hintText: "Write tags without ',' or '#'",
+                hintText: LocaleData.tagsHintText.getString(context),
                 labelStyle: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -115,7 +118,7 @@ class _AddPhotoInfoState extends State<AddPhotoInfo> {
               right: 16,
               bottom: kIsWeb ? 16 : Platform.isIOS ? 32 : 16,
             ),
-            buttonText: 'SAVE',
+            buttonText: LocaleData.save.getString(context).toUpperCase(),
             textColor: Theme.of(context).colorScheme.secondary,
             buttonColor: Theme.of(context).colorScheme.primary,
             function: () async {
