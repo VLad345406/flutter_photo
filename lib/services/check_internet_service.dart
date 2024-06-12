@@ -22,10 +22,6 @@ class _CheckInternetState extends State<CheckInternet> {
           stream: Connectivity().onConnectivityChanged,
           builder: (BuildContext context,
               AsyncSnapshot<List<ConnectivityResult>> snapshot) {
-            print(snapshot);
-            /*if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }*/
             if (snapshot.hasData) {
               List<ConnectivityResult>? result = snapshot.data;
               if (result?[0] == ConnectivityResult.mobile ||

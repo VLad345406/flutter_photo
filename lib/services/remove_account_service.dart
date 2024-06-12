@@ -47,12 +47,62 @@ void removeAccount(BuildContext context) async {
       await doc.reference.delete();
     }
 
-    await FirebaseFirestore.instance.collection('users').doc(userId).delete();
   } catch (e) {
     if (kDebugMode) {
       print("User don`t have info in database!");
     }
   }
+  try {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('followers')
+        .get();
+
+    for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(doc['uid'])
+          .collection('subscriptions')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .delete();
+    }
+    for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+
+  } catch (e) {
+    if (kDebugMode) {
+      print("User don`t have followers in database!");
+    }
+  }
+
+  try {
+    final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('subscriptions')
+        .get();
+
+    for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(doc['uid'])
+          .collection('followers')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .delete();
+    }
+    for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      print("User don`t have subscriptions in database!");
+    }
+  }
+
+  await FirebaseFirestore.instance.collection('users').doc(userId).delete();
+
   await FirebaseAuth.instance.authStateChanges().listen((User? user) {
     user?.delete();
   });
