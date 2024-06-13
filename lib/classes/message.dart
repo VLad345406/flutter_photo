@@ -7,6 +7,7 @@ class Message {
   final Timestamp timestamp;
   final String fileLink;
   final String fileType;
+  final String fileName;
 
   Message({
     required this.senderId,
@@ -15,6 +16,7 @@ class Message {
     required this.timestamp,
     required this.fileLink,
     required this.fileType,
+    required this.fileName,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,6 +27,7 @@ class Message {
       'timestamp': timestamp,
       'file_link': fileLink,
       'file_type': fileType,
+      'file_name': fileName,
     };
   }
 
@@ -36,6 +39,7 @@ class Message {
       timestamp: map['timestamp'],
       fileLink: map['file_link'],
       fileType: map['file_type'],
+      fileName: map['file_name'],
     );
   }
 }

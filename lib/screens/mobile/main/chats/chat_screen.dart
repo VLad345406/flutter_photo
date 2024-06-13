@@ -1,19 +1,23 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_qualification_work/services/chat_service.dart';
+import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/profile/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
-import 'package:flutter_qualification_work/services/chat_service.dart';
-import 'package:flutter_qualification_work/services/snack_bar_service.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends StatefulWidget {
   final String receiverUserID;
@@ -35,6 +39,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   bool editingStatus = false;
   String editingMessageID = '';
+
+  final ImagePicker _picker = ImagePicker();
 
   final TextEditingController _messageEditingController =
       TextEditingController();
@@ -58,8 +64,6 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  //TODO sendMessage
-
   void sendMessage() async {
     if (_messageEditingController.text.isNotEmpty) {
       if (editingStatus) {
@@ -75,6 +79,9 @@ class _ChatScreenState extends State<ChatScreen> {
         await _chatService.sendMessage(
           widget.receiverUserID,
           _messageEditingController.text,
+          '',
+          'text',
+          '',
         );
       }
       _messageEditingController.clear();
@@ -120,9 +127,42 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void getMessagesFunc() async {
-    getMessages = await _chatService.getMessages(
-        widget.receiverUserID, _firebaseAuth.currentUser!.uid);
+  Future<void> sendImage(File image) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String imageUrl = await uploadImage(image, fileName);
+      await _chatService.sendMessage(
+        widget.receiverUserID,
+        '',
+        imageUrl,
+        'image',
+        fileName,
+      );
+    } catch (e) {
+      print("Error sending image: $e");
+    }
+  }
+
+  Future<String> uploadImage(File image, String fileName) async {
+    try {
+      Reference reference =
+          FirebaseStorage.instance.ref().child("images").child(fileName);
+      UploadTask uploadTask = reference.putFile(image);
+      TaskSnapshot storageTaskSnapshot =
+          await uploadTask.whenComplete(() => null);
+      String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  void pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      File imageFile = File(pickedFile.path);
+      await sendImage(imageFile);
+    }
   }
 
   @override
@@ -203,9 +243,9 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: pickImage,
                     icon: const Icon(
-                      Icons.attach_file,
+                      Icons.add_photo_alternate,
                       size: 32,
                     ),
                   ),
@@ -292,7 +332,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ? Alignment.centerRight
         : Alignment.centerLeft;
 
-    //get message sent time
+    // get message sent time
     Timestamp messageTimestamp = data['timestamp'];
     DateTime dateTime =
         DateTime.fromMillisecondsSinceEpoch(messageTimestamp.seconds * 1000);
@@ -300,6 +340,7 @@ class _ChatScreenState extends State<ChatScreen> {
     int minute = dateTime.minute;
 
     _scrollToBottom();
+
     return Row(
       mainAxisAlignment: alignment == Alignment.centerRight
           ? MainAxisAlignment.end
@@ -419,9 +460,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                       PopupMenuItem(
                                         child: TextButton(
                                           onPressed: () {
-                                            editMessage(
-                                                document.id, data['message']);
-                                            Navigator.pop(context);
+                                            if (data['file_type'] != 'image') {
+                                              editMessage(
+                                                  document.id, data['message']);
+                                              Navigator.pop(context);
+                                            } else {
+                                              snackBar(
+                                                  context, 'Photo can`t edit!');
+                                              Navigator.pop(context);
+                                            }
                                           },
                                           child: Text(
                                             LocaleData.edit.getString(context),
@@ -456,7 +503,45 @@ class _ChatScreenState extends State<ChatScreen> {
                           ],
                         ),
                       ),
-                LinkifyText(text: data['message']),
+                if (data['file_type'] == 'image' &&
+                    data.containsKey('file_link'))
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PhotoOpen(
+                            path: data['file_link'],
+                            uid: alignment == Alignment.centerLeft
+                                ? widget.receiverUserID
+                                : FirebaseAuth.instance.currentUser!.uid,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Image.network(
+                      data['file_link'],
+                      height: 150,
+                      width: 150,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Text('Error loading image: $error');
+                      },
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                else if (data['file_type'] != 'image')
+                  LinkifyText(text: data['message']),
                 Text(
                   '${hour < 10 ? '0$hour' : hour}:${minute == 0 ? '00' : minute}',
                   style: const TextStyle(color: Colors.grey),
