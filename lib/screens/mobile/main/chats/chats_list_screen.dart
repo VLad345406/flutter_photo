@@ -166,7 +166,18 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
                                   textMessage.substring(0, 30) + "...";
                               textMessage = truncatedTextMessage;
                             }
-                            return Text(textMessage);
+
+                            if (snapshot.data!.docs.last['file_type'] ==
+                                'image') {
+                              return Row(
+                                children: [
+                                  Icon(Icons.photo),
+                                  Text(' Image'),
+                                ],
+                              );
+                            } else {
+                              return Text(textMessage);
+                            }
                           } catch (e) {
                             return Text(
                               LocaleData.noMessages.getString(context),

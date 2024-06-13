@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/classes/message.dart';
 
@@ -10,6 +11,9 @@ class ChatService extends ChangeNotifier {
   Future<void> sendMessage(
     String receiverId,
     String message,
+    String fileLink,
+    String fileType,
+    String fileName,
   ) async {
     final String currentUserId = _firebaseAuth.currentUser!.uid;
     final Timestamp timestamp = Timestamp.now();
@@ -19,8 +23,9 @@ class ChatService extends ChangeNotifier {
       receiverId: receiverId,
       message: message,
       timestamp: timestamp,
-      fileLink: '',
-      fileType: '',
+      fileLink: fileLink,
+      fileType: fileType,
+      fileName: fileName,
     );
 
     List<String> ids = [currentUserId, receiverId];
@@ -41,7 +46,7 @@ class ChatService extends ChangeNotifier {
         .set({'user_id': currentUserId});
 
     await _firestore
-        .collection('chat_rooms')
+        .collection('chats')
         .doc(chatRoomId)
         .collection('messages')
         .add(newMessage.toMap());
@@ -60,7 +65,7 @@ class ChatService extends ChangeNotifier {
 
     try {
       await _firestore
-          .collection('chat_rooms')
+          .collection('chats')
           .doc(chatRoomId)
           .collection('messages')
           .doc(messageID)
@@ -72,27 +77,48 @@ class ChatService extends ChangeNotifier {
   }
 
   Future<void> deleteMessage(
-    String receiverUserID,
-    String messageID,
-  ) async {
+      String receiverUserID,
+      String messageID,
+      ) async {
     final String currentUserId = _firebaseAuth.currentUser!.uid;
 
     List<String> ids = [currentUserId, receiverUserID];
     ids.sort();
     String chatRoomId = ids.join("_");
 
-    try {
-      await _firestore
-          .collection('chat_rooms')
-          .doc(chatRoomId)
-          .collection('messages')
-          .doc(messageID)
-          .delete();
-    } catch (e) {
-      print('Error deleting message: $e');
-      throw e;
+    final getMessage = await _firestore
+        .collection('chats')
+        .doc(chatRoomId)
+        .collection('messages')
+        .doc(messageID)
+        .get();
+
+    if (getMessage.exists) {
+      final data = getMessage.data() as Map<String, dynamic>;
+      final fileType = data['file_type'] as String?;
+      final fileLink = data['file_link'] as String?;
+      final fileName = data['file_name'];
+
+      try {
+        await _firestore
+            .collection('chats')
+            .doc(chatRoomId)
+            .collection('messages')
+            .doc(messageID)
+            .delete();
+
+        if (fileType == 'image' && fileLink != null) {
+          final Reference storageRef =
+          FirebaseStorage.instance.ref().child('images').child(fileName);
+          await storageRef.delete();
+        }
+      } catch (e) {
+        print('Error deleting message: $e');
+        throw e;
+      }
     }
   }
+
 
   Stream<QuerySnapshot> getMessages(String userId, String otherUserId) {
     List<String> ids = [userId, otherUserId];
@@ -100,7 +126,7 @@ class ChatService extends ChangeNotifier {
     String chatRoomId = ids.join("_");
 
     return _firestore
-        .collection('chat_rooms')
+        .collection('chats')
         .doc(chatRoomId)
         .collection('messages')
         .orderBy('timestamp', descending: false)
@@ -125,7 +151,7 @@ class ChatService extends ChangeNotifier {
         .delete();
 
     DocumentReference chatRoomDoc =
-        _firestore.collection('chat_rooms').doc(chatRoomId);
+        _firestore.collection('chats').doc(chatRoomId);
     CollectionReference messagesCollection = chatRoomDoc.collection('messages');
     QuerySnapshot messagesSnapshot = await messagesCollection.get();
     for (QueryDocumentSnapshot doc in messagesSnapshot.docs) {
