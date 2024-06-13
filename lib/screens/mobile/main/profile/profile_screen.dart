@@ -12,7 +12,7 @@ import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_settings_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
@@ -174,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: LocaleData.followers.getString(context),
+                        title: 'Followers',
                         userId: FirebaseAuth.instance.currentUser!.uid,
                       ),
                     ),
@@ -197,7 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: LocaleData.subscriptions.getString(context),
+                        title: 'Subscriptions',
                         userId: FirebaseAuth.instance.currentUser!.uid,
                       ),
                     ),

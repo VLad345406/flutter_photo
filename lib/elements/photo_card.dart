@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/profile/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -47,8 +47,6 @@ class _PhotoCardState extends State<PhotoCard> {
     super.initState();
     getUserData();
   }
-
-  bool _isLoading = true;
 
   @override
   Widget build(BuildContext context) {

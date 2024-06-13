@@ -6,7 +6,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/profile/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -43,6 +43,7 @@ class DisplayListUsers extends StatelessWidget {
               left: 16,
               right: 16,
             ),
+            width: kIsWeb ? 350 : MediaQuery.of(context).size.width,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               itemCount:

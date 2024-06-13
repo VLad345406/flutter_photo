@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
-import 'package:flutter_qualification_work/services/check_internet_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/services/validate_password_service.dart';
 import 'package:flutter_qualification_work/services/validate_username_service.dart';
@@ -21,18 +22,15 @@ Future registration(
       nickName == '' ||
       password == '' ||
       confirmPassword == '') {
-    snackBar(context, 'Please, input data!');
+    snackBar(context, LocaleData.registerError.getString(context));
   } else if (password != confirmPassword) {
-    snackBar(context, 'Wrong confirm password!');
+    snackBar(context, LocaleData.confirmPasswordError.getString(context));
   } else if (password.length < 8 || !validatePassword(password)) {
     snackBar(
-        context,
-        'Password must be 8 characters or more! Minimum 1 Upper case symbol, '
-        'Minimum 1 lowercase symbol, Minimum 1 Numeric Number symbol, '
-        'Minimum 1 Special Character!');
+        context, LocaleData.passwordValidateError.getString(context));
   } else {
     if (await validateUsername(nickName)) {
-      snackBar(context, 'This user name is already exist!');
+      snackBar(context, LocaleData.registerUserNameError.getString(context));
     } else {
       try {
         UserCredential userCredential =
@@ -57,7 +55,6 @@ Future registration(
                   webScaffold: WebMainScreen(),
                 )
               : MainScreen();
-          //return CheckInternet(widget: MainScreen());
         }), (route) => false);
       } on FirebaseAuthException catch (e) {
         snackBar(context, e.message.toString());

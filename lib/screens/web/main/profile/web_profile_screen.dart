@@ -4,11 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
@@ -158,7 +160,8 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                   left: 16,
                   right: 8,
                 ),
-                buttonText: 'Followers ($countFollowers)',
+                buttonText:
+                '${LocaleData.followers.getString(context)} ($countFollowers)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -180,7 +183,8 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                   left: 8,
                   right: 16,
                 ),
-                buttonText: 'Subscriptions ($countSubs)',
+                buttonText:
+                '${LocaleData.subscriptions.getString(context)} ($countSubs)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {

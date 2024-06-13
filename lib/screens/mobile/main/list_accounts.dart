@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/profile/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -55,7 +57,9 @@ class _ListAccountsState extends State<ListAccounts> {
           ),
         ),
         title: Text(
-          widget.title,
+          widget.title == 'Followers'
+              ? LocaleData.followers.getString(context)
+              : LocaleData.subscriptions.getString(context),
           style: GoogleFonts.comfortaa(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 36,

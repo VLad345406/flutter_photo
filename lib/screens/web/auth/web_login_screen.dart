@@ -1,20 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
-import 'package:flutter_qualification_work/screens/mobile/auth/mobile_google_sigh_in_registration_data.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/auth/mobile_restore_screen.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/main_screen.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_restore_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/authentication/google_sigh_in_service.dart';
 import 'package:flutter_qualification_work/services/authentication/login_service.dart';
-import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class WebLoginScreen extends StatefulWidget {
   const WebLoginScreen({super.key});
@@ -50,7 +46,11 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Log in',
+                LocaleData.login.getString(context)[0].toUpperCase() +
+                    LocaleData.login
+                        .getString(context)
+                        .substring(1)
+                        .toLowerCase(),
                 style: GoogleFonts.comfortaa(
                   fontSize: 90,
                 ),
@@ -70,7 +70,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                 child: PhotoTextField(
                   controller: passwordController,
                   showVisibleButton: true,
-                  label: 'Password',
+                  label: LocaleData.password.getString(context),
                   disableSpace: true,
                   disableUppercase: false,
                 ),
@@ -78,7 +78,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
               PhotoButton(
                 widthButton: 370,
                 buttonMargin: EdgeInsets.only(top: 18),
-                buttonText: 'LOGIN',
+                buttonText: LocaleData.login.getString(context),
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -93,7 +93,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                 padding: const EdgeInsets.only(top: 16),
                 child: RichText(
                   text: TextSpan(
-                    text: 'Forgot password? ',
+                    text: LocaleData.forgotPassword.getString(context),
                     style: GoogleFonts.roboto(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 16,
@@ -111,7 +111,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                                   ),
                                 ),
                               ),
-                        text: 'Restore',
+                        text: LocaleData.restore.getString(context),
                         style: GoogleFonts.roboto(
                           color: Theme.of(context).colorScheme.primary,
                           fontSize: 16,
@@ -126,7 +126,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 18),
                 child: Text(
-                  'Continue with:',
+                  LocaleData.continueWith.getString(context),
                   style: GoogleFonts.roboto(
                     fontSize: 16,
                   ),
@@ -142,7 +142,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
                       margin: const EdgeInsets.only(top: 16),
                       child: IconButton(
                         icon: Image.asset('assets/login_screen/Google.png'),
-                        onPressed: (){
+                        onPressed: () {
                           googleSighInService(context);
                         },
                       ),

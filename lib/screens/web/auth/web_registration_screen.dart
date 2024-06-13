@@ -1,7 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/services/authentication/registration_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,7 +43,11 @@ class _WebRegistrationScreenState extends State<WebRegistrationScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Register',
+                LocaleData.register.getString(context)[0].toUpperCase() +
+                    LocaleData.register
+                        .getString(context)
+                        .substring(1)
+                        .toLowerCase(),
                 style: GoogleFonts.comfortaa(
                   fontSize: 90,
                 ),
@@ -62,7 +67,7 @@ class _WebRegistrationScreenState extends State<WebRegistrationScreen> {
                 child: PhotoTextField(
                   controller: nickNameController,
                   showVisibleButton: false,
-                  label: 'Nick name',
+                  label: LocaleData.nickName.getString(context),
                   disableSpace: true,
                   disableUppercase: true,
                 ),
@@ -72,7 +77,7 @@ class _WebRegistrationScreenState extends State<WebRegistrationScreen> {
                 child: PhotoTextField(
                   controller: passwordController,
                   showVisibleButton: true,
-                  label: 'Password',
+                  label: LocaleData.password.getString(context),
                   disableSpace: true,
                   disableUppercase: false,
                 ),
@@ -82,7 +87,7 @@ class _WebRegistrationScreenState extends State<WebRegistrationScreen> {
                 child: PhotoTextField(
                   controller: confirmPasswordController,
                   showVisibleButton: true,
-                  label: 'Confirm password',
+                  label: LocaleData.confirmPassword.getString(context),
                   disableSpace: true,
                   disableUppercase: false,
                 ),
@@ -90,7 +95,7 @@ class _WebRegistrationScreenState extends State<WebRegistrationScreen> {
               PhotoButton(
                 widthButton: 370,
                 buttonMargin: EdgeInsets.only(top: 18),
-                buttonText: 'REGISTER',
+                buttonText: LocaleData.register.getString(context),
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
