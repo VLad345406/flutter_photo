@@ -15,6 +15,17 @@ mixin LocaleData {
   static const String forgotPassword = 'Forgot password? ';
   static const String restore = 'Restore';
   static const String continueWith = 'Continue with:';
+  static const String loginError = 'Input email and password!';
+  static const String registerError = 'Input data!';
+  static const String confirmPasswordError = 'Wrong confirm password!';
+  static const String passwordValidateError =
+      'Password must be 8 characters or more! Minimum 1 Upper case symbol, '
+      'Minimum 1 lowercase symbol, Minimum 1 Numeric Number symbol, '
+      'Minimum 1 Special Character!';
+  static const String registerUserNameError =
+      'This user name is already exist!';
+  static const String restoreMessage =
+      'Password restore link sent! Check your email!';
 
   //main screens
   static const String discover = 'Discover';
@@ -37,6 +48,7 @@ mixin LocaleData {
   static const String exit = 'Exit';
   static const String removeAccount = 'Remove account';
   static const String language = 'Language';
+  static const String successSave = 'Success save!';
 
   //chats
   static const String noMessages = 'No messages!';
@@ -65,6 +77,17 @@ mixin LocaleData {
     forgotPassword: 'Forgot password? ',
     restore: 'Restore',
     continueWith: 'Continue with:',
+    loginError: 'Input email and password!',
+    registerError: 'Input data!',
+    confirmPasswordError: 'Wrong confirm password!',
+    passwordValidateError:
+        'Password must be 8 characters or more! Minimum 1 Upper case symbol, '
+            'Minimum 1 lowercase symbol, Minimum 1 Numeric Number symbol, '
+            'Minimum 1 Special Character!',
+    registerUserNameError: 'This user name is already exist!',
+    restoreMessage: 'Password restore link sent! Check your email!',
+
+    //main screens
     discover: 'Discover',
     notSubscibed: "You're not subscribed to anyone! "
         "Maybe you know that users:",
@@ -85,6 +108,7 @@ mixin LocaleData {
     exit: 'Exit',
     removeAccount: 'Remove account',
     language: 'Language',
+    successSave: 'Success save!',
 
     //chats
     noMessages: 'No messages!',
@@ -113,6 +137,18 @@ mixin LocaleData {
     forgotPassword: 'Забули пароль? ',
     restore: 'Відновити',
     continueWith: 'Продовжити через:',
+    loginError: 'Введіть електрону пошту та пароль!',
+    registerError: 'Введіть інформацію!',
+    confirmPasswordError: 'Неправильний пароль для підтвердження!',
+    passwordValidateError:
+        'Пароль повинен містити 8 символів або більше! Мінімум 1 символ верхнього регістру, '
+            'Мінімум 1 символ нижнього регістру, Мінімум 1 символ цифри, '
+            "Мінімум 1 спеціальний символ!",
+    registerUserNameError: "Це ім'я користувача вже зайняте!",
+    restoreMessage:
+        "Посилання для відновлення паролю надіслано! Перевірте свою електронну пошту!",
+
+    //main screens
     discover: 'Відкриття',
     notSubscibed: "Ви ще ні на кого не підписані! "
         "Можливо, вам відомі ці користувачі:",
@@ -134,6 +170,7 @@ mixin LocaleData {
     exit: 'Вийти',
     removeAccount: 'Видалити аккаунт',
     language: 'Мова',
+    successSave: 'Успішно збережено!',
 
     //chats
     noMessages: 'Немає повідомлень!',

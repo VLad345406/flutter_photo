@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_edit_screen.dart';
-import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -185,7 +185,8 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                           left: 16,
                           right: 16,
                         ),
-                        buttonText: 'FOLLOW',
+                        buttonText:
+                            LocaleData.follow.getString(context).toUpperCase(),
                         textColor: Theme.of(context).colorScheme.secondary,
                         buttonColor: Theme.of(context).colorScheme.primary,
                         function: () {
@@ -217,7 +218,9 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                           left: 16,
                           right: 16,
                         ),
-                        buttonText: 'UNFOLLOW',
+                        buttonText: LocaleData.unfollow
+                            .getString(context)
+                            .toUpperCase(),
                         textColor: Colors.red,
                         buttonColor: Theme.of(context).colorScheme.primary,
                         function: () {
@@ -247,7 +250,8 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                       left: 16,
                       right: 16,
                     ),
-                    buttonText: 'MESSAGE',
+                    buttonText:
+                        LocaleData.message.getString(context).toUpperCase(),
                     textColor: Theme.of(context).colorScheme.secondary,
                     buttonColor: Theme.of(context).colorScheme.primary,
                   ),
@@ -263,7 +267,8 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                   left: 16,
                   right: 8,
                 ),
-                buttonText: 'Followers ($countFollowers)',
+                buttonText:
+                    '${LocaleData.followers.getString(context)} ($countFollowers)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -271,8 +276,9 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                          title: 'Followers',
-                          userId: widget.userId,),
+                        title: 'Followers',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
                     ),
                   );
                 },
@@ -284,7 +290,8 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                   left: 8,
                   right: 16,
                 ),
-                buttonText: 'Subscriptions ($countSubs)',
+                buttonText:
+                    '${LocaleData.subscriptions.getString(context)} ($countSubs)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -292,8 +299,9 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                          title: 'Subscriptions',
-                          userId: widget.userId,),
+                        title: 'Subscriptions',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
                     ),
                   );
                 },

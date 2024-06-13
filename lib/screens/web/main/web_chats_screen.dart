@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/chat_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -47,7 +49,7 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Chats',
+          LocaleData.chats.getString(context),
           style: GoogleFonts.comfortaa(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
@@ -88,14 +90,35 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
 
   Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('users').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .collection('chat_id_users')
+          .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Text("Error!");
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          //return const Center(child: Text("Loading..."));
-          return Center(child: CircularProgressIndicator());
+          return Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Text(
+                LocaleData.findUserMessage.getString(context),
+                textAlign: TextAlign.center,
+                style: GoogleFonts.roboto(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          );
         }
 
         return ListView(
@@ -110,76 +133,109 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
   }
 
   Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    String userId = document['user_id'];
 
-    if (_auth.currentUser!.email != data['email']) {
-      String receiverUserName = data['user_name'];
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text("Error!");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: CircularProgressIndicator(),
+          ));
+        }
 
-      if (data['name'] != '') {
-        receiverUserName = data['name'];
-      }
-      if (receiverUserName.length >
-          (MediaQuery.of(context).size.width / 4) / 22) {
-        String truncatedReceiverUserName = receiverUserName.substring(
-                0, ((MediaQuery.of(context).size.width / 4) / 22).toInt()) +
-            "...";
-        receiverUserName = truncatedReceiverUserName;
-      }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Text("No user data found!");
+        }
 
-      return ListTile(
-        title: Row(
-          children: [
-            PhotoUserAvatar(userAvatarLink: data['avatar_link'], radius: 20),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        Map<String, dynamic> data =
+        snapshot.data!.data()! as Map<String, dynamic>;
+
+        if (_auth.currentUser!.email != data['email']) {
+          String receiverUserName = data['user_name'];
+
+          if (data['name'] != '') {
+            receiverUserName = data['name'];
+          }
+
+          return ListTile(
+            title: Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  receiverUserName,
-                  style: GoogleFonts.roboto(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                PhotoUserAvatar(
+                    userAvatarLink: data['avatar_link'], radius: 20),
+                const SizedBox(width: 20),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        receiverUserName,
+                        style: GoogleFonts.roboto(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      StreamBuilder(
+                        stream: _chatService.getMessages(data['uid'],
+                            FirebaseAuth.instance.currentUser!.uid),
+                        builder: (context, snapshot) {
+                          try {
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text(
+                                      'Error ${snapshot.error.toString()}'));
+                            }
+
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(child: Text('Loading...'));
+                            }
+                            String textMessage =
+                            snapshot.data!.docs.last['message'];
+                            if (textMessage.length > 30) {
+                              String truncatedTextMessage =
+                                  textMessage.substring(0, 30) + "...";
+                              textMessage = truncatedTextMessage;
+                            }
+                            return Text(textMessage);
+                          } catch (e) {
+                            return Text(
+                              LocaleData.noMessages.getString(context),
+                            );
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                StreamBuilder(
-                  stream: _chatService.getMessages(
-                      data['uid'], FirebaseAuth.instance.currentUser!.uid),
-                  builder: (context, snapshot) {
-                    try {
-                      if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error ${snapshot.error.toString()}'));
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: Text('Loading...'));
-                      }
-                      String textMessage = snapshot.data!.docs.last['message'];
-                      if (textMessage.length >
-                          (MediaQuery.of(context).size.width / 4) / 22) {
-                        String truncatedTextMessage = textMessage.substring(
-                                0,
-                                ((MediaQuery.of(context).size.width / 5) / 22)
-                                    .toInt()) +
-                            "...";
-                        textMessage = truncatedTextMessage;
-                      }
-                      return Text(textMessage);
-                    } catch (e) {
-                      return Text('No message!');
-                    }
-                  },
+                Tooltip(
+                  message: 'Remove chat',
+                  child: IconButton(
+                    onPressed: () {
+                      _chatService.removeChat(
+                          FirebaseAuth.instance.currentUser!.uid, userId);
+                    },
+                    icon: Icon(
+                      Icons.remove_circle,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
               ],
-            )
-          ],
-        ),
-        onTap: () {
-          openChat(data['uid']);
-        },
-      );
-    } else {
-      return Container();
-    }
+            ),
+            onTap: () {
+              openChat(data['uid']);
+            },
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
   }
 }

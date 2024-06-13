@@ -8,7 +8,7 @@ import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/profile/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';

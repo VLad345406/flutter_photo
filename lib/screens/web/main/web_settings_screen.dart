@@ -3,9 +3,11 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/button.dart';
 import 'package:flutter_qualification_work/elements/text_field.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/web/auth/web_start_screen.dart';
 import 'package:flutter_qualification_work/services/change_password_service.dart';
 import 'package:flutter_qualification_work/services/image_picker_service.dart';
@@ -94,6 +96,15 @@ class _WebEditScreenState extends State<WebEditScreen> {
     getUserData();
   }
 
+  void _setLocale(String? value) {
+    if (value == null) return;
+    if (value == 'en') {
+      FlutterLocalization.instance.translate('en');
+    } else if (value == 'uk') {
+      FlutterLocalization.instance.translate('uk');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -114,7 +125,7 @@ class _WebEditScreenState extends State<WebEditScreen> {
           ),
         ),
         title: Text(
-          'Edit profile',
+          LocaleData.settings.getString(context),
           style: GoogleFonts.comfortaa(
             color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
@@ -127,11 +138,47 @@ class _WebEditScreenState extends State<WebEditScreen> {
           width: MediaQuery.of(context).size.width / 3,
           child: ListView(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+                    child: Text(
+                      LocaleData.language.getString(context),
+                      style: GoogleFonts.comfortaa(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: DropdownButton(
+                      value: FlutterLocalization
+                          .instance.currentLocale!.languageCode,
+                      items: [
+                        DropdownMenuItem(
+                          value: 'en',
+                          child: Text('English'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'uk',
+                          child: Text('Українська'),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        _setLocale(value);
+                      },
+                    ),
+                  ),
+                ],
+              ),
               Center(
                 child: Container(
                   padding: EdgeInsets.only(top: 16),
                   child: Text(
-                    'CHANGE AVATAR',
+                    LocaleData.changeAvatar.getString(context).toUpperCase(),
                     style: GoogleFonts.roboto(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 13,
@@ -184,27 +231,26 @@ class _WebEditScreenState extends State<WebEditScreen> {
               PhotoTextField(
                 controller: nameController,
                 showVisibleButton: false,
-                label: 'Name',
+                label: LocaleData.name.getString(context),
                 disableSpace: false,
                 disableUppercase: false,
               ),
               PhotoTextField(
                 controller: nicknameController,
                 showVisibleButton: false,
-                label: 'Nick name',
+                label: LocaleData.nickName.getString(context),
                 disableSpace: true,
                 disableUppercase: true,
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,
-                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                buttonText: 'SAVE',
+                buttonMargin:
+                    const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: LocaleData.save.getString(context).toUpperCase(),
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   saveData();
-                  //snackBar(context, 'Success save!');
-                  //Navigator.pop(context);
                 },
               ),
               PhotoTextField(
@@ -216,8 +262,10 @@ class _WebEditScreenState extends State<WebEditScreen> {
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,
-                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                buttonText: 'SAVE EMAIL',
+                buttonMargin:
+                    const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText:
+                    '${LocaleData.save.getString(context).toUpperCase()} EMAIL',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -225,28 +273,17 @@ class _WebEditScreenState extends State<WebEditScreen> {
                   //Navigator.pop(context);
                 },
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: Text(
-                  'Password (if use alternative sigh in method write name this method. For example "Google")',
-                  style: GoogleFonts.comfortaa(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
               PhotoTextField(
                 controller: oldPasswordController,
                 showVisibleButton: true,
-                label: 'Old password',
+                label: LocaleData.oldPassword.getString(context),
                 disableSpace: true,
                 disableUppercase: false,
               ),
               PhotoTextField(
                 controller: passwordController,
                 showVisibleButton: true,
-                label: 'Password',
+                label: LocaleData.password.getString(context),
                 disableSpace: true,
                 disableUppercase: false,
               ),
@@ -254,27 +291,29 @@ class _WebEditScreenState extends State<WebEditScreen> {
               PhotoTextField(
                 controller: confirmPasswordController,
                 showVisibleButton: true,
-                label: 'Confirm password',
+                label: LocaleData.confirmPassword.getString(context),
                 disableSpace: true,
                 disableUppercase: false,
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,
-                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                buttonText: 'SAVE PASSWORD',
+                buttonMargin:
+                    const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: LocaleData.save.getString(context).toUpperCase() +
+                    ' ' +
+                    LocaleData.password.getString(context).toUpperCase(),
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   changePassword(context, oldPasswordController.text,
                       passwordController.text, confirmPasswordController.text);
-                  //snackBar(context, 'Success save!');
-                  //Navigator.pop(context);
                 },
               ),
               PhotoButton(
                 widthButton: screenWidth - 32,
-                buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                buttonText: 'EXIT PROFILE',
+                buttonMargin:
+                    const EdgeInsets.only(top: 16, left: 16, right: 16),
+                buttonText: LocaleData.exit.getString(context).toUpperCase(),
                 textColor: Colors.red,
                 buttonColor: Theme.of(context).colorScheme.secondary,
                 function: () {
@@ -291,8 +330,10 @@ class _WebEditScreenState extends State<WebEditScreen> {
                 ),
                 child: PhotoButton(
                   widthButton: screenWidth - 32,
-                  buttonMargin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-                  buttonText: 'REMOVE ACCOUNT',
+                  buttonMargin:
+                      const EdgeInsets.only(top: 16, left: 16, right: 16),
+                  buttonText:
+                      LocaleData.removeAccount.getString(context).toUpperCase(),
                   textColor: Colors.red,
                   buttonColor: Theme.of(context).colorScheme.secondary,
                   function: () {

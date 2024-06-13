@@ -76,14 +76,15 @@ class _EditScreenState extends State<EditScreen> {
       if (nicknameController.text == data['user_name']) {
         await userRef
             .set({'name': nameController.text}, SetOptions(merge: true));
-        snackBar(context, 'Success add name!');
+        snackBar(context, LocaleData.successSave.getString(context));
       } else {
         if (!await validateUsername(nicknameController.text)) {
           await userRef.set(
               {'user_name': nicknameController.text}, SetOptions(merge: true));
-          snackBar(context, 'Success add nick name!');
+          snackBar(context, LocaleData.successSave.getString(context));
         } else {
-          snackBar(context, 'That nick name is already exist!');
+          snackBar(
+              context, LocaleData.registerUserNameError.getString(context));
         }
       }
     } catch (e) {
@@ -181,7 +182,7 @@ class _EditScreenState extends State<EditScreen> {
                 child: Container(
                   padding: EdgeInsets.only(top: 16),
                   child: Text(
-                    LocaleData.changeAvatar.getString(context),
+                    LocaleData.changeAvatar.getString(context).toUpperCase(),
                     style: GoogleFonts.roboto(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 13,
@@ -272,20 +273,8 @@ class _EditScreenState extends State<EditScreen> {
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
-                  snackBar(context, 'Success save!');
-                  //Navigator.pop(context);
+                  snackBar(context, LocaleData.successSave.getString(context));
                 },
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16, left: 16, right: 16),
-                child: Text(
-                  'Password (if use alternative sigh in method write name this method. For example "Google")',
-                  style: GoogleFonts.comfortaa(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
               ),
               PhotoTextField(
                 controller: oldPasswordController,

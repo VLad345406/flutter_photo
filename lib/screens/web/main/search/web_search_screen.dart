@@ -1,16 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/elements/user_avatar.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/main/web_open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/services/search_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'search/web_display_pictures.dart';
-import 'search/web_display_users.dart';
+import 'web_display_pictures.dart';
+import 'web_display_users.dart';
 
 class WebSearchScreen extends StatefulWidget {
   const WebSearchScreen({super.key});
@@ -35,7 +31,7 @@ class _WebSearchScreenState extends State<WebSearchScreen> {
         children: [
           Center(
             child: Text(
-              'Search',
+              LocaleData.search.getString(context),
               style: GoogleFonts.comfortaa(
                 fontSize: 90,
                 fontWeight: FontWeight.w200,
@@ -87,8 +83,8 @@ class _WebSearchScreenState extends State<WebSearchScreen> {
                   fontWeight: FontWeight.w400,
                   fontStyle: FontStyle.normal,
                 ),
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Search all photos, profiles',
+                decoration: InputDecoration.collapsed(
+                  hintText: LocaleData.searchPhotos.getString(context),
                 ),
               ),
             ),
