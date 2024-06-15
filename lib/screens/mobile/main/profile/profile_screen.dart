@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:flutter_qualification_work/elements/audio_player.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -267,20 +268,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PhotoOpen(
-                                            path: imageLink,
-                                            uid: state.uid,
+                                      if (userFile['file_type'] == 'image') {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PhotoOpen(
+                                              path: imageLink,
+                                              uid: state.uid,
+                                            ),
                                           ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                     },
                                     child: userFile['file_type'] == 'image'
                                         ? Container(
                                             margin: const EdgeInsets.only(
-                                                top: 32, left: 16, right: 16),
+                                                top: 16, left: 16, right: 16),
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .width -
@@ -327,12 +330,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ),
                                           )
                                         : userFile['file_type'] == 'music'
-                                            ? Text('Music')
+                                            ? AudioPlayerScreen(
+                                                fileName: userFile['file_name'],
+                                                fileLink: userFile['file_link'],
+                                              )
                                             : Text('Video'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
-                                        top: 26, right: 10),
+                                      top: 16,
+                                      right: 16,
+                                    ),
                                     child: IconButton(
                                       onPressed: () async {
                                         String result =
