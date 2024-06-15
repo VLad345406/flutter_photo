@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,11 +16,25 @@ pickImage(ImageSource source) async {
 Future<String> uploadImageToStorage(
     String userName, String fileName, Uint8List file) async {
   final FirebaseStorage storage = FirebaseStorage.instance;
-  Reference ref = storage.ref().child('pictures/$userName/$fileName');
+  Reference ref = storage.ref().child('content/$userName/$fileName');
   UploadTask uploadTask = ref.putData(file);
   TaskSnapshot snapshot = await uploadTask;
   String downloadUrl = await snapshot.ref.getDownloadURL();
   return downloadUrl;
+}
+
+Future<String> uploadFileToStorage(
+    String userName, String fileName, dynamic file) async {
+  try {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    TaskSnapshot uploadTask =
+        await storage.ref('content/$userName/$fileName').putFile(File(file.path));
+    String downloadUrl = await uploadTask.ref.getDownloadURL();
+    return downloadUrl;
+  } catch (e) {
+    print(e);
+    return "";
+  }
 }
 
 Future<String> saveAvatar(
@@ -60,12 +75,13 @@ Future savePictureInFirestore(
     await firestore
         .collection('users')
         .doc(uid)
-        .collection('pictures')
+        .collection('contents')
         .doc(pictureNumber.toString())
         .set({
-      'image_link': imageUrl,
+      'file_link': imageUrl,
       'file_name': pictureNumber.toString(),
       'tags': listTags,
+      'file_type' : 'image',
     });
     await firestore
         .collection('users')

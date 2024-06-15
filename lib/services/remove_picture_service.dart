@@ -21,7 +21,7 @@ Future<String> removePictureService(
       final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('pictures')
+          .collection('contents')
           .get();
 
       for (final QueryDocumentSnapshot doc in querySnapshot.docs) {
@@ -34,7 +34,7 @@ Future<String> removePictureService(
       final QuerySnapshot newQuerySnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('pictures')
+          .collection('contents')
           .get();
 
       if (newQuerySnapshot.docs.isEmpty) {
