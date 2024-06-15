@@ -70,6 +70,7 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
@@ -91,37 +92,28 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: IconButton(
-                  icon: Icon(
-                    _isPlaying ? Icons.pause : Icons.play_arrow,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                  onPressed: _playPause,
-                  iconSize: 30,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Slider(
-                    thumbColor: Theme.of(context).colorScheme.secondary,
-                    activeColor: Colors.grey,
-                    value: _position.inSeconds.toDouble(),
-                    min: 0.0,
-                    max: _duration.inSeconds.toDouble(),
-                    onChanged: (double value) {
-                      setState(() {
-                        _seekToSecond(value.toInt());
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Slider(
+              thumbColor: Theme.of(context).colorScheme.secondary,
+              activeColor: Colors.grey,
+              value: _position.inSeconds.toDouble(),
+              min: 0.0,
+              max: _duration.inSeconds.toDouble(),
+              onChanged: (double value) {
+                setState(() {
+                  _seekToSecond(value.toInt());
+                });
+              },
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              _isPlaying ? Icons.pause : Icons.play_arrow,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            onPressed: _playPause,
+            iconSize: 50,
           ),
           Text(
             "${_position.inMinutes}:${(_position.inSeconds % 60).toString().padLeft(2, '0')} / ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}",
