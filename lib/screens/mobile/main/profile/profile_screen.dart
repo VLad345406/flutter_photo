@@ -227,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   stream: FirebaseFirestore.instance
                       .collection('users')
                       .doc(FirebaseAuth.instance.currentUser?.uid)
-                      .collection('pictures')
+                      .collection('contents')
                       .snapshots(),
                   builder: (context, snapshot) {
                     try {
@@ -259,8 +259,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (BuildContext context, int index) {
-                              final userPicture = snapshot.data!.docs[index];
-                              final imageLink = userPicture['image_link'];
+                              final userFile = snapshot.data!.docs[index];
+                              final imageLink = userFile['file_link'];
                               return Stack(
                                 alignment: AlignmentDirectional.topEnd,
                                 fit: StackFit.loose,
@@ -277,47 +277,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       );
                                     },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 32, left: 16, right: 16),
-                                      height:
-                                          MediaQuery.of(context).size.width -
-                                              32,
-                                      width: MediaQuery.of(context).size.width -
-                                          32,
-                                      child: Image.network(
-                                        imageLink,
-                                        fit: BoxFit.cover,
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          } else {
-                                            return Center(
-                                              child: CircularProgressIndicator(
-                                                value: loadingProgress
-                                                            .expectedTotalBytes !=
-                                                        null
-                                                    ? loadingProgress
-                                                            .cumulativeBytesLoaded /
-                                                        (loadingProgress
-                                                                .expectedTotalBytes ??
-                                                            1)
-                                                    : null,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        errorBuilder: (BuildContext context,
-                                            Object error,
-                                            StackTrace? stackTrace) {
-                                          return Center(
-                                            child: Icon(Icons.error),
-                                          );
-                                        },
-                                      ),
-                                    ),
+                                    child: userFile['file_type'] == 'image'
+                                        ? Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 32, left: 16, right: 16),
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                32,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                32,
+                                            child: Image.network(
+                                              imageLink,
+                                              fit: BoxFit.cover,
+                                              loadingBuilder:
+                                                  (BuildContext context,
+                                                      Widget child,
+                                                      ImageChunkEvent?
+                                                          loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                } else {
+                                                  return Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: loadingProgress
+                                                                  .expectedTotalBytes !=
+                                                              null
+                                                          ? loadingProgress
+                                                                  .cumulativeBytesLoaded /
+                                                              (loadingProgress
+                                                                      .expectedTotalBytes ??
+                                                                  1)
+                                                          : null,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              errorBuilder:
+                                                  (BuildContext context,
+                                                      Object error,
+                                                      StackTrace? stackTrace) {
+                                                return Center(
+                                                  child: Icon(Icons.error),
+                                                );
+                                              },
+                                            ),
+                                          )
+                                        : userFile['file_type'] == 'music'
+                                            ? Text('Music')
+                                            : Text('Video'),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -326,8 +337,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       onPressed: () async {
                                         String result =
                                             await removePictureService(
-                                          'pictures/${state.userName}/${userPicture['file_name']}',
-                                          userPicture['file_name'],
+                                          'content/${state.userName}/${userFile['file_name']}',
+                                          userFile['file_name'],
                                         );
                                         if (result == 'Success') {
                                           context

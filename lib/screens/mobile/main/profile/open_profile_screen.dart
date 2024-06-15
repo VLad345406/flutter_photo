@@ -65,7 +65,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
       CollectionReference collectionRef = FirebaseFirestore.instance
           .collection('users')
           .doc(userId)
-          .collection('pictures');
+          .collection('contents');
 
       QuerySnapshot querySnapshot = await collectionRef.get();
       userPictures = querySnapshot.docs
@@ -336,8 +336,8 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: userPictures.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final userPicture = userPictures[index];
-                      final imageLink = userPicture['image_link'];
+                      final userFile = userPictures[index];
+                      final imageLink = userFile['file_link'];
                       return GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -350,41 +350,47 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                             ),
                           );
                         },
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              top: 32, left: 16, right: 16),
-                          height: MediaQuery.of(context).size.width - 32,
-                          width: MediaQuery.of(context).size.width - 32,
-                          child: Image.network(
-                            imageLink,
-                            fit: BoxFit.cover,
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            (loadingProgress
-                                                    .expectedTotalBytes ??
-                                                1)
-                                        : null,
-                                  ),
-                                );
-                              }
-                            },
-                            errorBuilder: (BuildContext context, Object error,
-                                StackTrace? stackTrace) {
-                              return Center(
-                                child: Icon(Icons.error),
-                              );
-                            },
-                          ),
-                        ),
+                        child: userFile['file_type'] == 'image'
+                            ? Container(
+                                margin: const EdgeInsets.only(
+                                    top: 32, left: 16, right: 16),
+                                height: MediaQuery.of(context).size.width - 32,
+                                width: MediaQuery.of(context).size.width - 32,
+                                child: Image.network(
+                                  imageLink,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  (loadingProgress
+                                                          .expectedTotalBytes ??
+                                                      1)
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object error, StackTrace? stackTrace) {
+                                    return Center(
+                                      child: Icon(Icons.error),
+                                    );
+                                  },
+                                ),
+                              )
+                            : userFile['file_type'] == 'music'
+                                ? Text('Music')
+                                : Text('Video'),
                       );
                     },
                   ),

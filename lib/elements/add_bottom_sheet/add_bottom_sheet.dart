@@ -3,36 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet_button.dart';
+import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/add_photo_info.dart';
-import 'package:flutter_qualification_work/services/image_picker_service.dart';
+import 'package:flutter_qualification_work/services/pick_files_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:io' show Platform;
 
-import '../../localization/locales.dart';
-
 class ShowAddBottomSheet {
-  Future<Uint8List> selectGalleryImage() async {
-    Uint8List image = Uint8List(0);
-    try {
-      image = await pickImage(ImageSource.gallery);
-      return image;
-    } catch (e) {
-      return image;
-    }
-  }
-
-  Future<Uint8List> addCameraImage() async {
-    Uint8List image = Uint8List(0);
-    try {
-      image = await pickImage(ImageSource.camera);
-      return image;
-    } catch (e) {
-      return image;
-    }
-  }
-
   void showAddBottomSheet(BuildContext context, double widthButton) {
     showMaterialModalBottomSheet<dynamic>(
       context: context,
@@ -122,7 +100,7 @@ class ShowAddBottomSheet {
                       ),
                       child: AddBottomSheetButton(
                         function: () {
-                          //addCameraImage(context);
+                          pickAudioFile();
                           Navigator.pop(context);
                         },
                         swgLink: 'assets/icons/music.svg',
@@ -133,7 +111,7 @@ class ShowAddBottomSheet {
                       padding: const EdgeInsets.only(top: 20),
                       child: AddBottomSheetButton(
                         function: () {
-                          //selectGalleryImage(context);
+                          pickVideoFile();
                           Navigator.pop(context);
                         },
                         swgLink: 'assets/icons/video.svg',
