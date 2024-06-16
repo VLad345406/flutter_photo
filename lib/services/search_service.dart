@@ -46,7 +46,8 @@ List<Map<String, dynamic>> searchUsers(
 
 Future<List<Map<String, String>>> getPicturesByTag(String searchTag) async {
   List<Map<String, String>> resultList = [];
-  CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+  CollectionReference usersCollection =
+      FirebaseFirestore.instance.collection('users');
 
   searchTag = searchTag.trim();
   try {
@@ -57,12 +58,15 @@ Future<List<Map<String, String>>> getPicturesByTag(String searchTag) async {
       String userId = userDoc.id;
 
       // Get this user's pictures collection
-      CollectionReference picturesCollection = usersCollection.doc(userId).collection('pictures');
-      QuerySnapshot picturesSnapshot = await picturesCollection.where('tags', arrayContains: searchTag).get();
+      CollectionReference picturesCollection =
+          usersCollection.doc(userId).collection('contents');
+      QuerySnapshot picturesSnapshot = await picturesCollection
+          .where('tags', arrayContains: searchTag)
+          .get();
 
       // Traversing all found documents in the pictures collection
       for (QueryDocumentSnapshot pictureDoc in picturesSnapshot.docs) {
-        String imageLink = pictureDoc['image_link'];
+        String imageLink = pictureDoc['file_link'];
         resultList.add({userId: imageLink});
       }
     }
