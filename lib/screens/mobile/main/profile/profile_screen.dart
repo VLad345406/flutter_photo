@@ -8,6 +8,7 @@ import 'package:flutter_qualification_work/elements/display_image_in_profile.dar
 import 'package:flutter_qualification_work/elements/display_video_thumbnail.dart';
 import 'package:flutter_qualification_work/elements/video_player.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/profile/profile_stream_builder.dart';
 import 'package:flutter_qualification_work/services/calculate_profile_listview_height_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -45,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> getUserData() async {
     final userId = FirebaseAuth.instance.currentUser!.uid;
     final data =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     final followers = await FirebaseFirestore.instance
         .collection('users')
         .doc(userId)
@@ -81,22 +82,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .colorScheme
-          .surface,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: Theme
-            .of(context)
-            .colorScheme
-            .surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        leading: Icon(
+          Icons.arrow_back,
+          color: Theme.of(context).colorScheme.surface,
+        ),
         title: Text(
           name,
           style: GoogleFonts.comfortaa(
-            color: Theme
-                .of(context)
-                .colorScheme
-                .primary,
+            color: Theme.of(context).colorScheme.primary,
             fontSize: 36,
             fontWeight: FontWeight.w400,
           ),
@@ -107,12 +103,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                  kIsWeb
+                  builder: (context) => kIsWeb
                       ? ResponsiveLayout(
-                    mobileScaffold: EditScreen(),
-                    webScaffold: WebEditScreen(),
-                  )
+                          mobileScaffold: EditScreen(),
+                          webScaffold: WebEditScreen(),
+                        )
                       : EditScreen(),
                 ),
               ).then((value) => getUserData());
@@ -134,11 +129,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>
-                            PhotoOpen(
-                              path: userAvatarLink,
-                              uid: uid,
-                            ),
+                        builder: (context) => PhotoOpen(
+                          path: userAvatarLink,
+                          uid: uid,
+                        ),
                       ),
                     );
                   }
@@ -164,10 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(
                   '@$userName',
                   style: GoogleFonts.roboto(
-                    color: Theme
-                        .of(context)
-                        .colorScheme
-                        .primary,
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 13,
                     fontWeight: FontWeight.w900,
                   ),
@@ -179,67 +170,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PhotoButton(
-                widthButton: MediaQuery
-                    .of(context)
-                    .size
-                    .width / 2 - 24,
+                widthButton: MediaQuery.of(context).size.width / 2 - 24,
                 buttonMargin: EdgeInsets.only(
                   top: 16,
                   left: 16,
                   right: 8,
                 ),
                 buttonText:
-                '${LocaleData.followers.getString(context)} ($countFollowers)',
-                textColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .secondary,
-                buttonColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary,
+                    '${LocaleData.followers.getString(context)} ($countFollowers)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ListAccounts(
-                            title: 'Followers',
-                            userId: FirebaseAuth.instance.currentUser!.uid,
-                          ),
+                      builder: (context) => ListAccounts(
+                        title: 'Followers',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
                     ),
                   );
                 },
               ),
               PhotoButton(
-                widthButton: MediaQuery
-                    .of(context)
-                    .size
-                    .width / 2 - 24,
+                widthButton: MediaQuery.of(context).size.width / 2 - 24,
                 buttonMargin: EdgeInsets.only(
                   top: 16,
                   left: 8,
                   right: 16,
                 ),
                 buttonText:
-                '${LocaleData.subscriptions.getString(context)} ($countSubs)',
-                textColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .secondary,
-                buttonColor: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary,
+                    '${LocaleData.subscriptions.getString(context)} ($countSubs)',
+                textColor: Theme.of(context).colorScheme.secondary,
+                buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ListAccounts(
-                            title: 'Subscriptions',
-                            userId: FirebaseAuth.instance.currentUser!.uid,
-                          ),
+                      builder: (context) => ListAccounts(
+                        title: 'Subscriptions',
+                        userId: FirebaseAuth.instance.currentUser!.uid,
+                      ),
                     ),
                   );
                 },
@@ -247,9 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
           BlocProvider(
-            create: (context) =>
-            ProfileBloc()
-              ..add(LoadUserData()),
+            create: (context) => ProfileBloc()..add(LoadUserData()),
             child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state.isLoading) {
@@ -265,7 +234,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   return Center(child: Text('An error occurred'));
                 }
 
-                return StreamBuilder(
+                return ProfileStreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(FirebaseAuth.instance.currentUser?.uid)
+                      .collection('contents')
+                      .snapshots(),
+                  userId: FirebaseAuth.instance.currentUser!.uid,
+                  userName: userName,
+                  mode: 'personal',
+                );
+
+                /*return StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
                       .doc(FirebaseAuth.instance.currentUser?.uid)
@@ -288,10 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             "You haven't uploaded any images yet!",
                             textAlign: TextAlign.center,
                             style: GoogleFonts.roboto(
-                              color: Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary,
+                              color: Theme.of(context).colorScheme.primary,
                               fontSize: 20,
                             ),
                           ),
@@ -313,53 +290,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   userFile['file_type'] == 'image'
                                       ? DisplayImageInProfile(
-                                    imageLink: imageLink,
-                                    uid: state.uid,
-                                  )
+                                          imageLink: imageLink,
+                                          uid: state.uid,
+                                        )
                                       : userFile['file_type'] == 'music'
-                                      ? AudioPlayerScreen(
-                                    fileName: userFile['file_name'],
-                                    fileLink: userFile['file_link'],
-                                  )
-                                      : GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              VideoPlayerScreen(
-                                                fileName:
-                                                userFile['file_name'],
-                                                fileLink:
-                                                userFile['file_link'],
+                                          ? AudioPlayerScreen(
+                                              fileName: userFile['file_name'],
+                                              fileLink: userFile['file_link'],
+                                            )
+                                          : GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        VideoPlayerScreen(
+                                                      fileName:
+                                                          userFile['file_name'],
+                                                      fileLink:
+                                                          userFile['file_link'],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Stack(
+                                                alignment:
+                                                    AlignmentDirectional.center,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(
+                                                      left: 16,
+                                                      right: 16,
+                                                      top: 16
+                                                    ),
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(5),
+                                                      ),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        userFile['file_name'],
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style:
+                                                            GoogleFonts.roboto(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 20,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .secondary,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Center(
+                                                    child: Icon(
+                                                      Icons.play_arrow,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .secondary,
+                                                      size: 50,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                        ),
-                                      );
-                                    },
-                                    child: Stack(
-                                      alignment:
-                                      AlignmentDirectional.center,
-                                      children: [
-                                        DisplayVideoThumbnail(
-                                          videoUrl:
-                                          userFile['file_link'],
-                                          width:
-                                          MediaQuery
-                                              .of(context)
-                                              .size
-                                              .width -
-                                              32,
-                                        ),
-                                        Center(
-                                          child: Icon(
-                                            Icons.play_arrow,
-                                            color: Colors.white,
-                                            size: 50,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                            ),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                       top: 16,
@@ -368,9 +378,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: IconButton(
                                       onPressed: () async {
                                         String result =
-                                        await removePictureService(
-                                          'content/${state
-                                              .userName}/${userFile['file_name']}',
+                                            await removePictureService(
+                                          'content/${state.userName}/${userFile['file_name']}',
                                           userFile['file_name'],
                                         );
                                         if (result == 'Success') {
@@ -407,7 +416,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     }
                   },
-                );
+                );*/
               },
             ),
           ),

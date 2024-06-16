@@ -11,6 +11,7 @@ import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/chat_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/profile/profile_stream_builder.dart';
 
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
@@ -317,84 +318,16 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
               ),
             ],
           ),
-          imageCount == 0
-              ? Container(
-                  //alignment: Alignment.center,
-                  margin: const EdgeInsets.all(16),
-                  child: Text(
-                    "This user has not uploaded any images yet!",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 20,
-                    ),
-                  ),
-                )
-              : SizedBox(
-                  height: MediaQuery.of(context).size.width * imageCount,
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: userPictures.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final userFile = userPictures[index];
-                      final imageLink = userFile['file_link'];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PhotoOpen(
-                                path: imageLink,
-                                uid: uid,
-                              ),
-                            ),
-                          );
-                        },
-                        child: userFile['file_type'] == 'image'
-                            ? Container(
-                                margin: const EdgeInsets.only(
-                                    top: 32, left: 16, right: 16),
-                                height: MediaQuery.of(context).size.width - 32,
-                                width: MediaQuery.of(context).size.width - 32,
-                                child: Image.network(
-                                  imageLink,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (BuildContext context,
-                                      Widget child,
-                                      ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  (loadingProgress
-                                                          .expectedTotalBytes ??
-                                                      1)
-                                              : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  errorBuilder: (BuildContext context,
-                                      Object error, StackTrace? stackTrace) {
-                                    return Center(
-                                      child: Icon(Icons.error),
-                                    );
-                                  },
-                                ),
-                              )
-                            : userFile['file_type'] == 'music'
-                                ? Text('Music')
-                                : Text('Video'),
-                      );
-                    },
-                  ),
-                ),
+          ProfileStreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(widget.userId)
+                .collection('contents')
+                .snapshots(),
+            userId: widget.userId,
+            userName: userName,
+            mode: 'open',
+          ),
         ],
       ),
     );

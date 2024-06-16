@@ -1,6 +1,7 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 
 class AudioPlayerScreen extends StatefulWidget {
   final String fileName;
@@ -19,41 +20,46 @@ class AudioPlayerScreen extends StatefulWidget {
 class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
+  bool _isInitialized = false;
   Duration _duration = Duration.zero;
   Duration _position = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer.onDurationChanged.listen((Duration d) {
+    _audioPlayer.durationStream.listen((Duration? d) {
       setState(() {
-        _duration = d;
+        _duration = d ?? Duration.zero;
       });
     });
 
-    _audioPlayer.onPositionChanged.listen((Duration p) {
+    _audioPlayer.positionStream.listen((Duration p) {
       setState(() {
         _position = p;
       });
     });
 
-    _audioPlayer.onPlayerComplete.listen((event) {
+    _audioPlayer.playerStateStream.listen((PlayerState state) {
       setState(() {
-        _position = Duration.zero;
-        _isPlaying = false;
+        _isPlaying = state.playing;
+        if (state.processingState == ProcessingState.completed) {
+          _position = Duration.zero;
+          _isPlaying = false;
+        }
       });
     });
   }
 
-  void _playPause() {
+  Future<void> _playPause() async {
     if (_isPlaying) {
-      _audioPlayer.pause();
+      await _audioPlayer.pause();
     } else {
-      _audioPlayer.play(UrlSource(widget.fileLink));
+      if (!_isInitialized) {
+        await _audioPlayer.setUrl(widget.fileLink);
+        _isInitialized = true;
+      }
+      await _audioPlayer.play();
     }
-    setState(() {
-      _isPlaying = !_isPlaying;
-    });
   }
 
   void _seekToSecond(int second) {
@@ -70,7 +76,12 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.width,
+      height: kIsWeb
+          ? MediaQuery.of(context).size.width / 2
+          : MediaQuery.of(context).size.width,
+      width: kIsWeb
+          ? MediaQuery.of(context).size.width / 2
+          : MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,

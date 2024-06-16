@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 
@@ -24,8 +25,12 @@ class DisplayImageInProfile extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-        height: MediaQuery.of(context).size.width - 32,
-        width: MediaQuery.of(context).size.width - 32,
+        height: kIsWeb
+            ? MediaQuery.of(context).size.width / 2
+            : MediaQuery.of(context).size.width - 32,
+        width: kIsWeb
+            ? MediaQuery.of(context).size.width / 2
+            : MediaQuery.of(context).size.width - 32,
         child: Image.network(
           imageLink,
           fit: BoxFit.cover,

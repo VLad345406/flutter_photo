@@ -36,6 +36,7 @@ class _DisplayVideoThumbnailState extends State<DisplayVideoThumbnail> {
 
     setState(() {
       _thumbnailUrl = thumbnailPath;
+      print(_thumbnailUrl);
     });
   }
 

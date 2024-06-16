@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -38,23 +40,27 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
       setState(() {});
     });
 
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
+    if (!kIsWeb) {
+      _animationController = AnimationController(
+        duration: const Duration(milliseconds: 300),
+        vsync: this,
+      );
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    );
+      _fadeAnimation = CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      );
 
-    _animationController.forward();
+      _animationController.forward();
+    }
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _animationController.dispose();
+    if (!kIsWeb) {
+      _animationController.dispose();
+    }
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
@@ -79,10 +85,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   void _toggleControls() {
     setState(() {
       _controlsVisible = !_controlsVisible;
-      if (_controlsVisible) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
+      if (!kIsWeb) {
+        if (_controlsVisible) {
+          _animationController.forward();
+        } else {
+          _animationController.reverse();
+        }
       }
     });
   }
@@ -97,7 +105,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           if (snapshot.connectionState == ConnectionState.done) {
             if (_controller.value.isInitialized) {
               return GestureDetector(
-                onTap: _toggleControls,
+                onTap: kIsWeb ? () {} : _toggleControls,
                 child: Stack(
                   children: <Widget>[
                     Center(
@@ -106,110 +114,39 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                         child: VideoPlayer(_controller),
                       ),
                     ),
-                    AnimatedBuilder(
-                      animation: _fadeAnimation,
-                      builder: (context, child) {
-                        return _controlsVisible
-                            ? Opacity(
-                                opacity: _fadeAnimation.value,
-                                child: Container(
-                                  color: Colors.black54,
-                                ),
-                              )
-                            : SizedBox.shrink();
-                      },
-                    ),
-                    AnimatedBuilder(
-                      animation: _fadeAnimation,
-                      builder: (context, child) {
-                        return Opacity(
-                          opacity: _fadeAnimation.value,
-                          child: IgnorePointer(
-                            ignoring: !_controlsVisible,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 20,
-                                    left: 16,
-                                    right: 16,
+                    if (!kIsWeb)
+                      AnimatedBuilder(
+                        animation: _fadeAnimation,
+                        builder: (context, child) {
+                          return _controlsVisible
+                              ? Opacity(
+                                  opacity: _fadeAnimation.value,
+                                  child: Container(
+                                    color: Colors.black54,
                                   ),
-                                  child: Row(
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.topLeft,
-                                        child: IconButton(
-                                          icon: SvgPicture.asset(
-                                            'assets/icons/back_arrow.svg',
-                                            width: 12.21,
-                                            height: 11.35,
-                                            color: Colors.white,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(widget.fileName)
-                                    ],
-                                  ),
-                                ),
-                                Spacer(),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      _controller.value.isPlaying
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                      color: Colors.white,
-                                      size: 50,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _controller.value.isPlaying
-                                            ? _controller.pause()
-                                            : _controller.play();
-                                      });
-                                    },
-                                  ),
-                                ),
-                                Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: 16,
-                                    left: 16,
-                                    right: 16,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: VideoProgressIndicator(
-                                          _controller,
-                                          allowScrubbing: true,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          _isFullScreen
-                                              ? Icons.fullscreen_exit
-                                              : Icons.fullscreen,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: _toggleFullScreen,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                )
+                              : SizedBox.shrink();
+                        },
+                      ),
+                    if (kIsWeb && _controlsVisible)
+                      Container(
+                        color: Colors.transparent,
+                      ),
+                    if (!kIsWeb)
+                      AnimatedBuilder(
+                        animation: _fadeAnimation,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: _fadeAnimation.value,
+                            child: IgnorePointer(
+                              ignoring: !_controlsVisible,
+                              child: _buildControls(),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      )
+                    else if (kIsWeb && _controlsVisible)
+                      _buildControls(),
                   ],
                 ),
               );
@@ -229,6 +166,119 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           }
         },
       ),
+    );
+  }
+
+  Widget _buildControls() {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(
+            top: kIsWeb
+                ? 20
+                : Platform.isIOS
+                    ? 50
+                    : 20,
+            left: 16,
+            right: 16,
+          ),
+          child: Row(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/icons/back_arrow.svg',
+                    width: 12.21,
+                    height: 11.35,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                child: Text(
+                  widget.fileName,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Spacer(),
+        !kIsWeb
+            ? Align(
+                alignment: Alignment.center,
+                child: IconButton(
+                  icon: Icon(
+                    _controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _controller.value.isPlaying
+                          ? _controller.pause()
+                          : _controller.play();
+                    });
+                  },
+                ),
+              )
+            : Container(),
+        Spacer(),
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 16,
+            left: 16,
+            right: 16,
+          ),
+          child: Row(
+            children: [
+              kIsWeb
+                  ? IconButton(
+                      icon: Icon(
+                        _controller.value.isPlaying
+                            ? Icons.pause
+                            : Icons.play_arrow,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _controller.value.isPlaying
+                              ? _controller.pause()
+                              : _controller.play();
+                        });
+                      },
+                    )
+                  : Container(),
+              Expanded(
+                child: VideoProgressIndicator(
+                  _controller,
+                  allowScrubbing: true,
+                ),
+              ),
+              !kIsWeb
+                  ? IconButton(
+                      icon: Icon(
+                        _isFullScreen
+                            ? Icons.fullscreen_exit
+                            : Icons.fullscreen,
+                        color: Colors.white,
+                      ),
+                      onPressed: _toggleFullScreen,
+                    )
+                  : Container(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

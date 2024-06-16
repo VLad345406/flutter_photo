@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/elements/add_bottom_sheet/add_bottom_sheet.dart';
+import 'package:flutter_qualification_work/screens/mobile/main/add_photo_info.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_chats_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_discover_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/profile/web_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/main/search/web_search_screen.dart';
+import 'package:flutter_qualification_work/services/pick_files_service.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 class WebMainScreen extends StatefulWidget {
   const WebMainScreen({super.key});
@@ -24,8 +28,6 @@ class _WebMainScreenState extends State<WebMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final widthButton = (MediaQuery.of(context).size.width - 32 - 9) / 2;
-
     final screens = [
       WebDiscoverScreen(),
       WebSearchScreen(),
@@ -80,9 +82,18 @@ class _WebMainScreenState extends State<WebMainScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    ShowAddBottomSheet()
-                        .showAddBottomSheet(context, widthButton);
+                  onPressed: () async {
+                    Uint8List image = await selectGalleryImage();
+                    if (image.isNotEmpty) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddPhotoInfo(
+                            image: image,
+                          ),
+                        ),
+                      ).then((value) => Navigator.pop(context));
+                    }
                   },
                   icon: Image.asset('assets/tab_bar/toolbar_add.png'),
                 ),

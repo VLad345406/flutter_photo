@@ -10,10 +10,10 @@ import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
+import 'package:flutter_qualification_work/screens/web/main/profile/web_profile_stream_builder.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_settings_screen.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
-import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -161,7 +161,7 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                   right: 8,
                 ),
                 buttonText:
-                '${LocaleData.followers.getString(context)} ($countFollowers)',
+                    '${LocaleData.followers.getString(context)} ($countFollowers)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -184,7 +184,7 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                   right: 16,
                 ),
                 buttonText:
-                '${LocaleData.subscriptions.getString(context)} ($countSubs)',
+                    '${LocaleData.subscriptions.getString(context)} ($countSubs)',
                 textColor: Theme.of(context).colorScheme.secondary,
                 buttonColor: Theme.of(context).colorScheme.primary,
                 function: () {
@@ -213,114 +213,15 @@ class _WebProfileScreenState extends State<WebProfileScreen> {
                   return Center(child: Text('An error occurred'));
                 }
 
-                return StreamBuilder(
+                return WebProfileStreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
                       .doc(FirebaseAuth.instance.currentUser?.uid)
-                      .collection('pictures')
+                      .collection('contents')
                       .snapshots(),
-                  builder: (context, snapshot) {
-                    try {
-                      if (snapshot.hasError) {
-                        return Center(
-                            child: Text('Error ${snapshot.error.toString()}'));
-                      }
-
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: Text('Loading...'));
-                      }
-                      if (snapshot.data!.docs.length == 0) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Text(
-                            "You haven't uploaded any images yet!",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.roboto(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontSize: 20,
-                            ),
-                          ),
-                        );
-                      } else {
-                        return SizedBox(
-                          height: (MediaQuery.of(context).size.width / 2) *
-                              snapshot.data!.docs.length,
-                          child: ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final userPicture = snapshot.data!.docs[index];
-                              final imageLink = userPicture['image_link'];
-                              return Center(
-                                child: Stack(
-                                  alignment: AlignmentDirectional.topEnd,
-                                  fit: StackFit.loose,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PhotoOpen(
-                                              path: imageLink,
-                                              uid: uid,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 32, left: 16, right: 16),
-                                        height: MediaQuery.of(context).size.width / 2,
-                                        width: MediaQuery.of(context).size.width / 2,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(imageLink),
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                      const EdgeInsets.only(top: 26, right: 10),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          String result = await removePictureService(
-                                            'pictures/$userName/${userPicture['file_name']}',
-                                            userPicture['file_name'],
-                                          );
-                                          if (result == 'Success') {
-                                            getUserData();
-                                            snackBar(context, 'Success remove file!');
-                                          } else {
-                                            snackBar(context, 'Fail remove file!');
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.remove_circle,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      }
-                    } catch (e) {
-                      return Text(
-                        "You haven't uploaded any images yet!",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.roboto(
-                          color: Colors.black,
-                          fontSize: 20,
-                        ),
-                      );
-                    }
-                  },
+                  userId: FirebaseAuth.instance.currentUser!.uid,
+                  userName: userName,
+                  mode: 'personal',
                 );
               },
             ),
