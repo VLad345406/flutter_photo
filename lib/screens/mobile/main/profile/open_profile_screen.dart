@@ -286,7 +286,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: LocaleData.followers.getString(context),
+                        title: 'Followers',
                         userId: widget.userId,
                       ),
                     ),
@@ -309,7 +309,7 @@ class _OpenProfileScreenState extends State<OpenProfileScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ListAccounts(
-                        title: LocaleData.subscriptions.getString(context),
+                        title: 'Subscriptions',
                         userId: widget.userId,
                       ),
                     ),
