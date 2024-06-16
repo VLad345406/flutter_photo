@@ -3,14 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/elements/video_player.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DisplayVideoInProfile extends StatelessWidget {
+class DisplayVideo extends StatelessWidget {
   final String fileName;
   final String fileLink;
+  final double videoWidth;
+  final double videoHeight;
 
-  const DisplayVideoInProfile({
+  const DisplayVideo({
     super.key,
     required this.fileName,
     required this.fileLink,
+    required this.videoWidth,
+    required this.videoHeight,
   });
 
   @override
@@ -30,12 +34,8 @@ class DisplayVideoInProfile extends StatelessWidget {
         },
         child: Container(
           margin: EdgeInsets.only(left: 16, right: 16, top: 16),
-          height: kIsWeb
-              ? MediaQuery.of(context).size.width / 2
-              : MediaQuery.of(context).size.width - 32,
-          width: kIsWeb
-              ? MediaQuery.of(context).size.width / 2
-              : MediaQuery.of(context).size.width - 32,
+          height: videoHeight,
+          width: videoWidth,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.all(

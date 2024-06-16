@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:flutter_qualification_work/elements/photo_card.dart';
+import 'package:flutter_qualification_work/elements/content_card.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/discover/display_list_users.dart';
 import 'package:flutter_qualification_work/services/discover_service.dart';
@@ -37,7 +37,7 @@ class _WebDiscoverScreenState extends State<WebDiscoverScreen> {
     countSubs = subscriptions.size;
 
     if (countSubs != 0) {
-      subsPictures = await getSubscribedPictures();
+      subsPictures = await getSubscribedFiles();
     }
 
     setState(() {});
@@ -70,11 +70,11 @@ class _WebDiscoverScreenState extends State<WebDiscoverScreen> {
         children: [
           countSubs == -1
               ? Padding(
-                padding: const EdgeInsets.only(top: 32),
-                child: Center(
+                  padding: const EdgeInsets.only(top: 32),
+                  child: Center(
                     child: CircularProgressIndicator(),
                   ),
-              )
+                )
               : countSubs == 0
                   ? DisplayListUsers(
                       usersCollection: usersCollection,
@@ -86,45 +86,21 @@ class _WebDiscoverScreenState extends State<WebDiscoverScreen> {
                         itemCount: subsPictures.length,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          return PhotoCard(
-                            pathImage: subsPictures[index].values.first,
+                          return ContentCard(
+                            fileLink:
+                                subsPictures[index]["file_link"].toString(),
                             cardWidth: 400,
-                            uid: subsPictures[index].keys.first,
+                            uid: subsPictures[index]['user_id'].toString(),
+                            fileType:
+                                subsPictures[index]['file_type'].toString(),
+                            fileName:
+                                subsPictures[index]['file_name'].toString(),
                           );
                         },
                       ),
                     ),
         ],
       ),
-      /*body: ListView(
-        children: [
-          Center(
-            child: Text(
-              'Discover',
-              style: GoogleFonts.comfortaa(
-                fontSize: 90,
-                fontWeight: FontWeight.w200,
-              ),
-            ),
-          ),
-
-          */ /*PhotoCard(
-            pathImage: 'assets/images/start_background_mobile.jpg',
-            cardWidth: 400,
-            uid: '',
-          ),
-          PhotoCard(
-            pathImage: 'assets/images/Profile1/picture1.jpg',
-            cardWidth: 400,
-            uid: '',
-          ),
-          PhotoCard(
-            pathImage: 'assets/images/Profile1/picture1.jpg',
-            cardWidth: 400,
-            uid: '',
-          ),*/ /*
-        ],
-      ),*/
     );
   }
 }

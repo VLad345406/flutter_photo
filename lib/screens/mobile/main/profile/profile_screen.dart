@@ -3,13 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:flutter_qualification_work/elements/audio_player.dart';
-import 'package:flutter_qualification_work/elements/display_image_in_profile.dart';
-import 'package:flutter_qualification_work/elements/display_video_thumbnail.dart';
-import 'package:flutter_qualification_work/elements/video_player.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/profile_stream_builder.dart';
-import 'package:flutter_qualification_work/services/calculate_profile_listview_height_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +15,6 @@ import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dar
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/web_settings_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
-import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 
 import 'bloc/profile_bloc.dart';

@@ -1,30 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_qualification_work/elements/audio_player.dart';
+import 'package:flutter_qualification_work/elements/display_image.dart';
+import 'package:flutter_qualification_work/elements/display_video.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/profile/open_profile_screen.dart';
-import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/profile/web_open_profile_screen.dart';
 import 'package:flutter_qualification_work/screens/web/responsive_layout.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class PhotoCard extends StatefulWidget {
-  final String pathImage;
+class ContentCard extends StatefulWidget {
+  final String fileLink;
   final String uid;
   final double cardWidth;
+  final String fileType;
+  final String fileName;
 
-  const PhotoCard({
+  const ContentCard({
     super.key,
-    required this.pathImage,
+    required this.fileLink,
     required this.cardWidth,
     required this.uid,
+    required this.fileType,
+    required this.fileName,
   });
 
   @override
-  State<PhotoCard> createState() => _PhotoCardState();
+  State<ContentCard> createState() => _ContentCardState();
 }
 
-class _PhotoCardState extends State<PhotoCard> {
+class _ContentCardState extends State<ContentCard> {
   String userName = '';
   String name = '';
   String userAvatarLink = '';
@@ -62,45 +68,30 @@ class _PhotoCardState extends State<PhotoCard> {
         ),
         child: Column(
           children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PhotoOpen(
-                      path: widget.pathImage,
-                      uid: widget.uid,
-                    ),
-                  ),
-                );
-              },
-              child: Container(
-                height: widget.cardWidth - 46,
-                width: widget.cardWidth,
-                child: Image.network(
-                  widget.pathImage,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                              : null,
-                        ),
-                      );
-                    }
-                  },
-                  errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                    return Center(
-                      child: Icon(Icons.error),
-                    );
-                  },
-                ),
-              ),
-            ),
+            widget.fileType == 'image'
+                ? DisplayImage(
+                    imageLink: widget.fileLink,
+                    uid: widget.uid,
+                    widthImage: widget.cardWidth,
+                    heightImage: widget.cardWidth - 70,
+                  )
+                : Container(),
+            widget.fileType == 'music'
+                ? AudioPlayerWidget(
+                    fileName: widget.fileName,
+                    fileLink: widget.fileLink,
+                    playerWidth: widget.cardWidth,
+                    playerHeight: widget.cardWidth - 70,
+                  )
+                : Container(),
+            widget.fileType == 'video'
+                ? DisplayVideo(
+                    fileName: widget.fileName,
+                    fileLink: widget.fileLink,
+                    videoWidth: widget.cardWidth,
+                    videoHeight: widget.cardWidth - 70,
+                  )
+                : Container(),
             Align(
               alignment: Alignment.topLeft,
               child: GestureDetector(
@@ -110,15 +101,15 @@ class _PhotoCardState extends State<PhotoCard> {
                     MaterialPageRoute(
                       builder: (context) => kIsWeb
                           ? ResponsiveLayout(
-                        mobileScaffold: OpenProfileScreen(
-                          userId: widget.uid,
-                        ),
-                        webScaffold:
-                        WebOpenProfileScreen(userId: widget.uid),
-                      )
+                              mobileScaffold: OpenProfileScreen(
+                                userId: widget.uid,
+                              ),
+                              webScaffold:
+                                  WebOpenProfileScreen(userId: widget.uid),
+                            )
                           : OpenProfileScreen(
-                        userId: widget.uid,
-                      ),
+                              userId: widget.uid,
+                            ),
                     ),
                   );
                 },

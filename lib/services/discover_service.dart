@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<List<Map<String, String>>> getSubscribedPictures() async {
+Future<List<Map<String, String>>> getSubscribedFiles() async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
 
   List<Map<String, String>> result = [];
@@ -18,13 +18,16 @@ Future<List<Map<String, String>>> getSubscribedPictures() async {
     var picturesSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(subscribedUserId)
-        .collection('pictures')
+        .collection('contents')
         .get();
 
     for (var pictureDoc in picturesSnapshot.docs) {
       var data = pictureDoc.data();
       result.add({
-        subscribedUserId: data['image_link'] ?? '',
+        'user_id' : subscribedUserId,
+        'file_link' : data['file_link'] ?? '',
+        'file_type': data['file_type'] ?? '',
+        'file_name' : data['file_name'] ?? '',
       });
     }
   }

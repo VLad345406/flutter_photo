@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_qualification_work/elements/photo_card.dart';
+import 'package:flutter_qualification_work/elements/content_card.dart';
 
 class WebDisplayPictures extends StatelessWidget {
   final List<Map<String, dynamic>> searchResult;
@@ -17,10 +17,12 @@ class WebDisplayPictures extends StatelessWidget {
         final userPicture = searchResult[index];
         final imageLink = userPicture.values.first;
         final uid = userPicture.keys.first;
-        return PhotoCard(
-          pathImage: imageLink,
+        return ContentCard(
+          fileLink: imageLink,
           cardWidth: MediaQuery.of(context).size.width / 4,
           uid: uid,
+          fileType: '',
+          fileName: '',
         );
       },
     );

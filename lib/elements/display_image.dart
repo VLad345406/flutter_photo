@@ -2,12 +2,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 
-class DisplayImageInProfile extends StatelessWidget {
+class DisplayImage extends StatelessWidget {
   final String imageLink;
   final String uid;
+  final double widthImage;
+  final double heightImage;
 
-  const DisplayImageInProfile(
-      {super.key, required this.imageLink, required this.uid});
+  const DisplayImage({
+    super.key,
+    required this.imageLink,
+    required this.uid,
+    required this.widthImage,
+    required this.heightImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +32,14 @@ class DisplayImageInProfile extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-        height: kIsWeb
+        height: heightImage,
+        width: widthImage,
+        /*height: kIsWeb
             ? MediaQuery.of(context).size.width / 2
             : MediaQuery.of(context).size.width - 32,
         width: kIsWeb
             ? MediaQuery.of(context).size.width / 2
-            : MediaQuery.of(context).size.width - 32,
+            : MediaQuery.of(context).size.width - 32,*/
         child: Image.network(
           imageLink,
           fit: BoxFit.cover,

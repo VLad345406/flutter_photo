@@ -3,21 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:just_audio/just_audio.dart';
 
-class AudioPlayerScreen extends StatefulWidget {
+class AudioPlayerWidget extends StatefulWidget {
   final String fileName;
   final String fileLink;
+  final double playerWidth;
+  final double playerHeight;
 
-  const AudioPlayerScreen({
+  const AudioPlayerWidget({
     super.key,
     required this.fileName,
     required this.fileLink,
+    required this.playerWidth,
+    required this.playerHeight,
   });
 
   @override
-  _AudioPlayerScreenState createState() => _AudioPlayerScreenState();
+  _AudioPlayerWidgetState createState() => _AudioPlayerWidgetState();
 }
 
-class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
+class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
   bool _isInitialized = false;
@@ -76,12 +80,14 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: kIsWeb
+      height: widget.playerHeight,
+      width: widget.playerWidth,
+      /*height: kIsWeb
           ? MediaQuery.of(context).size.width / 2
           : MediaQuery.of(context).size.width,
       width: kIsWeb
           ? MediaQuery.of(context).size.width / 2
-          : MediaQuery.of(context).size.width,
+          : MediaQuery.of(context).size.width,*/
       margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,

@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qualification_work/elements/audio_player.dart';
-import 'package:flutter_qualification_work/elements/display_image_in_profile.dart';
+import 'package:flutter_qualification_work/elements/display_image.dart';
 import 'package:flutter_qualification_work/elements/video_player.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
@@ -71,14 +72,26 @@ class _ProfileStreamBuilderState extends State<ProfileStreamBuilder> {
                     fit: StackFit.loose,
                     children: [
                       userFile['file_type'] == 'image'
-                          ? DisplayImageInProfile(
+                          ? DisplayImage(
                               imageLink: imageLink,
                               uid: widget.userId,
+                              widthImage: kIsWeb
+                                  ? MediaQuery.of(context).size.width / 2
+                                  : MediaQuery.of(context).size.width - 32,
+                              heightImage: kIsWeb
+                                  ? MediaQuery.of(context).size.width / 2
+                                  : MediaQuery.of(context).size.width - 32,
                             )
                           : userFile['file_type'] == 'music'
-                              ? AudioPlayerScreen(
+                              ? AudioPlayerWidget(
                                   fileName: userFile['file_name'],
                                   fileLink: userFile['file_link'],
+                                  playerWidth: kIsWeb
+                                      ? MediaQuery.of(context).size.width / 2
+                                      : MediaQuery.of(context).size.width - 32,
+                                  playerHeight: kIsWeb
+                                      ? MediaQuery.of(context).size.width / 2
+                                      : MediaQuery.of(context).size.width - 32,
                                 )
                               : GestureDetector(
                                   onTap: () {

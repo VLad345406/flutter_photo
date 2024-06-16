@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_qualification_work/elements/audio_player.dart';
-import 'package:flutter_qualification_work/elements/display_image_in_profile.dart';
-import 'package:flutter_qualification_work/elements/display_video_in_profile.dart';
+import 'package:flutter_qualification_work/elements/display_image.dart';
+import 'package:flutter_qualification_work/elements/display_video.dart';
 import 'package:flutter_qualification_work/services/remove_picture_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -75,27 +75,40 @@ class _WebProfileStreamBuilderState extends State<WebProfileStreamBuilder> {
                       children: [
                         userFile['file_type'] == 'image'
                             ? Center(
-                                child: DisplayImageInProfile(
+                                child: DisplayImage(
                                   imageLink: imageLink,
                                   uid: widget.userId,
+                                  widthImage:
+                                      MediaQuery.of(context).size.width / 2,
+                                  heightImage:
+                                      MediaQuery.of(context).size.width / 2,
                                 ),
                               )
                             : userFile['file_type'] == 'music'
                                 ? Center(
-                                    child: AudioPlayerScreen(
+                                    child: AudioPlayerWidget(
                                       fileName: userFile['file_name'],
                                       fileLink: userFile['file_link'],
+                                      playerWidth:
+                                          MediaQuery.of(context).size.width / 2,
+                                      playerHeight:
+                                          MediaQuery.of(context).size.width / 2,
                                     ),
                                   )
-                                : DisplayVideoInProfile(
+                                : DisplayVideo(
                                     fileName: userFile['file_name'],
                                     fileLink: userFile['file_link'],
+                                    videoWidth:
+                                        MediaQuery.of(context).size.width / 2,
+                                    videoHeight:
+                                        MediaQuery.of(context).size.width / 2,
                                   ),
                         widget.mode == 'personal'
                             ? Padding(
                                 padding: EdgeInsets.only(
                                   top: 16,
-                                  right: MediaQuery.of(context).size.width / 4 - 40,
+                                  right: MediaQuery.of(context).size.width / 4 -
+                                      40,
                                 ),
                                 child: IconButton(
                                   onPressed: () async {

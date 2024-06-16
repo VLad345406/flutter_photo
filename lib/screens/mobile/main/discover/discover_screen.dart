@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:flutter_qualification_work/elements/photo_card.dart';
+import 'package:flutter_qualification_work/elements/content_card.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/discover/display_list_users.dart';
 import 'package:flutter_qualification_work/services/discover_service.dart';
@@ -37,7 +37,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     countSubs = subscriptions.size;
 
     if (countSubs != 0) {
-      subsPictures = await getSubscribedPictures();
+      subsPictures = await getSubscribedFiles();
     }
 
     setState(() {});
@@ -87,10 +87,14 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           itemCount: subsPictures.length,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return PhotoCard(
-                              pathImage: subsPictures[index].values.first,
+                            return ContentCard(
+                              fileLink:
+                                  subsPictures[index]["file_link"].toString(),
                               cardWidth: MediaQuery.of(context).size.width - 32,
-                              uid: subsPictures[index].keys.first,
+                              uid: subsPictures[index]['user_id'].toString(),
+                              fileType:
+                                  subsPictures[index]['file_type'].toString(),
+                              fileName: subsPictures[index]['file_name'].toString(),
                             );
                           },
                         ),
