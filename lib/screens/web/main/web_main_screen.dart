@@ -11,7 +11,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class WebMainScreen extends StatefulWidget {
-  const WebMainScreen({super.key});
+  final Widget? sourceWidget;
+
+  const WebMainScreen({super.key, this.sourceWidget});
 
   @override
   State<WebMainScreen> createState() => _WebMainScreenState();
@@ -24,6 +26,14 @@ class _WebMainScreenState extends State<WebMainScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    if (widget.sourceWidget != null) {
+      _selectedIndex = 3;
+    }
+    super.initState();
   }
 
   @override
@@ -137,11 +147,12 @@ class _WebMainScreenState extends State<WebMainScreen> {
           ),
           SizedBox(width: 16),
           Expanded(
-            child: screens[_selectedIndex],
+            child: _selectedIndex == 3 && widget.sourceWidget != null
+                ? widget.sourceWidget as Widget
+                : screens[_selectedIndex],
           ),
         ],
       ),
-      //body: screens[_selectedIndex],
     );
   }
 }

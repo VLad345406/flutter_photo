@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,9 +8,9 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_qualification_work/elements/user_avatar.dart';
 import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
+import 'package:flutter_qualification_work/services/pick_files_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_qualification_work/services/chat_service.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/chats/linkify_text.dart';
@@ -39,8 +38,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   bool editingStatus = false;
   String editingMessageID = '';
-
-  final ImagePicker _picker = ImagePicker();
 
   final TextEditingController _messageEditingController =
       TextEditingController();
@@ -127,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future<void> sendImage(File image) async {
+  Future<void> sendImage(Uint8List image) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       String imageUrl = await uploadImage(image, fileName);
@@ -143,14 +140,13 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<String> uploadImage(File image, String fileName) async {
+  Future<String> uploadImage(Uint8List image, String fileName) async {
     try {
-      Reference reference =
-          FirebaseStorage.instance.ref().child("images").child(fileName);
-      UploadTask uploadTask = reference.putFile(image);
-      TaskSnapshot storageTaskSnapshot =
-          await uploadTask.whenComplete(() => null);
-      String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      final FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child("images").child(fileName);
+      UploadTask uploadTask = ref.putData(image);
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
       throw e;
@@ -158,10 +154,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      File imageFile = File(pickedFile.path);
-      await sendImage(imageFile);
+    final pickedFile = await selectGalleryImage();
+    if (pickedFile.isNotEmpty) {
+      await sendImage(pickedFile);
     }
   }
 

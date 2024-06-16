@@ -10,6 +10,8 @@ import 'package:flutter_qualification_work/localization/locales.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/list_accounts.dart';
 import 'package:flutter_qualification_work/screens/mobile/main/photo_open.dart';
 import 'package:flutter_qualification_work/screens/web/main/profile/web_profile_stream_builder.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_chats_screen.dart';
+import 'package:flutter_qualification_work/screens/web/main/web_main_screen.dart';
 import 'package:flutter_qualification_work/services/snack_bar_service.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -255,6 +257,19 @@ class _WebOpenProfileScreenState extends State<WebOpenProfileScreen> {
                         LocaleData.message.getString(context).toUpperCase(),
                     textColor: Theme.of(context).colorScheme.secondary,
                     buttonColor: Theme.of(context).colorScheme.primary,
+                    function: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WebMainScreen(
+                            sourceWidget: WebChatsScreen(
+                              receiverId: widget.userId,
+                            ),
+                          ),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
                   ),
                 )
               : Container(),

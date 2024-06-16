@@ -128,7 +128,6 @@ class _ChatsListScreenState extends State<ChatsListScreen> {
 
           return ListTile(
             title: Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 PhotoUserAvatar(
                     userAvatarLink: data['avatar_link'], radius: 20),

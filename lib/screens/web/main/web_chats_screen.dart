@@ -11,7 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../services/chat_service.dart';
 
 class WebChatsScreen extends StatefulWidget {
-  const WebChatsScreen({super.key});
+  final String? receiverId;
+  const WebChatsScreen({super.key, this.receiverId});
 
   @override
   State<WebChatsScreen> createState() => _WebChatsScreenState();
@@ -38,6 +39,9 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
   void initState() {
     super.initState();
     _focusNode.requestFocus();
+    if (widget.receiverId != null) {
+      openChat(widget.receiverId.toString());
+    }
   }
 
   @override
@@ -202,7 +206,17 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
                                   textMessage.substring(0, 30) + "...";
                               textMessage = truncatedTextMessage;
                             }
-                            return Text(textMessage);
+                            if (snapshot.data!.docs.last['file_type'] ==
+                                'image') {
+                              return Row(
+                                children: [
+                                  Icon(Icons.photo),
+                                  Text(' Image'),
+                                ],
+                              );
+                            } else {
+                              return Text(textMessage);
+                            }
                           } catch (e) {
                             return Text(
                               LocaleData.noMessages.getString(context),
@@ -219,6 +233,9 @@ class _WebChatsScreenState extends State<WebChatsScreen> {
                     onPressed: () {
                       _chatService.removeChat(
                           FirebaseAuth.instance.currentUser!.uid, userId);
+                      setState(() {
+                        currentChat = Container();
+                      });
                     },
                     icon: Icon(
                       Icons.remove_circle,
