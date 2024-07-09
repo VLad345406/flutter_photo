@@ -82,12 +82,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
     return Container(
       height: widget.playerHeight,
       width: widget.playerWidth,
-      /*height: kIsWeb
-          ? MediaQuery.of(context).size.width / 2
-          : MediaQuery.of(context).size.width,
-      width: kIsWeb
-          ? MediaQuery.of(context).size.width / 2
-          : MediaQuery.of(context).size.width,*/
       margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,

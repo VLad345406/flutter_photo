@@ -1,4 +1,4 @@
-import 'package:flutter_qualification_work/classes/picture.dart';
+import 'package:flutter_qualification_work/classes/file.dart';
 
 class MyUser {
   String avatarLink;
@@ -7,7 +7,7 @@ class MyUser {
   String name;
   String uid;
   String userName;
-  List<Picture> pictures;
+  List<File> contents;
   List<String> subscriptions;
   List<String> followers;
 
@@ -18,7 +18,7 @@ class MyUser {
     required this.name,
     required this.uid,
     required this.userName,
-    required this.pictures,
+    required this.contents,
     required this.subscriptions,
     required this.followers,
   });
@@ -31,6 +31,7 @@ class MyUser {
       'name': name,
       'uid': uid,
       'user_name': userName,
+      'contents' : contents,
       'subscriptions': subscriptions,
       'followers': followers,
     };
@@ -44,7 +45,7 @@ class MyUser {
       name: map['name'],
       uid: map['uid'],
       userName: map['user_name'],
-      pictures: map['pictures'],
+      contents: map['contents'],
       subscriptions: map['subscriptions'],
       followers: map['followers'],
     );
